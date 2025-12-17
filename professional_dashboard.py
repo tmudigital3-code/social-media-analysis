@@ -117,6 +117,13 @@ except ImportError:
     def render_ai_next_move(data):
         st.info("AI recommendations not available.")
 
+# Import Dashboard Extensions
+try:
+    import dashboard_extensions
+    EXTENSIONS_AVAILABLE = True
+except ImportError:
+    EXTENSIONS_AVAILABLE = False
+
 # Import new ML modules
 try:
     from ml_optimization import render_ml_dashboard
@@ -1441,7 +1448,8 @@ def render_advanced_content_analysis(data):
         "Deep content insights with NLP and sentiment analysis"
     )
     
-    tab1, tab2, tab3 = st.tabs(["Sentiment Analysis", "Word Cloud & Patterns", "Hashtag Performance"])
+    # Enhanced tabs with new Deep Dive section
+    tab1, tab2, tab3, tab4 = st.tabs(["Sentiment Analysis", "Word Cloud & Patterns", "Hashtag Performance", "🔍 Deep Dive"])
     
     # Initialize sentiments list
     sentiments = []
@@ -1578,6 +1586,21 @@ def render_advanced_content_analysis(data):
         
         st.markdown('</div>', unsafe_allow_html=True)
 
+    with tab4:
+        st.markdown("### 🔍 Deep Dive Analytics")
+        if EXTENSIONS_AVAILABLE:
+            col_dd1, col_dd2 = st.columns(2)
+            
+            with col_dd1:
+                dashboard_extensions.render_engagement_funnel(data)
+                dashboard_extensions.render_metric_radar(data)
+                
+            with col_dd2:
+                dashboard_extensions.render_correlation_heatmap(data)
+                dashboard_extensions.render_treemap_content(data)
+        else:
+            st.warning("Dashboard extensions module not found.")
+
 # ==================== PDF Report Generation ====================
 def generate_comprehensive_pdf_report(data):  # type: ignore
     """Generate comprehensive PDF report with all charts and analytics"""
@@ -1586,46 +1609,58 @@ def generate_comprehensive_pdf_report(data):  # type: ignore
         return None
     
     buffer = io.BytesIO()
-    doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=0.5*inch, bottomMargin=0.5*inch)  # type: ignore
+    doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=0.5*inch, bottomMargin=0.5*inch)
     story = []
-    styles = getSampleStyleSheet()  # type: ignore
+    styles = getSampleStyleSheet()
     
     # Custom styles
     title_style = ParagraphStyle(
         'CustomTitle',
         parent=styles['Heading1'],
         fontSize=24,
-        textColor=colors.HexColor('#667eea'),  # type: ignore
+        textColor=colors.HexColor('#667eea'),
         spaceAfter=30,
-        alignment=TA_CENTER,  # type: ignore
+        alignment=TA_CENTER,
         fontName='Helvetica-Bold'
-    )  # type: ignore
+    )
     
     heading_style = ParagraphStyle(
         'CustomHeading',
         parent=styles['Heading2'],
         fontSize=16,
-        textColor=colors.HexColor('#2c3e50'),  # type: ignore
+        textColor=colors.HexColor('#2c3e50'),
         spaceAfter=12,
         spaceBefore=20,
         fontName='Helvetica-Bold'
-    )  # type: ignore
+    )
+
+    sub_heading_style = ParagraphStyle(
+        'CustomSubHeading',
+        parent=styles['Heading3'],
+        fontSize=14,
+        textColor=colors.HexColor('#7f8c8d'),
+        spaceAfter=10,
+        spaceBefore=15,
+        fontName='Helvetica-Bold'
+    )
     
     # Title Page
-    story.append(Spacer(1, 1*inch))  # type: ignore
-    story.append(Paragraph("Professional Social Media Analytics Report", title_style))  # type: ignore
-    story.append(Spacer(1, 0.2*inch))  # type: ignore
-    story.append(Paragraph(f"Generated on {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", styles['Normal']))  # type: ignore
-    story.append(Spacer(1, 0.5*inch))  # type: ignore
+    story.append(Spacer(1, 1*inch))
+    story.append(Paragraph("Professional Social Media Analytics Report", title_style))
+    story.append(Spacer(1, 0.2*inch))
+    story.append(Paragraph(f"Generated on {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", styles['Normal']))
+    story.append(Spacer(1, 0.5*inch))
     
     # Executive Summary
-    story.append(Paragraph("Executive Summary", heading_style))  # type: ignore
+    story.append(Paragraph("1. Executive Summary", heading_style))
     
     # Calculate KPIs
     total_posts = len(data)
     total_likes = safe_int(data['likes'].sum()) if 'likes' in data.columns else 0
     total_comments = safe_int(data['comments'].sum()) if 'comments' in data.columns else 0
     total_shares = safe_int(data['shares'].sum()) if 'shares' in data.columns else 0
+    total_reach = safe_int(data['reach'].sum()) if 'reach' in data.columns else 0
+    total_impressions = safe_int(data['impressions'].sum()) if 'impressions' in data.columns else 0
     total_engagement = total_likes + total_comments + total_shares
     avg_engagement = safe_int(total_engagement / total_posts) if total_posts > 0 else 0
     
@@ -1636,103 +1671,117 @@ def generate_comprehensive_pdf_report(data):  # type: ignore
         ['Total Likes', f"{total_likes:,}"],
         ['Total Comments', f"{total_comments:,}"],
         ['Total Shares', f"{total_shares:,}"],
+        ['Total Reach', f"{total_reach:,}"],
+        ['Total Impressions', f"{total_impressions:,}"],
         ['Total Engagement', f"{total_engagement:,}"],
-        ['Average Engagement per Post', f"{avg_engagement:,}"]
+        ['Average Engagement', f"{avg_engagement:,}"]
     ]
     
-    kpi_table = Table(kpi_data, colWidths=[3*inch, 2*inch])  # type: ignore
+    kpi_table = Table(kpi_data, colWidths=[3*inch, 2*inch])
     kpi_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#667eea')),  # type: ignore
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # type: ignore
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#667eea')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 12),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),  # type: ignore
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # type: ignore
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('TOPPADDING', (0, 1), (-1, -1), 8),
         ('BOTTOMPADDING', (0, 1), (-1, -1), 8),
-    ]))  # type: ignore
-    story.append(kpi_table)  # type: ignore
-    story.append(Spacer(1, 0.3*inch))  # type: ignore
+    ]))
+    story.append(kpi_table)
+    story.append(Spacer(1, 0.3*inch))
     
-    # Content Performance Analysis
-    story.append(Paragraph("Content Performance Analysis", heading_style))  # type: ignore
+    # Engagement Funnel Analysis
+    story.append(Paragraph("2. Engagement Funnel Analysis", heading_style))
+    story.append(Paragraph("Analysis of user journey from impressions to engagement.", styles['Normal']))
+    story.append(Spacer(1, 0.1*inch))
     
-    if 'media_type' in data.columns:
-        media_type_performance = data.groupby('media_type')['likes'].agg(['count', 'sum', 'mean']).reset_index()
-        media_data = [['Media Type', 'Post Count', 'Total Likes', 'Avg Likes']]
-        for _, row in media_type_performance.iterrows():
-            media_data.append([
-                str(row['media_type']),
-                f"{safe_int(row['count']):,}",
-                f"{safe_int(row['sum']):,}",
-                f"{safe_int(row['mean']):,}"
-            ])
+    if total_impressions > 0 and total_reach > 0:
+        funnel_data = [
+            ['Stage', 'Count', 'Conversion'],
+            ['1. Impressions', f"{total_impressions:,}", "100%"],
+            ['2. Reach', f"{total_reach:,}", f"{(total_reach/total_impressions*100):.1f}% of Impressions"],
+            ['3. Engagement', f"{total_engagement:,}", f"{(total_engagement/total_reach*100):.1f}% of Reach"]
+        ]
         
-        media_table = Table(media_data, colWidths=[1.5*inch, 1.5*inch, 1.5*inch, 1.5*inch])  # type: ignore
-        media_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#764ba2')),  # type: ignore
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # type: ignore
+        funnel_table = Table(funnel_data, colWidths=[2*inch, 1.5*inch, 2*inch])
+        funnel_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#764ba2')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 11),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),  # type: ignore
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),  # type: ignore
-            ('FONTSIZE', (0, 1), (-1, -1), 9),
-        ]))  # type: ignore
-        story.append(media_table)  # type: ignore
-        story.append(Spacer(1, 0.3*inch))  # type: ignore
-    
-    # Top Performing Posts
-    story.append(Paragraph("Top 10 Performing Posts", heading_style))  # type: ignore
-    
-    if all(col in data.columns for col in ['likes', 'comments', 'shares']):
-        data_copy = data.copy()
-        data_copy['total_engagement'] = data_copy['likes'] + data_copy['comments'] + data_copy['shares']
-        top_posts = data_copy.nlargest(10, 'total_engagement')
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ]))
+        story.append(funnel_table)
+    else:
+        story.append(Paragraph("Insufficient data for funnel analysis.", styles['Normal']))
         
-        post_data = [['Post Date', 'Caption', 'Likes', 'Comments', 'Shares', 'Total']]
-        for _, post in top_posts.iterrows():
-            caption = str(post.get('caption', 'N/A'))[:40] + "..."
-            post_date = post['timestamp'].strftime('%m/%d/%Y') if 'timestamp' in post and pd.notna(post['timestamp']) else 'N/A'
-            post_data.append([
-                post_date,
-                caption,
-                f"{safe_int(post['likes']):,}",
-                f"{safe_int(post['comments']):,}",
-                f"{safe_int(post['shares']):,}",
-                f"{safe_int(post['total_engagement']):,}"
+    story.append(Spacer(1, 0.3*inch))
+    
+    # Media Performance (Radar)
+    story.append(Paragraph("3. Media Performance Radar", heading_style))
+    story.append(Paragraph("Comparative performance by media type.", styles['Normal']))
+    story.append(Spacer(1, 0.1*inch))
+    
+    if 'media_type' in data.columns:
+        media_agg = data.groupby('media_type')[['likes', 'comments', 'shares', 'reach']].mean().reset_index()
+        radar_data = [['Media Type', 'Avg Likes', 'Avg Comments', 'Avg Shares', 'Avg Reach']]
+        for _, row in media_agg.iterrows():
+            radar_data.append([
+                str(row['media_type']),
+                f"{row['likes']:.1f}",
+                f"{row['comments']:.1f}",
+                f"{row['shares']:.1f}",
+                f"{row['reach']:.1f}" if 'reach' in row else 'N/A'
             ])
-        
-        posts_table = Table(post_data, colWidths=[0.8*inch, 2*inch, 0.7*inch, 0.7*inch, 0.7*inch, 0.7*inch])  # type: ignore
-        posts_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#10b981')),  # type: ignore
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # type: ignore
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            
+        radar_table = Table(radar_data, colWidths=[1.5*inch, 1*inch, 1*inch, 1*inch, 1*inch])
+        radar_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#10b981')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 9),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.lightblue),  # type: ignore
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),  # type: ignore
-            ('FONTSIZE', (0, 1), (-1, -1), 8),
-            ('TOPPADDING', (0, 1), (-1, -1), 6),
-            ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
-        ]))  # type: ignore
-        story.append(posts_table)  # type: ignore
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ]))
+        story.append(radar_table)
     
-    story.append(PageBreak())  # type: ignore
+    story.append(Spacer(1, 0.3*inch))
     
-    # Predictive Analytics Section
-    story.append(Paragraph("Predictive Analytics & Insights", heading_style))  # type: ignore
-    
-    # Growth Predictions
-    if 'timestamp' in data.columns and 'follower_count' in data.columns:
-        story.append(Paragraph("Follower Growth Forecast", styles['Heading3']))  # type: ignore
-        daily_followers = data.groupby(pd.Grouper(key='timestamp', freq='D'))['follower_count'].last().dropna()
+    # Content Distribution (Treemap Data)
+    story.append(Paragraph("4. Content Distribution Strategy", heading_style))
+    if 'media_type' in data.columns:
+        content_counts = data['media_type'].value_counts()
+        content_likes = data.groupby('media_type')['likes'].sum()
         
+        tree_data = [['Media Type', 'Volume (Posts)', 'Total Impact (Likes)', 'Efficiency (Likes/Post)']]
+        for mtype in content_counts.index:
+            vol = content_counts[mtype]
+            impact = content_likes[mtype]
+            eff = impact / vol if vol > 0 else 0
+            tree_data.append([mtype, f"{vol}", f"{impact:,}", f"{eff:.1f}"])
+            
+        tree_table = Table(tree_data, colWidths=[1.5*inch, 1.2*inch, 1.5*inch, 1.5*inch])
+        tree_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#f59e0b')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ]))
+        story.append(tree_table)
+    
+    story.append(PageBreak())
+
+    # Deep Learning Forecast
+    story.append(Paragraph("5. AI Growth Forecast", heading_style))
+    if 'timestamp' in data.columns and 'follower_count' in data.columns:
+        story.append(Paragraph("Projected follower growth based on linear regression model.", styles['Normal']))
+        story.append(Spacer(1, 0.1*inch))
+        
+        daily_followers = data.groupby(pd.Grouper(key='timestamp', freq='D'))['follower_count'].last().dropna()
         if len(daily_followers) > 7:
             from sklearn.linear_model import LinearRegression
             X = np.arange(len(daily_followers)).reshape(-1, 1)
@@ -1745,85 +1794,44 @@ def generate_comprehensive_pdf_report(data):  # type: ignore
             future_y = model.predict(future_X)
             
             forecast_data = [
-                ['Time Period', 'Predicted Followers', 'Growth Rate'],
+                ['Time Period', 'Predicted Followers', 'Net Growth'],
                 ['Next 7 days', f"{safe_int(future_y[6]):,}", f"+{safe_int(future_y[6] - y[-1]):,}"],
                 ['Next 14 days', f"{safe_int(future_y[13]):,}", f"+{safe_int(future_y[13] - y[-1]):,}"],
                 ['Next 30 days', f"{safe_int(future_y[29]):,}", f"+{safe_int(future_y[29] - y[-1]):,}"]
             ]
             
-            forecast_table = Table(forecast_data, colWidths=[2*inch, 2*inch, 1.5*inch])  # type: ignore
+            forecast_table = Table(forecast_data, colWidths=[2*inch, 2*inch, 1.5*inch])
             forecast_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#f093fb')),  # type: ignore
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # type: ignore
+                ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#f093fb')),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
                 ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('FONTSIZE', (0, 0), (-1, 0), 10),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.lavender),  # type: ignore
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),  # type: ignore
-            ]))  # type: ignore
-            story.append(forecast_table)  # type: ignore
-            story.append(Spacer(1, 0.3*inch))  # type: ignore
-    
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ]))
+            story.append(forecast_table)
+            
     # AI Recommendations
-    story.append(Paragraph("AI-Powered Recommendations", heading_style))  # type: ignore
+    story.append(Spacer(1, 0.3*inch))
+    story.append(Paragraph("6. Strategic AI Recommendations", heading_style))
     
     recommendations = [
-        "• Post carousel content at 8:00 PM with relevant hashtags for +22% engagement boost",
-        "• Create 2 reels per week featuring behind-the-scenes content for +18% follower growth",
-        "• Optimize posting schedule: Focus on evenings (7-9 PM) for 2.3× higher interaction",
-        "• Increase video content by 30% - videos show 40% higher engagement than images",
-        "• Engage with comments within first hour of posting to boost algorithmic visibility"
+        "• Post carousel content at 8:00 PM to align with peak engagement windows.",
+        "• Increase Faceless Reels production; they show 40% higher reach potential.",
+        "• Optimize caption length to 80-120 characters for maximum readability.",
+        "• Engage with commenters in the first hour to boost algorithmic ranking.",
+        "• Use 5-8 relevant hashtags per post; excessive tagging may reduce reach."
     ]
     
     for rec in recommendations:
-        story.append(Paragraph(rec, styles['Normal']))  # type: ignore
-        story.append(Spacer(1, 0.1*inch))  # type: ignore
-    
-    story.append(Spacer(1, 0.3*inch))  # type: ignore
-    
-    # Engagement Trends
-    story.append(Paragraph("Engagement Trends Summary", heading_style))  # type: ignore
-    
-    if 'timestamp' in data.columns:
-        data['week'] = pd.to_datetime(data['timestamp']).dt.to_period('W')
-        weekly_engagement = data.groupby('week').agg({
-            'likes': 'sum',
-            'comments': 'sum',
-            'shares': 'sum'
-        }).tail(4)
-        
-        trend_data = [['Week', 'Likes', 'Comments', 'Shares', 'Total Engagement']]
-        for week, row in weekly_engagement.iterrows():
-            total = safe_int(row['likes'] + row['comments'] + row['shares'])
-            trend_data.append([
-                str(week),
-                f"{safe_int(row['likes']):,}",
-                f"{safe_int(row['comments']):,}",
-                f"{safe_int(row['shares']):,}",
-                f"{total:,}"
-            ])
-        
-        trend_table = Table(trend_data, colWidths=[1.5*inch, 1.2*inch, 1.2*inch, 1.2*inch, 1.5*inch])  # type: ignore
-        trend_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#667eea')),  # type: ignore
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # type: ignore
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 10),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.lightcyan),  # type: ignore
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),  # type: ignore
-        ]))  # type: ignore
-        story.append(trend_table)  # type: ignore
-    
+        story.append(Paragraph(rec, styles['Normal']))
+        story.append(Spacer(1, 0.1*inch))
+
     # Footer
-    story.append(Spacer(1, 0.5*inch))  # type: ignore
+    story.append(Spacer(1, 0.5*inch))
     footer_text = f"<para align=center><font size=9 color=grey>Report generated by Professional Social Media Analytics Platform | © 2025 All Rights Reserved</font></para>"
-    story.append(Paragraph(footer_text, styles['Normal']))  # type: ignore
+    story.append(Paragraph(footer_text, styles['Normal']))
     
-    # Build PDF
-    doc.build(story)  # type: ignore
+    doc.build(story)
     buffer.seek(0)
     return buffer
 
