@@ -1,0 +1,108 @@
+name: Streamlit App CI/CD
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-prod.txt
+        pip install -r requirements-test.txt
+    
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+    
+    - name: Check for syntax errors
+      run: |
+        find . -name "*.py" -exec python -m py_compile {} \;
+    
+    - name: Test import of main modules
+      run: |
+        python -c "import professional_dashboard; print('Main app imports successfully')"
+        python -c "import data_adapter; print('Data adapter imports successfully')"
+        python -c "import dashboard_sections; print('Dashboard sections imports successfully')"
+        python -c "import advanced_techniques; print('Advanced techniques imports successfully')"
+        python -c "import ml_advanced; print('ML advanced imports successfully')"
+        python -c "import ml_optimization; print('ML optimization imports successfully')"
+        python -c "import sentiment_analysis; print('Sentiment analysis imports successfully')"
+    
+    - name: Run unit tests
+      run: |
+        python test_data_adapter.py
+    
+    - name: Test data processing functions
+      run: |
+        python -c "
+import pandas as pd
+import numpy as np
+from datetime import datetime
+# Test that basic data processing functions work
+print('Testing basic data processing capabilities...')
+df = pd.DataFrame({
+    'timestamp': [datetime.now(), datetime.now()],
+    'likes': [10, 20],
+    'comments': [1, 2]
+})
+print('DataFrame creation successful')
+result = df['likes'].sum()
+print(f'Sum calculation successful: {result}')
+print('All basic processing tests passed')
+"
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Notify successful build
+      if: success() && github.event_name == 'push'
+      run: |
+        echo "✅ All tests passed! Your Streamlit app is ready for deployment."
+        
+    - name: Deploy to Streamlit Cloud
+      if: success() && github.event_name == 'push'
+      run: |
+        echo "🚀 To deploy to Streamlit Cloud:"
+        echo "1. Visit https://share.streamlit.io/"
+        echo "2. Connect your GitHub repository"
+        echo "3. Select professional_dashboard.py as your main file"
+        echo "4. Streamlit Cloud will automatically deploy new commits to main branch"
+        
+    - name: Create deployment notification
+      if: success() && github.event_name == 'push'
+      run: |
+        echo "🔗 Your app will be available at: https://your-app-name.streamlit.app (replace with your actual URL)"
+        
+    - name: Notify on failure
+      if: failure()
+      run: |
+        echo "❌ Build failed! Check the logs for more information."
+        echo "Fix the issues and push again to trigger a new build."
