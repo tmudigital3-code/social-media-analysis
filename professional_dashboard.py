@@ -105,7 +105,9 @@ try:
         render_advanced_analytics_ml,
         render_content_performance_advanced,
         render_audience_insights_advanced,
-        render_ai_next_move
+        render_ai_next_move,
+        render_optimal_posting_times,
+        render_trending_content_suggestions
     )
 except ImportError:
     def render_advanced_analytics_ml(data):
@@ -116,6 +118,10 @@ except ImportError:
         st.info("Advanced audience insights not available.")
     def render_ai_next_move(data):
         st.info("AI recommendations not available.")
+    def render_optimal_posting_times(data):
+        st.info("Optimal posting times not available.")
+    def render_trending_content_suggestions(data):
+        st.info("Trending content suggestions not available.")
 
 # Import Dashboard Extensions
 try:
