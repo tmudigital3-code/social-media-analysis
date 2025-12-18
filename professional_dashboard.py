@@ -950,29 +950,77 @@ def render_professional_dashboard(data):
     comments_sum = 0
     shares_sum = 0
     if 'likes' in current_period.columns:
-        likes_sum = current_period['likes'].fillna(0).astype(float).sum()
+        try:
+            likes_sum = pd.to_numeric(current_period['likes'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert likes to numeric: {e}")
+            likes_sum = 0
     if 'comments' in current_period.columns:
-        comments_sum = current_period['comments'].fillna(0).astype(float).sum()
+        try:
+            comments_sum = pd.to_numeric(current_period['comments'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert comments to numeric: {e}")
+            comments_sum = 0
     if 'shares' in current_period.columns:
-        shares_sum = current_period['shares'].fillna(0).astype(float).sum()
+        try:
+            shares_sum = pd.to_numeric(current_period['shares'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert shares to numeric: {e}")
+            shares_sum = 0
     current_engagement = safe_float(likes_sum + comments_sum + shares_sum)
     
     prev_likes_sum = 1
     prev_comments_sum = 0
     prev_shares_sum = 0
     if 'likes' in previous_period.columns:
-        prev_likes_sum = previous_period['likes'].fillna(0).astype(float).sum() or 1
-        prev_comments_sum = previous_period['comments'].fillna(0).astype(float).sum()
-        prev_shares_sum = previous_period['shares'].fillna(0).astype(float).sum()
+        try:
+            prev_likes_sum = pd.to_numeric(previous_period['likes'], errors='coerce').fillna(0).sum() or 1
+        except Exception as e:
+            print(f"Warning: Could not convert previous likes to numeric: {e}")
+            prev_likes_sum = 1
+        try:
+            prev_comments_sum = pd.to_numeric(previous_period['comments'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert previous comments to numeric: {e}")
+            prev_comments_sum = 0
+        try:
+            prev_shares_sum = pd.to_numeric(previous_period['shares'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert previous shares to numeric: {e}")
+            prev_shares_sum = 0
     prev_engagement = safe_float(prev_likes_sum + prev_comments_sum + prev_shares_sum, 1)
     engagement_change = safe_float(((current_engagement - prev_engagement) / prev_engagement * 100) if prev_engagement > 0 else 0)
     
-    current_impressions = safe_int(current_period['impressions'].fillna(0).astype(float).sum() if 'impressions' in current_period.columns else 0)
-    prev_impressions = safe_int(previous_period['impressions'].fillna(0).astype(float).sum() if 'impressions' in previous_period.columns else 1, 1)
+    current_impressions = 0
+    if 'impressions' in current_period.columns:
+        try:
+            current_impressions = safe_int(pd.to_numeric(current_period['impressions'], errors='coerce').fillna(0).sum())
+        except Exception as e:
+            print(f"Warning: Could not convert impressions to numeric: {e}")
+            current_impressions = 0
+    prev_impressions = 1
+    if 'impressions' in previous_period.columns:
+        try:
+            prev_impressions = safe_int(pd.to_numeric(previous_period['impressions'], errors='coerce').fillna(0).sum() or 1, 1)
+        except Exception as e:
+            print(f"Warning: Could not convert previous impressions to numeric: {e}")
+            prev_impressions = 1
     impressions_change = safe_float(((current_impressions - prev_impressions) / prev_impressions * 100) if prev_impressions > 0 else 0)
     
-    current_reach = safe_int(current_period['reach'].fillna(0).astype(float).sum() if 'reach' in current_period.columns else 0)
-    prev_reach = safe_int(previous_period['reach'].fillna(0).astype(float).sum() if 'reach' in previous_period.columns else 1, 1)
+    current_reach = 0
+    if 'reach' in current_period.columns:
+        try:
+            current_reach = safe_int(pd.to_numeric(current_period['reach'], errors='coerce').fillna(0).sum())
+        except Exception as e:
+            print(f"Warning: Could not convert reach to numeric: {e}")
+            current_reach = 0
+    prev_reach = 1
+    if 'reach' in previous_period.columns:
+        try:
+            prev_reach = safe_int(pd.to_numeric(previous_period['reach'], errors='coerce').fillna(0).sum() or 1, 1)
+        except Exception as e:
+            print(f"Warning: Could not convert previous reach to numeric: {e}")
+            prev_reach = 1
     reach_change = safe_float(((current_reach - prev_reach) / prev_reach * 100) if prev_reach > 0 else 0)
     
     engagement_rate = safe_float((current_engagement / current_impressions * 100) if current_impressions > 0 else 0)
@@ -1063,9 +1111,21 @@ def render_professional_dashboard(data):
             # For large datasets, sample data for performance
             sampled_period = current_period if len(current_period) <= 500 else current_period.sample(n=500, random_state=42)
             # Safely calculate total engagement with proper data type conversion
-            likes_col = sampled_period['likes'].fillna(0).astype(float) if 'likes' in sampled_period.columns else 0
-            comments_col = sampled_period['comments'].fillna(0).astype(float) if 'comments' in sampled_period.columns else 0
-            shares_col = sampled_period['shares'].fillna(0).astype(float) if 'shares' in sampled_period.columns else 0
+            try:
+                likes_col = pd.to_numeric(sampled_period['likes'], errors='coerce').fillna(0) if 'likes' in sampled_period.columns else 0
+            except Exception as e:
+                print(f"Warning: Could not convert likes to numeric: {e}")
+                likes_col = 0
+            try:
+                comments_col = pd.to_numeric(sampled_period['comments'], errors='coerce').fillna(0) if 'comments' in sampled_period.columns else 0
+            except Exception as e:
+                print(f"Warning: Could not convert comments to numeric: {e}")
+                comments_col = 0
+            try:
+                shares_col = pd.to_numeric(sampled_period['shares'], errors='coerce').fillna(0) if 'shares' in sampled_period.columns else 0
+            except Exception as e:
+                print(f"Warning: Could not convert shares to numeric: {e}")
+                shares_col = 0
             sampled_period['total_engagement'] = likes_col + comments_col + shares_col
             top_posts = sampled_period.nlargest(5, 'total_engagement')
             
