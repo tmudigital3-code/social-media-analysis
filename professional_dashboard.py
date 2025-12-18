@@ -945,16 +945,34 @@ def render_professional_dashboard(data):
     prev_followers = safe_int(data['follower_count'].iloc[-8] if 'follower_count' in data.columns and len(data) > 7 else total_followers, total_followers)
     follower_change = safe_float(((total_followers - prev_followers) / prev_followers * 100) if prev_followers > 0 else 0)
     
-    current_engagement = safe_float(current_period['likes'].sum() + current_period['comments'].sum() + current_period['shares'].sum() if 'likes' in current_period.columns else 0)
-    prev_engagement = safe_float(previous_period['likes'].sum() + previous_period['comments'].sum() + previous_period['shares'].sum() if 'likes' in previous_period.columns else 1, 1)
+    # Safely calculate engagement metrics with proper data type conversion
+    likes_sum = 0
+    comments_sum = 0
+    shares_sum = 0
+    if 'likes' in current_period.columns:
+        likes_sum = current_period['likes'].fillna(0).astype(float).sum()
+    if 'comments' in current_period.columns:
+        comments_sum = current_period['comments'].fillna(0).astype(float).sum()
+    if 'shares' in current_period.columns:
+        shares_sum = current_period['shares'].fillna(0).astype(float).sum()
+    current_engagement = safe_float(likes_sum + comments_sum + shares_sum)
+    
+    prev_likes_sum = 1
+    prev_comments_sum = 0
+    prev_shares_sum = 0
+    if 'likes' in previous_period.columns:
+        prev_likes_sum = previous_period['likes'].fillna(0).astype(float).sum() or 1
+        prev_comments_sum = previous_period['comments'].fillna(0).astype(float).sum()
+        prev_shares_sum = previous_period['shares'].fillna(0).astype(float).sum()
+    prev_engagement = safe_float(prev_likes_sum + prev_comments_sum + prev_shares_sum, 1)
     engagement_change = safe_float(((current_engagement - prev_engagement) / prev_engagement * 100) if prev_engagement > 0 else 0)
     
-    current_impressions = safe_int(current_period['impressions'].sum() if 'impressions' in current_period.columns else 0)
-    prev_impressions = safe_int(previous_period['impressions'].sum() if 'impressions' in previous_period.columns else 1, 1)
+    current_impressions = safe_int(current_period['impressions'].fillna(0).astype(float).sum() if 'impressions' in current_period.columns else 0)
+    prev_impressions = safe_int(previous_period['impressions'].fillna(0).astype(float).sum() if 'impressions' in previous_period.columns else 1, 1)
     impressions_change = safe_float(((current_impressions - prev_impressions) / prev_impressions * 100) if prev_impressions > 0 else 0)
     
-    current_reach = safe_int(current_period['reach'].sum() if 'reach' in current_period.columns else 0)
-    prev_reach = safe_int(previous_period['reach'].sum() if 'reach' in previous_period.columns else 1, 1)
+    current_reach = safe_int(current_period['reach'].fillna(0).astype(float).sum() if 'reach' in current_period.columns else 0)
+    prev_reach = safe_int(previous_period['reach'].fillna(0).astype(float).sum() if 'reach' in previous_period.columns else 1, 1)
     reach_change = safe_float(((current_reach - prev_reach) / prev_reach * 100) if prev_reach > 0 else 0)
     
     engagement_rate = safe_float((current_engagement / current_impressions * 100) if current_impressions > 0 else 0)
@@ -1044,7 +1062,11 @@ def render_professional_dashboard(data):
         if 'likes' in current_period.columns and 'comments' in current_period.columns:
             # For large datasets, sample data for performance
             sampled_period = current_period if len(current_period) <= 500 else current_period.sample(n=500, random_state=42)
-            sampled_period['total_engagement'] = sampled_period['likes'] + sampled_period['comments'] + sampled_period['shares']
+            # Safely calculate total engagement with proper data type conversion
+            likes_col = sampled_period['likes'].fillna(0).astype(float) if 'likes' in sampled_period.columns else 0
+            comments_col = sampled_period['comments'].fillna(0).astype(float) if 'comments' in sampled_period.columns else 0
+            shares_col = sampled_period['shares'].fillna(0).astype(float) if 'shares' in sampled_period.columns else 0
+            sampled_period['total_engagement'] = likes_col + comments_col + shares_col
             top_posts = sampled_period.nlargest(5, 'total_engagement')
             
             # Enhanced post display with more details
@@ -2287,6 +2309,21 @@ def main():
                         current_data = get_cached_data() # Reload
                     except Exception as e:
                         st.error(f"Error auto-loading data: {e}")
+                
+                # If still empty, try loading sample data
+                if current_data.empty:
+                    sample_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample_posts.csv')
+                    if os.path.exists(sample_file):
+                        st.toast(f"📂 Loading sample data...", icon="🔄")
+                        try:
+                            sample_data = adapt_csv_data(sample_file)
+                            if sample_data is not None and not sample_data.empty:
+                                database_manager.save_data(sample_data)
+                                st.cache_data.clear()  # Clear cache to ensure we get the new data
+                                current_data = get_cached_data() # Reload
+                                st.toast(f"✅ Sample data loaded successfully!", icon="📊")
+                        except Exception as e:
+                            st.error(f"Error loading sample data: {e}")
             
             # 3. Final Check & Assignment
             if not current_data.empty:

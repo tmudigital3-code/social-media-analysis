@@ -72,6 +72,13 @@ def save_data(df):
         # Select only required columns
         df_to_save = df[required_cols].copy()
         
+        # Convert numeric columns to proper data types before saving
+        numeric_columns = ['likes', 'comments', 'shares', 'saves', 'impressions', 'reach', 'follower_count']
+        for col in numeric_columns:
+            if col in df_to_save.columns:
+                # Convert to numeric, replacing invalid values with 0
+                df_to_save[col] = pd.to_numeric(df_to_save[col], errors='coerce').fillna(0).astype(int)
+        
         # Convert timestamp to datetime then string for SQLite
         df_to_save['timestamp'] = pd.to_datetime(df_to_save['timestamp'], errors='coerce')
         df_to_save['timestamp'] = df_to_save['timestamp'].astype(str)
@@ -163,7 +170,7 @@ def save_data(df):
             print(f"⚠️ Error closing database connection: {e}")
 
 def load_data():
-    """Load data from database"""
+    """Load data from database with proper data type conversion"""
     conn = get_db_connection()
     try:
         df = pd.read_sql("SELECT * FROM posts", conn)
@@ -171,6 +178,13 @@ def load_data():
         # Convert timestamp back to datetime
         if not df.empty and 'timestamp' in df.columns:
             df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+        
+        # Convert numeric columns to proper data types
+        numeric_columns = ['likes', 'comments', 'shares', 'saves', 'impressions', 'reach', 'follower_count']
+        for col in numeric_columns:
+            if col in df.columns:
+                # Convert to numeric, replacing invalid values with 0
+                df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype(int)
             
         return df
     except Exception as e:
