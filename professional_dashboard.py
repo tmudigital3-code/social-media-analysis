@@ -2579,7 +2579,12 @@ def main():
         if st.session_state.data is not None:
             render_predictive_analytics(st.session_state.data)
             # Add AI Next Move at the bottom
-            render_ai_next_move(st.session_state.data)
+            try:
+                # Use the globally imported function instead of importing locally
+                render_ai_next_move(st.session_state.data)
+            except Exception as e:
+                st.warning("AI recommendations not available.")
+                # st.error(f"Debug: Error in AI recommendations: {str(e)}")  # Uncomment for debugging
         else:
             st.info("⚠️ Please upload data first.")
             if st.button("📤 Upload Data Now"):
@@ -2624,18 +2629,28 @@ def main():
     
     elif st.session_state.current_page == "AI Recommendations":
         if st.session_state.data is not None:
-            # Import and render AI recommendation components
-            from advanced_techniques import render_ai_next_move, render_trending_content_suggestions, render_optimal_posting_times
-            
+            # Add header for AI Recommendations
             st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
             st.markdown('<div class="pro-header-title">🔥 AI-Powered Recommendations</div>', unsafe_allow_html=True)
             st.markdown('<div class="pro-header-subtitle">Intelligent insights for maximizing your social media impact</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
             
-            # Render all AI recommendation components
-            render_optimal_posting_times(st.session_state.data)
-            render_trending_content_suggestions(st.session_state.data)
-            render_ai_next_move(st.session_state.data)
+            # Use globally imported functions instead of importing locally
+            # Render all AI recommendation components with individual error handling
+            try:
+                render_optimal_posting_times(st.session_state.data)
+            except Exception as e:
+                st.warning("Could not load optimal posting times: " + str(e))
+            
+            try:
+                render_trending_content_suggestions(st.session_state.data)
+            except Exception as e:
+                st.warning("Could not load trending content suggestions: " + str(e))
+            
+            try:
+                render_ai_next_move(st.session_state.data)
+            except Exception as e:
+                st.warning("Could not load AI next move recommendations: " + str(e))
         else:
             st.info("⚠️ Please upload data first.")
             if st.button("📤 Upload Data Now"):
@@ -2645,10 +2660,11 @@ def main():
     # Show AI Next Move on Dashboard page too
     if st.session_state.current_page == "Dashboard" and st.session_state.data is not None:
         try:
-            from advanced_techniques import render_ai_next_move
+            # Use the globally imported function instead of importing locally
             render_ai_next_move(st.session_state.data)
-        except ImportError:
+        except Exception as e:
             st.info("AI recommendations not available.")
+            # st.error(f"Debug: Error in AI recommendations: {str(e)}")  # Uncomment for debugging
     
     # Professional Footer
     st.markdown("""

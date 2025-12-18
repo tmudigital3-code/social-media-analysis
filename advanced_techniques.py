@@ -578,198 +578,262 @@ def render_audience_insights_advanced(data):
 # ==================== 🚀 AI Next Move Recommendation ====================
 def render_ai_next_move(data):
     """AI-Powered Next Move Recommendations"""
-    st.markdown('<div class="pro-insights fade-in" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border: 2px solid #667eea;">', unsafe_allow_html=True)
-    st.markdown('### 🚀 AI "Next Move" Recommendations')
-    
-    # Enhanced AI recommendations with more detailed analysis
-    recommendations = [
-        {
-            'action': 'Post carousel content at 8:00 PM with #UniversityLife',
-            'predicted_impact': '+22% engagement',
-            'confidence': '87%',
-            'priority': 'High',
-            'details': 'Based on historical data showing peak engagement during evening hours with educational content'
-        },
-        {
-            'action': 'Create 2 reels per week featuring student testimonials',
-            'predicted_impact': '+18% follower growth',
-            'confidence': '82%',
-            'priority': 'High',
-            'details': 'Reels have 3x higher reach than static posts; student testimonials drive authentic engagement'
-        },
-        {
-            'action': 'Reduce #MondayMotivation usage, add #CareerSuccess',
-            'predicted_impact': '+12% reach',
-            'confidence': '75%',
-            'priority': 'Medium',
-            'details': 'Industry hashtags perform 40% better than generic motivational tags'
-        },
-        {
-            'action': 'Post alumni success stories on weekends',
-            'predicted_impact': '+25% shares',
-            'confidence': '79%',
-            'priority': 'High',
-            'details': 'Weekend audiences are 35% more likely to share inspirational content'
-        }
-    ]
-    
-    for rec in recommendations:
-        priority_color = '#ef4444' if rec['priority'] == 'High' else '#fbbf24'
-        st.markdown(f"""
-        <div class="pro-insight-item" style="border-left-color: {priority_color}; padding: 1rem; margin-bottom: 1rem; background: rgba(255, 255, 255, 0.7); border-radius: 8px;">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-                <strong style="color: #1e293b; flex: 1;">🎯 {rec['action']}</strong>
-                <span style="background: {priority_color}; color: white; padding: 0.2rem 0.6rem; 
-                      border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
-                    {rec['priority']} Priority
-                </span>
-            </div>
-            <div style="display: flex; gap: 1.5rem; font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">
-                <div>📈 <strong>Impact:</strong> {rec['predicted_impact']}</div>
-                <div>🎯 <strong>Confidence:</strong> {rec['confidence']}</div>
-            </div>
-            <div style="font-size: 0.8rem; color: #475569; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e2e8f0;">
-                {rec['details']}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+    try:
+        # Check if data is valid
+        if data is None:
+            st.info("No data available for AI recommendations.")
+            return
+        
+        # Additional data validation
+        if not isinstance(data, pd.DataFrame):
+            st.info("Invalid data format for AI recommendations.")
+            return
+        
+        st.markdown('<div class="pro-insights fade-in" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border: 2px solid #667eea;">', unsafe_allow_html=True)
+        st.markdown('### 🚀 AI "Next Move" Recommendations')
+        
+        # Enhanced AI recommendations with more detailed analysis
+        recommendations = [
+            {
+                'action': 'Post carousel content at 8:00 PM with #UniversityLife',
+                'predicted_impact': '+22% engagement',
+                'confidence': '87%',
+                'priority': 'High',
+                'details': 'Based on historical data showing peak engagement during evening hours with educational content'
+            },
+            {
+                'action': 'Create 2 reels per week featuring student testimonials',
+                'predicted_impact': '+18% follower growth',
+                'confidence': '82%',
+                'priority': 'High',
+                'details': 'Reels have 3x higher reach than static posts; student testimonials drive authentic engagement'
+            },
+            {
+                'action': 'Reduce #MondayMotivation usage, add #CareerSuccess',
+                'predicted_impact': '+12% reach',
+                'confidence': '75%',
+                'priority': 'Medium',
+                'details': 'Industry hashtags perform 40% better than generic motivational tags'
+            },
+            {
+                'action': 'Post alumni success stories on weekends',
+                'predicted_impact': '+25% shares',
+                'confidence': '79%',
+                'priority': 'High',
+                'details': 'Weekend audiences are 35% more likely to share inspirational content'
+            }
+        ]
+        
+        for rec in recommendations:
+            try:
+                priority_color = '#ef4444' if rec['priority'] == 'High' else '#fbbf24'
+                st.markdown(f"""
+                <div class="pro-insight-item" style="border-left-color: {priority_color}; padding: 1rem; margin-bottom: 1rem; background: rgba(255, 255, 255, 0.7); border-radius: 8px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                        <strong style="color: #1e293b; flex: 1;">🎯 {rec['action']}</strong>
+                        <span style="background: {priority_color}; color: white; padding: 0.2rem 0.6rem; 
+                              border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                            {rec['priority']} Priority
+                        </span>
+                    </div>
+                    <div style="display: flex; gap: 1.5rem; font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">
+                        <div>📈 <strong>Impact:</strong> {rec['predicted_impact']}</div>
+                        <div>🎯 <strong>Confidence:</strong> {rec['confidence']}</div>
+                    </div>
+                    <div style="font-size: 0.8rem; color: #475569; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e2e8f0;">
+                        {rec['details']}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            except Exception as e:
+                # Silently continue if one recommendation fails
+                continue
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    except Exception as e:
+        # More graceful error handling
+        try:
+            st.info("AI recommendations are temporarily unavailable.")
+        except:
+            pass  # Completely silent fallback
 
 
 def render_trending_content_suggestions(data):
     """AI-Powered Trending Content Suggestions"""
-    st.markdown('<div class="pro-insights fade-in" style="background: linear-gradient(135deg, #f093fb15 0%, #fbbf2415 100%); border: 2px solid #f093fb;">', unsafe_allow_html=True)
-    st.markdown('### 🔥 Trending Content Suggestions')
-    
-    # Trending content ideas based on current data analysis
-    trending_ideas = [
-        {
-            'type': 'Reel',
-            'theme': 'Campus Life Tour',
-            'description': 'Create a day-in-the-life video showcasing different parts of campus',
-            'hashtags': ['#CampusTour', '#UniversityLife', '#StudentExperience'],
-            'optimal_time': 'Wednesday 6:00 PM',
-            'engagement_potential': 'High'
-        },
-        {
-            'type': 'Carousel',
-            'theme': 'Student Success Stories',
-            'description': 'Highlight recent graduate achievements with before/after photos',
-            'hashtags': ['#GraduateSuccess', '#AlumniSpotlight', '#CareerGoals'],
-            'optimal_time': 'Friday 7:00 PM',
-            'engagement_potential': 'Very High'
-        },
-        {
-            'type': 'Image',
-            'theme': 'Study Tips & Resources',
-            'description': 'Share infographics with exam preparation tips and study hacks',
-            'hashtags': ['#StudyTips', '#ExamPrep', '#AcademicSuccess'],
-            'optimal_time': 'Monday 9:00 AM',
-            'engagement_potential': 'Medium'
-        },
-        {
-            'type': 'Video',
-            'theme': 'Faculty Q&A Sessions',
-            'description': 'Host live Q&A sessions with popular professors on trending topics',
-            'hashtags': ['#AskProfessor', '#AcademicInsights', '#HigherEducation'],
-            'optimal_time': 'Thursday 5:00 PM',
-            'engagement_potential': 'High'
-        }
-    ]
-    
-    for idea in trending_ideas:
-        engagement_color = {
-            'Very High': '#10b981',
-            'High': '#667eea',
-            'Medium': '#fbbf24'
-        }.get(idea['engagement_potential'], '#64748b')
+    try:
+        # Check if data is valid
+        if data is None:
+            st.info("No data available for content suggestions.")
+            return
         
-        st.markdown(f"""
-        <div class="pro-insight-item" style="padding: 1rem; margin-bottom: 1rem; background: rgba(255, 255, 255, 0.7); border-radius: 8px; border-left: 4px solid {engagement_color};">
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
-                <div>
-                    <span style="background: {engagement_color}; color: white; padding: 0.2rem 0.6rem; 
-                          border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem;">
-                        {idea['type']}
-                    </span>
-                    <strong style="color: #1e293b; font-size: 1.1rem;">{idea['theme']}</strong>
+        # Additional data validation
+        if not isinstance(data, pd.DataFrame):
+            st.info("Invalid data format for content suggestions.")
+            return
+        
+        st.markdown('<div class="pro-insights fade-in" style="background: linear-gradient(135deg, #f093fb15 0%, #fbbf2415 100%); border: 2px solid #f093fb;">', unsafe_allow_html=True)
+        st.markdown('### 🔥 Trending Content Suggestions')
+        
+        # Trending content ideas based on current data analysis
+        trending_ideas = [
+            {
+                'type': 'Reel',
+                'theme': 'Campus Life Tour',
+                'description': 'Create a day-in-the-life video showcasing different parts of campus',
+                'hashtags': ['#CampusTour', '#UniversityLife', '#StudentExperience'],
+                'optimal_time': 'Wednesday 6:00 PM',
+                'engagement_potential': 'High'
+            },
+            {
+                'type': 'Carousel',
+                'theme': 'Student Success Stories',
+                'description': 'Highlight recent graduate achievements with before/after photos',
+                'hashtags': ['#GraduateSuccess', '#AlumniSpotlight', '#CareerGoals'],
+                'optimal_time': 'Friday 7:00 PM',
+                'engagement_potential': 'Very High'
+            },
+            {
+                'type': 'Image',
+                'theme': 'Study Tips & Resources',
+                'description': 'Share infographics with exam preparation tips and study hacks',
+                'hashtags': ['#StudyTips', '#ExamPrep', '#AcademicSuccess'],
+                'optimal_time': 'Monday 9:00 AM',
+                'engagement_potential': 'Medium'
+            },
+            {
+                'type': 'Video',
+                'theme': 'Faculty Q&A Sessions',
+                'description': 'Host live Q&A sessions with popular professors on trending topics',
+                'hashtags': ['#AskProfessor', '#AcademicInsights', '#HigherEducation'],
+                'optimal_time': 'Thursday 5:00 PM',
+                'engagement_potential': 'High'
+            }
+        ]
+        
+        for idea in trending_ideas:
+            try:
+                engagement_color = {
+                    'Very High': '#10b981',
+                    'High': '#667eea',
+                    'Medium': '#fbbf24'
+                }.get(idea['engagement_potential'], '#64748b')
+                
+                st.markdown(f"""
+                <div class="pro-insight-item" style="padding: 1rem; margin-bottom: 1rem; background: rgba(255, 255, 255, 0.7); border-radius: 8px; border-left: 4px solid {engagement_color};">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                        <div>
+                            <span style="background: {engagement_color}; color: white; padding: 0.2rem 0.6rem; 
+                                  border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem;">
+                                {idea['type']}
+                            </span>
+                            <strong style="color: #1e293b; font-size: 1.1rem;">{idea['theme']}</strong>
+                        </div>
+                        <span style="background: rgba(102, 126, 234, 0.1); color: #667eea; padding: 0.2rem 0.6rem; 
+                              border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                            {idea['engagement_potential']} Potential
+                        </span>
+                    </div>
+                    <div style="font-size: 0.9rem; color: #475569; margin: 0.5rem 0;">
+                        {idea['description']}
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0;">
+                        { ''.join([f'<span style="background: #dbeafe; color: #1e40af; padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem;">{tag}</span>' for tag in idea['hashtags']]) }
+                    </div>
+                    <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e2e8f0;">
+                        🕐 <strong>Best Time:</strong> {idea['optimal_time']}
+                    </div>
                 </div>
-                <span style="background: rgba(102, 126, 234, 0.1); color: #667eea; padding: 0.2rem 0.6rem; 
-                      border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
-                    {idea['engagement_potential']} Potential
-                </span>
-            </div>
-            <div style="font-size: 0.9rem; color: #475569; margin: 0.5rem 0;">
-                {idea['description']}
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0;">
-                { ''.join([f'<span style="background: #dbeafe; color: #1e40af; padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.75rem;">{tag}</span>' for tag in idea['hashtags']]) }
-            </div>
-            <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #e2e8f0;">
-                🕐 <strong>Best Time:</strong> {idea['optimal_time']}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
+            except Exception as e:
+                # Silently continue if one suggestion fails
+                continue
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    except Exception as e:
+        # More graceful error handling
+        try:
+            st.info("Content suggestions are temporarily unavailable.")
+        except:
+            pass  # Completely silent fallback
 
 def render_optimal_posting_times(data):
     """AI-Powered Optimal Posting Time Recommendations"""
-    st.markdown('<div class="pro-insights fade-in" style="background: linear-gradient(135deg, #10b98115 0%, #667eea15 100%); border: 2px solid #10b981;">', unsafe_allow_html=True)
-    st.markdown('### 🕐 Optimal Posting Times')
-    
-    # Analyze data to determine best posting times
-    if 'timestamp' in data.columns and 'likes' in data.columns:
-        data['timestamp'] = pd.to_datetime(data['timestamp'])
-        data['hour'] = data['timestamp'].dt.hour
-        data['day_of_week'] = data['timestamp'].dt.day_name()
+    try:
+        # Check if data is valid
+        if data is None:
+            st.info("No data available for posting time recommendations.")
+            return
         
-        # Group by hour and day to find optimal times
-        hourly_performance = data.groupby('hour')['likes'].mean().sort_values(ascending=False)
-        daily_performance = data.groupby('day_of_week')['likes'].mean().sort_values(ascending=False)
+        # Additional data validation
+        if not isinstance(data, pd.DataFrame):
+            st.info("Invalid data format for posting time recommendations.")
+            return
         
-        best_hours = hourly_performance.head(3)
-        best_days = daily_performance.head(3)
+        st.markdown('<div class="pro-insights fade-in" style="background: linear-gradient(135deg, #10b98115 0%, #667eea15 100%); border: 2px solid #10b981;">', unsafe_allow_html=True)
+        st.markdown('### 🕐 Optimal Posting Times')
         
-        st.markdown('<div style="display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0;">', unsafe_allow_html=True)
-        
-        # Best Hours
-        st.markdown('<div style="flex: 1; min-width: 250px;">', unsafe_allow_html=True)
-        st.markdown('<h4>⏱️ Peak Hours</h4>', unsafe_allow_html=True)
-        for hour, avg_likes in best_hours.items():
-            period = 'AM' if hour < 12 else 'PM'
-            display_hour = hour if hour <= 12 else hour - 12
-            if hour == 0:
-                display_hour = 12
-            st.markdown(f'<div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-bottom: 0.5rem;">'
-                       f'<span><strong>{display_hour}:00 {period}</strong></span>'
-                       f'<span>{avg_likes:.0f} avg likes</span>'
-                       f'</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Best Days
-        st.markdown('<div style="flex: 1; min-width: 250px;">', unsafe_allow_html=True)
-        st.markdown('<h4>📅 Best Days</h4>', unsafe_allow_html=True)
-        for day, avg_likes in best_days.items():
-            st.markdown(f'<div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px; margin-bottom: 0.5rem;">'
-                       f'<span><strong>{day}</strong></span>'
-                       f'<span>{avg_likes:.0f} avg likes</span>'
-                       f'</div>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Additional insights
-        st.markdown('<div style="background: rgba(255, 255, 255, 0.7); padding: 1rem; border-radius: 8px; margin-top: 1rem;">', unsafe_allow_html=True)
-        st.markdown('<h4>💡 Pro Tips</h4>', unsafe_allow_html=True)
-        st.markdown('<ul style="padding-left: 1.5rem;">', unsafe_allow_html=True)
-        st.markdown('<li>Post 2-3 times per week for optimal reach without overwhelming your audience</li>', unsafe_allow_html=True)
-        st.markdown('<li>Videos perform 2.5x better than images on average</li>', unsafe_allow_html=True)
-        st.markdown('<li>Engage with comments within 2 hours of posting for 40% higher engagement</li>', unsafe_allow_html=True)
-        st.markdown('</ul>', unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    else:
-        st.info("Not enough data to determine optimal posting times. Upload more data for better insights.")
+        # Analyze data to determine best posting times
+        if 'timestamp' in data.columns and 'likes' in data.columns:
+            try:
+                data['timestamp'] = pd.to_datetime(data['timestamp'])
+                data['hour'] = data['timestamp'].dt.hour
+                data['day_of_week'] = data['timestamp'].dt.day_name()
+                
+                # Group by hour and day to find optimal times
+                hourly_performance = data.groupby('hour')['likes'].mean().sort_values(ascending=False)
+                daily_performance = data.groupby('day_of_week')['likes'].mean().sort_values(ascending=False)
+                
+                best_hours = hourly_performance.head(3)
+                best_days = daily_performance.head(3)
+                
+                st.markdown('<div style="display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0;">', unsafe_allow_html=True)
+                
+                # Best Hours
+                st.markdown('<div style="flex: 1; min-width: 250px;">', unsafe_allow_html=True)
+                st.markdown('<h4>⏱️ Peak Hours</h4>', unsafe_allow_html=True)
+                for hour, avg_likes in best_hours.items():
+                    try:
+                        period = 'AM' if hour < 12 else 'PM'
+                        display_hour = hour if hour <= 12 else hour - 12
+                        if hour == 0:
+                            display_hour = 12
+                        st.markdown(f'<div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; margin-bottom: 0.5rem;"><span><strong>{display_hour}:00 {period}</strong></span><span>{avg_likes:.0f} avg likes</span></div>', unsafe_allow_html=True)
+                    except Exception as e:
+                        # Silently continue if one hour fails
+                        continue
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+                # Best Days
+                st.markdown('<div style="flex: 1; min-width: 250px;">', unsafe_allow_html=True)
+                st.markdown('<h4>📅 Best Days</h4>', unsafe_allow_html=True)
+                for day, avg_likes in best_days.items():
+                    try:
+                        st.markdown(f'<div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px; margin-bottom: 0.5rem;"><span><strong>{day}</strong></span><span>{avg_likes:.0f} avg likes</span></div>', unsafe_allow_html=True)
+                    except Exception as e:
+                        # Silently continue if one day fails
+                        continue
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+                # Additional insights
+                st.markdown('<div style="background: rgba(255, 255, 255, 0.7); padding: 1rem; border-radius: 8px; margin-top: 1rem;">', unsafe_allow_html=True)
+                st.markdown('<h4>💡 Pro Tips</h4>', unsafe_allow_html=True)
+                st.markdown('<ul style="padding-left: 1.5rem;">', unsafe_allow_html=True)
+                st.markdown('<li>Post 2-3 times per week for optimal reach without overwhelming your audience</li>', unsafe_allow_html=True)
+                st.markdown('<li>Videos perform 2.5x better than images on average</li>', unsafe_allow_html=True)
+                st.markdown('<li>Engage with comments within 2 hours of posting for 40% higher engagement</li>', unsafe_allow_html=True)
+                st.markdown('</ul>', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
+            except Exception as e:
+                st.info("Unable to determine optimal posting times due to data processing error.")
+        else:
+            st.info("Not enough data to determine optimal posting times. Upload more data for better insights.")
+    except Exception as e:
+        # More graceful error handling
+        try:
+            st.info("Posting time recommendations are temporarily unavailable.")
+        except:
+            pass  # Completely silent fallback
     
     st.markdown('</div>', unsafe_allow_html=True)
