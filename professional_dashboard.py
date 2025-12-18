@@ -775,12 +775,12 @@ def render_professional_upload():
                     filter_value = st.selectbox(f"Filter {filter_col} by", ["All"] + list(unique_values))
                     if filter_value != "All":
                         filtered_data = combined_data[combined_data[filter_col] == filter_value]
-                        st.dataframe(filtered_data.head(10), use_container_width=True)
+                        st.dataframe(filtered_data.head(10), width='stretch')
                         st.caption(f"Showing {len(filtered_data)} of {len(combined_data)} records")
                     else:
-                        st.dataframe(combined_data.head(10), use_container_width=True)
+                        st.dataframe(combined_data.head(10), width='stretch')
                 else:
-                    st.dataframe(combined_data.head(10), use_container_width=True)
+                    st.dataframe(combined_data.head(10), width='stretch')
                 
                 # Enhanced Column Analysis
                 st.markdown("### ✓ Column Analysis")
@@ -830,7 +830,7 @@ def render_professional_upload():
                 """)
                 
                 # Enhanced button with confirmation
-                if st.button("✅ Use This Data for Analysis", type="primary", use_container_width=True, help="Load data for analytics"):
+                if st.button("✅ Use This Data for Analysis", type="primary", width='stretch', help="Load data for analytics"):
                     st.session_state.data = combined_data
                     st.success("✅ Data loaded successfully! You can now navigate to other sections.")
                     st.balloons()
@@ -884,7 +884,7 @@ def render_professional_upload():
         st.markdown("### 📥 Sample Data")
         st.info("Download sample data to understand the expected format")
         
-        if st.button("📥 Download Sample Data", use_container_width=True, help="Get sample CSV file"):
+        if st.button("📥 Download Sample Data", width='stretch', help="Get sample CSV file"):
             sample_data = pd.DataFrame({
                 'post_id': ['post_001', 'post_002', 'post_003'],
                 'timestamp': ['2025-01-15 10:00:00', '2025-01-16 14:30:00', '2025-01-17 09:15:00'],
@@ -905,7 +905,7 @@ def render_professional_upload():
                 data=csv,
                 file_name="sample_social_media_data.csv",
                 mime="text/csv",
-                use_container_width=True
+                width='stretch'
             )
         
         # Data Tips Section
@@ -1021,7 +1021,7 @@ def render_professional_dashboard(data):
                 yaxis=dict(showgrid=True, gridcolor='#f0f0f0'),
                 hovermode='x unified'
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
             
             # Add growth insights
             if len(daily_followers) > 1 and 'z' in locals():
@@ -1228,7 +1228,7 @@ def render_professional_dashboard(data):
             yaxis_title="Value"
         )
         
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col6:
@@ -1260,7 +1260,7 @@ def render_professional_dashboard(data):
                 margin=dict(l=0, r=0, t=10, b=0),
                 annotations=[dict(text='Engagement', x=0.5, y=0.5, font_size=16, showarrow=False)]
             )
-            st.plotly_chart(fig_dist, use_container_width=True)
+            st.plotly_chart(fig_dist, width='stretch')
             
             # Add engagement insights
             total_engagement = sum(engagement_values)
@@ -1367,7 +1367,7 @@ def render_professional_dashboard(data):
                     yaxis_title="Hashtag"
                 )
                 
-                st.plotly_chart(fig_hashtags, use_container_width=True)
+                st.plotly_chart(fig_hashtags, width='stretch')
             else:
                 st.info("No hashtag data available for analysis.")
         else:
@@ -1411,11 +1411,11 @@ def render_professional_dashboard(data):
                 yaxis_title="Average Engagement"
             )
             
-            st.plotly_chart(fig_content, use_container_width=True)
+            st.plotly_chart(fig_content, width='stretch')
             
             # Show content type stats
             st.markdown("#### Content Type Statistics")
-            st.dataframe(content_performance.style.format("{:.1f}"), use_container_width=True)
+            st.dataframe(content_performance.style.format("{:.1f}"), width='stretch')
         else:
             st.info("Required columns (media_type, likes) not found in the dataset.")
         
@@ -1476,7 +1476,7 @@ def render_professional_dashboard(data):
             legend=dict(orientation="h", yanchor="bottom", y=1.02)
         )
         
-        st.plotly_chart(fig_hourly, use_container_width=True)
+        st.plotly_chart(fig_hourly, width='stretch')
         
         # Best posting times insight
         best_hour = hourly_engagement['likes'].idxmax()
@@ -1536,7 +1536,7 @@ def render_deep_research_analytics(data):
                     hovermode='x unified',
                     legend=dict(orientation="h", yanchor="bottom", y=1.02)
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -1565,7 +1565,7 @@ def render_deep_research_analytics(data):
                 xaxis_title="Caption Length (characters)",
                 yaxis_title="Likes"
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
             
             # AI Insight
             optimal_length = data.groupby(pd.cut(data['caption_length'], bins=5))['likes'].mean().idxmax()
@@ -1627,7 +1627,7 @@ def render_deep_research_analytics(data):
                 margin=dict(l=0, r=0, t=10, b=0),
                 showlegend=False
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -1670,7 +1670,7 @@ def render_deep_research_analytics(data):
                 xaxis_title="Hour of Day",
                 yaxis_title="Day of Week"
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
             
             # AI Insight
             best_hour = data.groupby('hour')['likes'].mean().idxmax()
@@ -1734,7 +1734,7 @@ def render_advanced_content_analysis(data):
                     height=350,
                     margin=dict(l=0, r=0, t=10, b=0)
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
             
             st.markdown('</div>', unsafe_allow_html=True)
         
@@ -1761,7 +1761,7 @@ def render_advanced_content_analysis(data):
                     xaxis_title="Sentiment",
                     yaxis_title="Average Likes"
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
             
             st.markdown('</div>', unsafe_allow_html=True)
     
@@ -1793,7 +1793,7 @@ def render_advanced_content_analysis(data):
                 xaxis_title="Frequency",
                 yaxis_title="Words"
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -1825,7 +1825,7 @@ def render_advanced_content_analysis(data):
                 xaxis_title="Hashtag",
                 yaxis_title="Frequency"
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
         
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2131,7 +2131,7 @@ def render_professional_reports(data):
     with col_a:
         # PDF Download with all charts and analytics
         if PDF_AVAILABLE:
-            if st.button("📊 Generate Comprehensive PDF", use_container_width=True, type="primary"):
+            if st.button("📊 Generate Comprehensive PDF", width='stretch', type="primary"):
                 with st.spinner("🔄 Generating comprehensive PDF report with all analytics..."):
                     pdf_buffer = generate_comprehensive_pdf_report(data)
                     if pdf_buffer:
@@ -2140,7 +2140,7 @@ def render_professional_reports(data):
                             data=pdf_buffer,
                             file_name=f"social_media_comprehensive_report_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.pdf",
                             mime="application/pdf",
-                            use_container_width=True,
+                            width='stretch',
                             type="primary"
                         )
                         st.success("✅ PDF report generated successfully!")
@@ -2155,7 +2155,7 @@ def render_professional_reports(data):
             data=csv_data,
             file_name=f"social_media_report_{pd.Timestamp.now().strftime('%Y%m%d')}.csv",
             mime="text/csv",
-            use_container_width=True
+            width='stretch'
         )
     
     with col_c:
@@ -2186,7 +2186,7 @@ def render_professional_reports(data):
             data=excel_data,
             file_name=f"social_media_report_{pd.Timestamp.now().strftime('%Y%m%d')}.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            use_container_width=True,
+            width='stretch',
             type="primary"
         )
     
@@ -2198,7 +2198,7 @@ def render_professional_reports(data):
             data=json_data,
             file_name=f"social_media_report_{pd.Timestamp.now().strftime('%Y%m%d')}.json",
             mime="application/json",
-            use_container_width=True
+            width='stretch'
         )
     
     st.markdown('</div>', unsafe_allow_html=True)
@@ -2235,7 +2235,7 @@ def render_professional_reports(data):
             data_copy = data.copy()
             data_copy['total_engagement'] = data_copy['likes'] + data_copy['comments'] + data_copy['shares']
             top_posts = data_copy.nlargest(5, 'total_engagement')[['timestamp', 'caption', 'likes', 'comments', 'shares', 'total_engagement']]
-            st.dataframe(top_posts, use_container_width=True)
+            st.dataframe(top_posts, width='stretch')
     
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -2390,11 +2390,11 @@ def main():
         st.markdown("### ⚡ Quick Actions")
         col1, col2 = st.columns(2)
         with col1:
-            if st.button("📊 Refresh Data", use_container_width=True):
+            if st.button("📊 Refresh Data", width='stretch'):
                 st.cache_data.clear()
                 st.rerun()
         with col2:
-            if st.button("🔄 Reset App", use_container_width=True):
+            if st.button("🔄 Reset App", width='stretch'):
                 st.session_state.clear()
                 st.rerun()
         

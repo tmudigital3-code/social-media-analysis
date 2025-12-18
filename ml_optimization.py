@@ -37,7 +37,7 @@ def render_visual_analysis(data):
                               text=[f'{s:.1f}' for s in scores], textposition='outside'))
         fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0),
                          yaxis_title='Engagement Score', xaxis_tickangle=-30)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         st.markdown('💡 **Vibrant colors** drive +23% higher engagement')
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -52,7 +52,7 @@ def render_visual_analysis(data):
                               text=avg_likes, textposition='outside'))
         fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0),
                          yaxis_title='Average Likes')
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         st.markdown('💡 **Posts with 2-3 faces** get +40% more likes')
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -106,7 +106,7 @@ def render_advanced_optimization(data):
                                            colorscale='Viridis', text=heatmap_data.values.round(0),
                                            texttemplate='%{text}', textfont={"size": 8}, colorbar=dict(title="Likes")))
             fig.update_layout(template='plotly_white', height=350, margin=dict(l=0, r=0, t=10, b=0), xaxis_title='Time')
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
             
             best_idx = np.unravel_index(heatmap_data.values.argmax(), heatmap_data.values.shape)
             best_day = heatmap_data.index[best_idx[0]]
@@ -137,7 +137,7 @@ def render_advanced_optimization(data):
             
             fig.update_layout(template='plotly_white', height=350, margin=dict(l=0, r=0, t=10, b=0),
                             barmode='group', yaxis_title='Percentage (%)')
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
         st.markdown('</div>', unsafe_allow_html=True)
     
     # A/B Testing Framework

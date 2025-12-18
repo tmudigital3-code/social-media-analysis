@@ -77,7 +77,7 @@ def render_advanced_analytics_ml(data):
                     margin=dict(l=0, r=0, t=10, b=0),
                     hovermode='x unified'
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
             
             st.markdown('</div>', unsafe_allow_html=True)
         
@@ -111,7 +111,7 @@ def render_advanced_analytics_ml(data):
                 xaxis_title="Hours After Posting",
                 yaxis_title="Engagement Remaining (%)"
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
             
             st.markdown('<div class="pro-insights">', unsafe_allow_html=True)
             st.markdown('💡 <strong>90% of engagement occurs within 18 hours of posting</strong>', unsafe_allow_html=True)
@@ -154,7 +154,7 @@ def render_advanced_analytics_ml(data):
                     xaxis_title="Hour of Day",
                     yaxis_title="Post Type"
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
             
             st.markdown('</div>', unsafe_allow_html=True)
         
@@ -184,7 +184,7 @@ def render_advanced_analytics_ml(data):
                 showlegend=False,
                 xaxis_title="Importance Score"
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
             
             st.markdown('</div>', unsafe_allow_html=True)
     
@@ -224,7 +224,7 @@ def render_advanced_analytics_ml(data):
                 height=300,
                 margin=dict(l=0, r=0, t=40, b=0)
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
             
             st.markdown('<div class="pro-insights">', unsafe_allow_html=True)
             st.markdown('🎯 <strong>73% success likelihood</strong> - High probability of going viral', unsafe_allow_html=True)
@@ -274,7 +274,7 @@ def render_advanced_analytics_ml(data):
                     hovermode='x unified',
                     yaxis_title="Sentiment %"
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
             
             st.markdown('</div>', unsafe_allow_html=True)
 
@@ -333,7 +333,7 @@ def render_content_performance_advanced(data):
                 xaxis=dict(showgrid=False, showticklabels=False),
                 yaxis=dict(showgrid=False, showticklabels=False)
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -410,7 +410,7 @@ def render_content_performance_advanced(data):
             margin=dict(l=0, r=0, t=10, b=0),
             showlegend=False
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -469,7 +469,7 @@ def render_audience_insights_advanced(data):
                     margin=dict(l=0, r=0, t=10, b=0),
                     hovermode='x unified'
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
             else:
                 st.info("Not enough data for forecasting")
         
@@ -508,7 +508,7 @@ def render_audience_insights_advanced(data):
             xaxis_title="Weeks Since Follow",
             yaxis_title="Percentage"
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         
         st.markdown('<div class="pro-insights">', unsafe_allow_html=True)
         st.markdown('💡 <strong>Audience Loyalty Index:</strong> 72/100 - Good retention after 12 weeks', unsafe_allow_html=True)

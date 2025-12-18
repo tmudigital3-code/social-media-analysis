@@ -211,7 +211,7 @@ def render_sentiment_analysis(data):
             margin=dict(l=0, r=0, t=10, b=0),
             annotations=[dict(text=f'{len(data)}<br>Posts', x=0.5, y=0.5, font_size=16, showarrow=False)]
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
@@ -245,7 +245,7 @@ def render_sentiment_analysis(data):
             xaxis_title='Post Count',
             showlegend=False
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         st.markdown('</div>', unsafe_allow_html=True)
     
     # Row 2: Sentiment vs Engagement & Polarity Timeline
@@ -279,7 +279,7 @@ def render_sentiment_analysis(data):
                 barmode='group',
                 yaxis_title='Average Count'
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
             
             best_sentiment = sentiment_engagement['likes'].idxmax()
             best_likes = sentiment_engagement['likes'].max()
@@ -319,7 +319,7 @@ def render_sentiment_analysis(data):
                 yaxis_range=[-1, 1],
                 hovermode='x unified'
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width='stretch')
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -370,7 +370,7 @@ def render_sentiment_analysis(data):
                     xaxis_tickangle=-45,
                     yaxis_title='Post Count'
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width='stretch')
             else:
                 st.info("No hashtag data available")
         else:
@@ -401,7 +401,7 @@ def render_sentiment_analysis(data):
             xaxis_title='Caption Length (chars)',
             yaxis_title='Polarity Score'
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
         
         avg_length_by_sentiment = data.groupby('sentiment')['caption_length'].mean()
         optimal_sentiment = avg_length_by_sentiment.idxmax()
@@ -431,7 +431,7 @@ def render_sentiment_analysis(data):
             yaxis_title='Post Count',
             hovermode='x unified'
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
     
     st.markdown('</div>', unsafe_allow_html=True)
     
@@ -447,7 +447,7 @@ def render_sentiment_analysis(data):
             if len(sentiment_posts) > 0 and 'likes' in sentiment_posts.columns:
                 top_posts = sentiment_posts.nlargest(5, 'likes')[['timestamp', 'caption', 'likes', 'emotion', 'polarity']]
                 top_posts['caption'] = top_posts['caption'].str[:80] + '...'
-                st.dataframe(top_posts, use_container_width=True, hide_index=True)
+                st.dataframe(top_posts, width='stretch', hide_index=True)
             else:
                 st.info(f"No {sentiment_name.lower()} posts found")
     
