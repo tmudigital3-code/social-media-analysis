@@ -20,13 +20,15 @@ ENV/
 Thumbs.db
 
 # Project specific
-*.csv
-*.xlsx
-*.xls
+# Exclude actual user data but allow sample data
 data/
 uploads/
 *.db
 *.sqlite
+
+# Allow sample data files
+!sample_posts.csv
+!SAMPLE_DATA_README.md
 
 # Logs
 *.log
