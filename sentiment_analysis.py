@@ -65,24 +65,65 @@ def analyze_sentiment(text):
         return {'sentiment': 'Neutral', 'polarity': 0.0, 'subjectivity': 0.0, 'emotion': '😐 Neutral'}
 
 
+
+@st.cache_data(show_spinner=False)
+def process_sentiment_for_dataframe(df_dict, text_column):
+    """
+    Cached sentiment processing.
+    Accepts specific columns as dict/df to ensure cache stability.
+    Returns processed dataframe with sentiment columns.
+    """
+    # Reconstruct dataframe from input
+    data = pd.DataFrame(df_dict)
+    
+    # Pre-calculate lists for speed
+    sentiments_list = []
+    
+    # Helper for single text analysis (inline for speed within cached function)
+    def _get_sentiment(text):
+        if pd.isna(text) or text == '':
+            return 'Neutral', 0.0, 0.0, '😐 Neutral'
+        try:
+            blob = TextBlob(str(text))
+            p = float(blob.sentiment.polarity)
+            s = float(blob.sentiment.subjectivity)
+            
+            # Sentiment
+            if p > 0.1: sent = 'Positive'
+            elif p < -0.1: sent = 'Negative'
+            else: sent = 'Neutral'
+            
+            # Emotion
+            if p > 0.6: emo = '😍 Joy'
+            elif p > 0.3: emo = '😊 Happy'
+            elif p < -0.6: emo = '😡 Anger'
+            elif p < -0.3: emo = '😢 Sad'
+            elif s > 0.7: emo = '😲 Surprise'
+            elif p > 0: emo = '😌 Content'
+            else: emo = '😐 Neutral'
+            
+            return sent, p, s, emo
+        except:
+             return 'Neutral', 0.0, 0.0, '😐 Neutral'
+
+    # Batch process
+    texts = data[text_column].tolist()
+    results = [_get_sentiment(t) for t in texts]
+    
+    # Assign back
+    data['sentiment'] = [r[0] for r in results]
+    data['polarity'] = [r[1] for r in results]
+    data['subjectivity'] = [r[2] for r in results]
+    data['emotion'] = [r[3] for r in results]
+    
+    return data
+
 def render_sentiment_analysis(data):
     """Main sentiment analysis dashboard"""
     
     if not NLP_AVAILABLE:
         st.error("❌ TextBlob not installed.")
         st.code("pip install textblob", language="bash")
-        st.code("python -m textblob.download_corpora", language="bash")
-        st.info("💡 After installation, restart the dashboard.")
-        return
-    
-    # Test if TextBlob is working
-    try:
-        test_blob = TextBlob("test")
-        _ = test_blob.sentiment
-    except Exception as e:
-        st.error("❌ TextBlob corpora not downloaded.")
-        st.code("python -m textblob.download_corpora", language="bash")
-        st.info(f"Error: {str(e)}")
         return
     
     # Header
@@ -93,41 +134,35 @@ def render_sentiment_analysis(data):
     
     # Check for caption column
     text_column = None
-    if 'caption' in data.columns:
-        text_column = 'caption'
-    elif 'text' in data.columns:
-        text_column = 'text'
-    elif 'content' in data.columns:
-        text_column = 'content'
-    elif 'message' in data.columns:
-        text_column = 'message'
-    elif 'description' in data.columns:
-        text_column = 'description'
+    possible_cols = ['caption', 'text', 'content', 'message', 'description']
+    for col in possible_cols:
+        if col in data.columns:
+            text_column = col
+            break
     
     if text_column is None:
         st.warning("⚠️ No text/caption data found.")
-        st.info(f"📊 Available columns: {', '.join(data.columns.tolist())}")
-        st.info("💡 Please upload data with one of these columns: caption, text, content, message, or description")
-        
-        # Show sample data structure
-        st.markdown("### 📋 Sample Data Structure Needed:")
-        sample = pd.DataFrame({
-            'caption': ['Great post!', 'Love this content', 'Not sure about this'],
-            'likes': [100, 150, 50],
-            'comments': [10, 15, 5]
-        })
-        st.dataframe(sample, use_container_width=True)
         return
     
     st.success(f"✅ Analyzing text from column: **{text_column}**")
     
-    # Analyze all captions
-    with st.spinner('🔍 Analyzing sentiment...'):
-        sentiments = data[text_column].apply(analyze_sentiment)
-        data['sentiment'] = sentiments.apply(lambda x: x['sentiment'])
-        data['polarity'] = sentiments.apply(lambda x: x['polarity'])
-        data['subjectivity'] = sentiments.apply(lambda x: x['subjectivity'])
-        data['emotion'] = sentiments.apply(lambda x: x['emotion'])
+    # Analyze all captions (Cached)
+    with st.spinner('🔍 Analyzing sentiment (cached)...'):
+        # Pass only necessary column and ID to cache effectively
+        # We need a unique identifier (like index) to merge back if needed, 
+        # but here we just process the text column and return a DF aligned with it.
+        # To be safe, we pass the subset of data we need.
+        input_data = data[[text_column]].copy()
+        
+        # We convert to dict for caching optimization if DF is huge, but DF is usually fine.
+        # The function expects a dict or DF. Let's pass the DF directly but ensure specific columns.
+        processed_data = process_sentiment_for_dataframe(input_data, text_column)
+        
+        # Merge results back to main data for visualization (this part is fast)
+        data['sentiment'] = processed_data['sentiment']
+        data['polarity'] = processed_data['polarity']
+        data['subjectivity'] = processed_data['subjectivity']
+        data['emotion'] = processed_data['emotion']
     
     # Summary Metrics
     st.markdown("### 📊 Sentiment Overview")

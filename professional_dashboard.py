@@ -133,6 +133,19 @@ except ImportError:
     def render_ml_dashboard(data):
         st.warning("⚠️ Advanced ML modules not available. Install dependencies: pip install textblob prophet")
 
+# Import ML Pipeline
+try:
+    from ml_pipeline import execute_ml_pipeline, get_pipeline_history, get_recent_predictions
+    ML_PIPELINE_AVAILABLE = True
+except ImportError:
+    ML_PIPELINE_AVAILABLE = False
+    def execute_ml_pipeline(csv_file_path=None, data_directory=None):
+        return {"status": "failed", "error": "ML Pipeline not available"}
+    def get_pipeline_history():
+        return pd.DataFrame()
+    def get_recent_predictions(module_name=None, prediction_type=None):
+        return pd.DataFrame()
+
 # Import Sentiment Analysis module
 try:
     from sentiment_analysis import render_sentiment_analysis
@@ -168,13 +181,14 @@ def add_professional_css():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    /* Global Styles */
+    /* Global Styles - Power BI Inspired */
     * {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: #f3f6fb;
+        color: #202020;
     }
     
     /* Hide Streamlit Branding */
@@ -182,82 +196,88 @@ def add_professional_css():
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Professional Header */
+    /* Power BI Style Header */
     .pro-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 2rem 2.5rem;
-        border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        margin-bottom: 2rem;
+        background: linear-gradient(90deg, #118ACD 0%, #0078D7 100%);
+        padding: 1.8rem 2.5rem;
+        border-radius: 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0;
         color: white;
+        border-bottom: 1px solid #e1e1e1;
     }
     
     .pro-header-title {
-        font-size: 2.2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.5px;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+        letter-spacing: 0;
     }
     
     .pro-header-subtitle {
-        font-size: 1rem;
-        opacity: 0.95;
+        font-size: 0.95rem;
+        opacity: 0.9;
         font-weight: 400;
     }
     
-    /* Professional Sidebar */
+    /* Power BI Style Sidebar */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-        border-right: 1px solid #e1e8ed;
+        background: #ffffff;
+        border-right: 1px solid #e1e1e1;
+        padding-top: 0;
     }
     
     .sidebar-logo {
         text-align: center;
-        padding: 1.5rem 1rem;
-        border-bottom: 2px solid #e1e8ed;
-        margin-bottom: 1rem;
+        padding: 1.2rem 1rem;
+        border-bottom: 1px solid #e1e1e1;
+        margin-bottom: 0;
+        background: #f8f8f8;
     }
     
     .sidebar-logo img {
-        max-width: 120px;
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        max-width: 100px;
+        filter: none;
     }
     
     .nav-item {
-        padding: 0.85rem 1.2rem;
-        margin: 0.4rem 0.8rem;
-        border-radius: 10px;
+        padding: 0.75rem 1.2rem;
+        margin: 0;
+        border-radius: 0;
         cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.2s ease;
         font-weight: 500;
-        font-size: 0.95rem;
-        color: #2c3e50;
+        font-size: 0.9rem;
+        color: #333333;
         background: transparent;
-        border: 1px solid transparent;
+        border-left: 3px solid transparent;
+        border-bottom: 1px solid #f0f0f0;
     }
     
     .nav-item:hover {
-        background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-        transform: translateX(5px);
-        border-color: #667eea30;
+        background: #f0f8ff;
+        border-left: 3px solid #0078D7;
+        color: #0078D7;
     }
     
     .nav-item-active {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        background: #e1f0fa;
+        color: #0078D7;
+        border-left: 3px solid #0078D7;
+        font-weight: 600;
     }
     
-    /* Professional KPI Cards */
+    /* Power BI Style KPI Cards */
     .pro-kpi-card {
         background: white;
-        border-radius: 14px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-        border: 1px solid rgba(0, 0, 0, 0.04);
-        transition: all 0.3s ease;
+        border-radius: 4px;
+        padding: 1.2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e1e1e1;
+        transition: all 0.2s ease;
         position: relative;
         overflow: hidden;
+        height: 100%;
     }
     
     .pro-kpi-card::before {
@@ -265,285 +285,320 @@ def add_professional_css():
         position: absolute;
         top: 0;
         left: 0;
-        width: 4px;
+        width: 3px;
         height: 100%;
-        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        background: #0078D7;
     }
     
     .pro-kpi-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
     
     .pro-kpi-title {
-        font-size: 0.85rem;
-        color: #64748b;
+        font-size: 0.8rem;
+        color: #666666;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.8rem;
+        letter-spacing: 0.8px;
+        margin-bottom: 0.6rem;
     }
     
     .pro-kpi-value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 0.5rem;
-        line-height: 1;
-    }
-    
-    .pro-kpi-change {
-        font-size: 0.85rem;
+        font-size: 1.6rem;
         font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
+        color: #202020;
+        margin-bottom: 0.3rem;
+        line-height: 1.2;
     }
     
-    .pro-kpi-change.positive {
-        color: #10b981;
-    }
-    
-    .pro-kpi-change.negative {
-        color: #ef4444;
-    }
-    
-    .pro-kpi-change.neutral {
-        color: #64748b;
-    }
-    
-    /* Professional Chart Container */
+
+    /* Power BI Style Chart Container */
     .pro-chart-container {
         background: white;
-        border-radius: 14px;
-        padding: 1.8rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-        margin-bottom: 1.5rem;
-        border: 1px solid rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.2rem;
+        border: 1px solid #e1e1e1;
     }
     
     .pro-chart-title {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #1e293b;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #202020;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-bottom: 1px solid #f0f0f0;
+        padding-bottom: 0.5rem;
+    }
+    
+    .pro-chart-subtitle {
+        font-size: 0.85rem;
+        color: #666666;
+        margin-top: 0.2rem;
+    }
+    
+    /* Power BI Style Buttons */
+    .stButton>button {
+        background: #0078D7;
+        color: white;
+        border: 1px solid #0078D7;
+        border-radius: 2px;
+        padding: 0.5rem 1.2rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        box-shadow: none;
+        text-transform: none;
+        letter-spacing: 0.2px;
+    }
+    
+    .stButton>button:hover {
+        background: #106EBE;
+        border-color: #106EBE;
+        transform: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stButton>button:active {
+        transform: none;
+    }
+    
+    /* Power BI Style File Uploader */
+    .stFileUploader {
+        background: white;
+        border: 1px dashed #cccccc;
+        border-radius: 2px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
+    
+    .stFileUploader:hover {
+        border-color: #0078D7;
+        background: #f9f9f9;
+    }
+    
+    /* Power BI Style Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0;
+        background: #f3f6fb;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+        border-bottom: 1px solid #e1e1e1;
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        height: 40px;
+        border-radius: 0;
+        color: #666666;
+        font-weight: 500;
+        padding: 0 1.2rem;
+        transition: all 0.2s ease;
+        background: transparent;
+        border-bottom: 2px solid transparent;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background: #e1f0fa;
+        color: #0078D7;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        background: transparent;
+        color: #0078D7;
+        border-bottom: 2px solid #0078D7;
+        font-weight: 600;
+    }
+    
+    /* Power BI Style Metrics */
+    .pro-metric {
+        background: white;
+        padding: 1rem;
+        border-radius: 2px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border-left: 3px solid #0078D7;
+        border: 1px solid #e1e1e1;
+    }
+    
+    /* Power BI Style Insights Panel */
+    .pro-insights {
+        background: #f9f9f9;
+        border-radius: 4px;
+        padding: 1.2rem;
+        border: 1px solid #e1e1e1;
         margin-bottom: 1.2rem;
+    }
+    
+    .pro-insight-item {
+        background: white;
+        padding: 0.8rem;
+        border-radius: 2px;
+        margin: 0.4rem 0;
+        border-left: 2px solid #0078D7;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f0f0f0;
+    }
+    
+    /* Power BI Style Alert Boxes */
+    .stAlert {
+        border-radius: 2px;
+        border: 1px solid #e1e1e1;
+        padding: 0.8rem 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Power BI Style Data Table */
+    .dataframe {
+        border-radius: 2px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e1e1e1;
+    }
+    
+    .dataframe th {
+        background: #0078D7;
+        color: white;
+        font-weight: 500;
+        padding: 0.8rem;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .dataframe td {
+        padding: 0.7rem 0.8rem;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.85rem;
+    }
+    
+    .dataframe tr:hover {
+        background: #f8f8f8;
+    }
+    
+    /* Power BI Style Section Header */
+    .pro-section-header {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #202020;
+        margin: 1.5rem 0 1rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #0078D7;
         display: flex;
         align-items: center;
         gap: 0.6rem;
     }
     
-    .pro-chart-subtitle {
-        font-size: 0.9rem;
-        color: #64748b;
-        margin-top: 0.3rem;
-    }
-    
-    /* Professional Buttons */
-    .stButton>button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 0.65rem 1.5rem;
-        font-weight: 600;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        text-transform: none;
-        letter-spacing: 0.3px;
-    }
-    
-    .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    }
-    
-    .stButton>button:active {
-        transform: translateY(0);
-    }
-    
-    /* Professional File Uploader */
-    .stFileUploader {
-        background: white;
-        border: 2px dashed #cbd5e1;
-        border-radius: 14px;
-        padding: 2.5rem;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-    
-    .stFileUploader:hover {
-        border-color: #667eea;
-        background: linear-gradient(135deg, #667eea05 0%, #764ba205 100%);
-    }
-    
-    /* Professional Tabs */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 0.5rem;
-        background: white;
-        padding: 0.5rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        border-radius: 8px;
-        color: #64748b;
-        font-weight: 600;
-        padding: 0 1.5rem;
-        transition: all 0.3s ease;
-    }
-    
-    .stTabs [data-baseweb="tab"]:hover {
-        background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
-    }
-    
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-    
-    /* Professional Metrics */
-    .pro-metric {
-        background: white;
-        padding: 1.2rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        border-left: 4px solid #667eea;
-    }
-    
-    /* Professional Insights Panel */
-    .pro-insights {
-        background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
-        border-radius: 14px;
-        padding: 1.5rem;
-        border: 1px solid #667eea20;
-        margin-bottom: 1.5rem;
-    }
-    
-    .pro-insight-item {
-        background: white;
-        padding: 1rem;
-        border-radius: 10px;
-        margin: 0.6rem 0;
-        border-left: 3px solid #667eea;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-    }
-    
-    /* Professional Alert Boxes */
-    .stAlert {
-        border-radius: 12px;
-        border: none;
-        padding: 1rem 1.2rem;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Professional Data Table */
-    .dataframe {
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    }
-    
-    .dataframe th {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        font-weight: 600;
-        padding: 1rem;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
-    }
-    
-    .dataframe td {
-        padding: 0.9rem 1rem;
-        border-bottom: 1px solid #f1f5f9;
-    }
-    
-    .dataframe tr:hover {
-        background: #f8fafc;
-    }
-    
-    /* Professional Section Header */
-    .pro-section-header {
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: #1e293b;
-        margin: 2rem 0 1.2rem 0;
-        padding-bottom: 0.8rem;
-        border-bottom: 3px solid #e2e8f0;
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-    }
-    
-    /* Professional Badge */
+    /* Power BI Style Badge */
     .pro-badge {
         display: inline-block;
-        padding: 0.4rem 0.9rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 0.3rem 0.7rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: #0078D7;
         color: white;
     }
     
-    /* Professional Footer */
+    /* Power BI Style Footer */
     .pro-footer {
         text-align: center;
-        padding: 2rem;
-        color: #64748b;
-        font-size: 0.9rem;
-        margin-top: 3rem;
-        border-top: 2px solid #e2e8f0;
+        padding: 1.5rem;
+        color: #666666;
+        font-size: 0.85rem;
+        margin-top: 2rem;
+        border-top: 1px solid #e1e1e1;
         background: white;
-        border-radius: 14px;
+        border-radius: 0;
     }
     
-    /* Scrollbar Styling */
+    /* Scrollbar Styling - Power BI Style */
     ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
     }
     
     ::-webkit-scrollbar-track {
-        background: #f1f5f9;
+        background: #f1f1f1;
     }
     
     ::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 5px;
+        background: #0078D7;
+        border-radius: 4px;
     }
     
     ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        background: #106EBE;
     }
     
     /* Animation Classes */
     @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
+        from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
     
     .fade-in {
-        animation: fadeIn 0.5s ease-out;
+        animation: fadeIn 0.3s ease-out;
     }
     
     /* Loading Spinner */
     .pro-spinner {
-        border: 4px solid #f3f4f6;
-        border-top: 4px solid #667eea;
+        border: 3px solid #f0f0f0;
+        border-top: 3px solid #0078D7;
         border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 2rem auto;
+        width: 30px;
+        height: 30px;
+        animation: spin 0.8s linear infinite;
+        margin: 1.5rem auto;
     }
     
     @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+    }
+    
+    /* Additional Power BI Style Elements */
+    .metric-tile {
+        background: white;
+        border: 1px solid #e1e1e1;
+        border-radius: 2px;
+        padding: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+    
+    .metric-tile .value {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #0078D7;
+        margin: 0.5rem 0;
+    }
+    
+    .metric-tile .label {
+        font-size: 0.85rem;
+        color: #666666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .card {
+        background: white;
+        border: 1px solid #e1e1e1;
+        border-radius: 2px;
+        padding: 1.2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .card-header {
+        font-weight: 600;
+        color: #202020;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #f0f0f0;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -558,9 +613,8 @@ def render_professional_header(title, subtitle):
     </div>
     """, unsafe_allow_html=True)
 
-def render_professional_kpi(title, value, change, change_type="neutral"):
-    """Render professional KPI card"""
-    icon = "▲" if change_type == "positive" else "▼" if change_type == "negative" else "●"
+def render_professional_kpi(title, value, change=None, change_type="neutral"):
+    """Render professional KPI card without change indicators"""
     # Format value only if it's a number
     if isinstance(value, (int, float)):
         formatted_value = f"{value:,}"
@@ -571,10 +625,21 @@ def render_professional_kpi(title, value, change, change_type="neutral"):
     <div class="pro-kpi-card fade-in">
         <div class="pro-kpi-title">{title}</div>
         <div class="pro-kpi-value">{formatted_value}</div>
-        <div class="pro-kpi-change {change_type}">
-            <span>{icon}</span>
-            <span>{change}</span>
-        </div>
+    </div>
+    """
+
+def render_powerbi_style_kpi(title, value, change=None, change_type="neutral", icon="📊"):
+    """Render Power BI style KPI card without change indicators"""
+    # Format value only if it's a number
+    if isinstance(value, (int, float)):
+        formatted_value = f"{value:,}"
+    else:
+        formatted_value = str(value)
+    
+    return f"""
+    <div class="metric-tile fade-in">
+        <div class="label">{title}</div>
+        <div class="value">{formatted_value}</div>
     </div>
     """
 
@@ -636,7 +701,18 @@ def render_professional_upload():
                     # Try to adapt the CSV format
                     try:
                         if file.name.endswith('.csv'):
-                            df = adapt_csv_data(temp_path)
+                            # For large files, read in chunks
+                            file_size = os.path.getsize(temp_path)
+                            if file_size > 50 * 1024 * 1024:  # 50MB
+                                st.info(f"🔄 Processing large file {file.name} in chunks...")
+                                # Read in chunks for large files
+                                chunk_list = []
+                                for chunk in pd.read_csv(temp_path, chunksize=1000):
+                                    chunk_adapted = adapt_csv_data_chunk(chunk)
+                                    chunk_list.append(chunk_adapted)
+                                df = pd.concat(chunk_list, ignore_index=True)
+                            else:
+                                df = adapt_csv_data(temp_path)
                             st.success(f"✅ Successfully loaded and converted {file.name} ({len(df)} posts)")
                         else:
                             df = pd.read_excel(temp_path)
@@ -883,7 +959,7 @@ def render_professional_dashboard(data):
     
     engagement_rate = safe_float((current_engagement / current_impressions * 100) if current_impressions > 0 else 0)
     
-    # Enhanced KPI Cards with Professional Styling
+    # Power BI Style KPI Cards
     st.markdown("### 📊 Key Performance Indicators")
     cols = st.columns(4)
     kpi_data = [
@@ -895,7 +971,7 @@ def render_professional_dashboard(data):
     
     for col, (title, value, change, change_type) in zip(cols, kpi_data):
         with col:
-            st.markdown(render_professional_kpi(title, value, change, change_type), unsafe_allow_html=True)
+            st.markdown(render_powerbi_style_kpi(title, value, change, change_type), unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
@@ -907,7 +983,9 @@ def render_professional_dashboard(data):
         st.markdown('<div class="pro-chart-title">📈 Real-time Follower Growth</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'follower_count' in data.columns:
-            daily_followers = data.groupby(pd.Grouper(key='timestamp', freq='D'))['follower_count'].last()
+            # For large datasets, sample data for performance
+            sampled_data = data if len(data) <= 1000 else data.sample(n=1000, random_state=42)
+            daily_followers = sampled_data.groupby(pd.Grouper(key='timestamp', freq='D'))['follower_count'].last()
             
             fig = go.Figure()
             fig.add_trace(go.Scatter(
@@ -964,8 +1042,10 @@ def render_professional_dashboard(data):
         st.markdown('<div class="pro-chart-title">🔥 Top Performing Posts This Week</div>', unsafe_allow_html=True)
         
         if 'likes' in current_period.columns and 'comments' in current_period.columns:
-            current_period['total_engagement'] = current_period['likes'] + current_period['comments'] + current_period['shares']
-            top_posts = current_period.nlargest(5, 'total_engagement')
+            # For large datasets, sample data for performance
+            sampled_period = current_period if len(current_period) <= 500 else current_period.sample(n=500, random_state=42)
+            sampled_period['total_engagement'] = sampled_period['likes'] + sampled_period['comments'] + sampled_period['shares']
+            top_posts = sampled_period.nlargest(5, 'total_engagement')
             
             # Enhanced post display with more details
             for idx, (i, post) in enumerate(top_posts.iterrows()):
@@ -1016,14 +1096,18 @@ def render_professional_dashboard(data):
         avg_post_frequency = 0
         
         if 'media_type' in data.columns and 'likes' in data.columns:
-            type_performance = current_period.groupby('media_type')['likes'].mean()
+            # For large datasets, sample data for performance
+            sampled_data = current_period if len(current_period) <= 500 else current_period.sample(n=500, random_state=42)
+            type_performance = sampled_data.groupby('media_type')['likes'].mean()
             if len(type_performance) > 0:
                 best_type = type_performance.idxmax()
         
         if 'timestamp' in current_period.columns and 'likes' in current_period.columns:
-            current_period_copy = current_period.copy()
-            current_period_copy['day_of_week'] = pd.to_datetime(current_period_copy['timestamp']).dt.day_name()
-            day_performance = current_period_copy.groupby('day_of_week')['likes'].mean()
+            # For large datasets, sample data for performance
+            sampled_data = current_period if len(current_period) <= 500 else current_period.sample(n=500, random_state=42)
+            sampled_data_copy = sampled_data.copy()
+            sampled_data_copy['day_of_week'] = pd.to_datetime(sampled_data_copy['timestamp']).dt.day_name()
+            day_performance = sampled_data_copy.groupby('day_of_week')['likes'].mean()
             if len(day_performance) > 0:
                 best_day = day_performance.idxmax()
             
@@ -1240,6 +1324,165 @@ def render_professional_dashboard(data):
     # Default recommendation if no specific insights
     if not insights:
         st.markdown('<div class="pro-insight-item">✅ Performance metrics are stable. Continue current strategy while monitoring trends.</div>', unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Additional Charts Section
+    st.markdown("### 📊 Additional Analytics Charts")
+    
+    # Row 5: Hashtag Performance & Content Type Analysis
+    col7, col8 = st.columns([1, 1])
+    
+    with col7:
+        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">🏷️ Top Hashtags Performance</div>', unsafe_allow_html=True)
+        
+        # Hashtag analysis
+        if 'hashtags' in data.columns:
+            # Extract and count hashtags
+            all_hashtags = []
+            for hashtags in data['hashtags'].dropna():
+                if isinstance(hashtags, str):
+                    # Split hashtags by space or comma
+                    tags = [tag.strip('# ') for tag in hashtags.replace(',', ' ').split() if tag.strip()]
+                    all_hashtags.extend(tags)
+            
+            if all_hashtags:
+                hashtag_counts = pd.Series(all_hashtags).value_counts().head(10)
+                
+                fig_hashtags = go.Figure(data=[go.Bar(
+                    x=hashtag_counts.values,
+                    y=hashtag_counts.index,
+                    orientation='h',
+                    marker_color='#667eea',
+                    text=hashtag_counts.values,
+                    textposition='auto'
+                )])
+                
+                fig_hashtags.update_layout(
+                    template='plotly_white',
+                    height=400,
+                    margin=dict(l=0, r=0, t=10, b=0),
+                    xaxis_title="Usage Count",
+                    yaxis_title="Hashtag"
+                )
+                
+                st.plotly_chart(fig_hashtags, use_container_width=True)
+            else:
+                st.info("No hashtag data available for analysis.")
+        else:
+            st.info("Hashtag column not found in the dataset.")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with col8:
+        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">🎬 Content Type Performance</div>', unsafe_allow_html=True)
+        
+        # Content type analysis
+        if 'media_type' in data.columns and 'likes' in data.columns:
+            content_performance = data.groupby('media_type').agg({
+                'likes': 'mean',
+                'comments': 'mean',
+                'shares': 'mean'
+            }).round(1)
+            
+            # Melt for better visualization
+            content_melted = content_performance.reset_index().melt(
+                id_vars='media_type',
+                var_name='Metric',
+                value_name='Average'
+            )
+            
+            fig_content = px.bar(
+                content_melted,
+                x='media_type',
+                y='Average',
+                color='Metric',
+                barmode='group',
+                color_discrete_sequence=['#667eea', '#f093fb', '#10b981']
+            )
+            
+            fig_content.update_layout(
+                template='plotly_white',
+                height=400,
+                margin=dict(l=0, r=0, t=10, b=0),
+                xaxis_title="Content Type",
+                yaxis_title="Average Engagement"
+            )
+            
+            st.plotly_chart(fig_content, use_container_width=True)
+            
+            # Show content type stats
+            st.markdown("#### Content Type Statistics")
+            st.dataframe(content_performance.style.format("{:.1f}"), use_container_width=True)
+        else:
+            st.info("Required columns (media_type, likes) not found in the dataset.")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Row 6: Time-Based Engagement Patterns
+    st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-chart-title">⏰ Time-Based Engagement Patterns</div>', unsafe_allow_html=True)
+    
+    if 'timestamp' in data.columns and 'likes' in data.columns:
+        # Extract time components
+        data_time = data.copy()
+        data_time['hour'] = pd.to_datetime(data_time['timestamp']).dt.hour
+        data_time['day_of_week'] = pd.to_datetime(data_time['timestamp']).dt.day_name()
+        
+        # Hourly engagement pattern
+        hourly_engagement = data_time.groupby('hour').agg({
+            'likes': 'mean',
+            'comments': 'mean',
+            'shares': 'mean'
+        }).round(1)
+        
+        fig_hourly = go.Figure()
+        
+        fig_hourly.add_trace(go.Scatter(
+            x=hourly_engagement.index,
+            y=hourly_engagement['likes'],
+            mode='lines+markers',
+            name='Avg Likes',
+            line=dict(color='#667eea', width=3),
+            marker=dict(size=8)
+        ))
+        
+        fig_hourly.add_trace(go.Scatter(
+            x=hourly_engagement.index,
+            y=hourly_engagement['comments'],
+            mode='lines+markers',
+            name='Avg Comments',
+            line=dict(color='#f093fb', width=3),
+            marker=dict(size=8)
+        ))
+        
+        fig_hourly.add_trace(go.Scatter(
+            x=hourly_engagement.index,
+            y=hourly_engagement['shares'],
+            mode='lines+markers',
+            name='Avg Shares',
+            line=dict(color='#10b981', width=3),
+            marker=dict(size=8)
+        ))
+        
+        fig_hourly.update_layout(
+            template='plotly_white',
+            height=400,
+            margin=dict(l=0, r=0, t=10, b=0),
+            xaxis=dict(title="Hour of Day", tickmode='linear', dtick=1),
+            yaxis=dict(title="Average Engagement"),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02)
+        )
+        
+        st.plotly_chart(fig_hourly, use_container_width=True)
+        
+        # Best posting times insight
+        best_hour = hourly_engagement['likes'].idxmax()
+        st.success(f"🏆 Peak engagement hour: {best_hour}:00 - {best_hour+1}:00")
+    else:
+        st.info("Required columns (timestamp, likes) not found in the dataset.")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2029,25 +2272,33 @@ def main():
             # Initialize DB
             database_manager.init_db()
             
-            # Check if we have data, if not load from data directory
+            # 1. First attempt to load existing data
             current_data = get_cached_data()
+            
+            # 2. If empty, try auto-loading from data directory
             if current_data.empty:
-                # specific data directory path
                 data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
                 if os.path.exists(data_dir):
-                    st.info(f"📂 Found data directory at {data_dir}. Auto-loading datasets...")
-                    database_manager.parse_csv_files_in_data_dir(data_dir, adapt_csv_data)
-                    st.cache_data.clear() # Clear cache to load new data
-                    current_data = get_cached_data()
+                    # Only show toast to avoid cluttering UI permanently
+                    st.toast(f"📂 Found data folder. Auto-processing...", icon="🔄")
+                    try:
+                        database_manager.parse_csv_files_in_data_dir(data_dir, adapt_csv_data)
+                        st.cache_data.clear()  # Clear cache to ensure we get the new data
+                        current_data = get_cached_data() # Reload
+                    except Exception as e:
+                        st.error(f"Error auto-loading data: {e}")
             
-            # Set session state data
+            # 3. Final Check & Assignment
             if not current_data.empty:
                 # Ensure timestamps are correct
                 if 'timestamp' in current_data.columns:
-                    current_data['timestamp'] = pd.to_datetime(current_data['timestamp'])
+                    current_data['timestamp'] = pd.to_datetime(current_data['timestamp'], errors='coerce')
+                
                 st.session_state.data = current_data
-                st.success(f"✅ Automatically connected and loaded {len(current_data)} records from database")
-            
+                st.toast(f"✅ Data Loaded: {len(current_data)} records", icon="📊")
+            else:
+                st.session_state.data = None
+                
             st.session_state.db_initialized = True
             
     if 'data' not in st.session_state:
@@ -2058,7 +2309,7 @@ def main():
         st.markdown('<div class="sidebar-logo">', unsafe_allow_html=True)
         try:
             # Try multiple paths for logo to ensure it works in different environments
-            logo_paths = "logo small black.png"
+            logo_paths = ["logo small black.png"]
             
             logo_loaded = False
             for logo_path in logo_paths:
@@ -2090,7 +2341,8 @@ def main():
             "🔮 Predictive Analytics",
             "💬 Sentiment Analysis",
             "📋 Reports",
-            "🤖 Advanced ML"
+            "🤖 Advanced ML",
+            "🔥 AI Recommendations"
         ]
         
         # Enhanced page mapping
@@ -2104,7 +2356,8 @@ def main():
             "🔮 Predictive Analytics": "Predictive Analytics",
             "💬 Sentiment Analysis": "Sentiment Analysis",
             "📋 Reports": "Reports",
-            "🤖 Advanced ML": "🤖 Advanced ML"
+            "🤖 Advanced ML": "🤖 Advanced ML",
+            "🔥 AI Recommendations": "AI Recommendations"
         }
         
         # Find current selection index
@@ -2272,9 +2525,33 @@ def main():
                 st.session_state.current_page = "Upload Data"
                 st.rerun()
     
+    elif st.session_state.current_page == "AI Recommendations":
+        if st.session_state.data is not None:
+            # Import and render AI recommendation components
+            from advanced_techniques import render_ai_next_move, render_trending_content_suggestions, render_optimal_posting_times
+            
+            st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
+            st.markdown('<div class="pro-header-title">🔥 AI-Powered Recommendations</div>', unsafe_allow_html=True)
+            st.markdown('<div class="pro-header-subtitle">Intelligent insights for maximizing your social media impact</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Render all AI recommendation components
+            render_optimal_posting_times(st.session_state.data)
+            render_trending_content_suggestions(st.session_state.data)
+            render_ai_next_move(st.session_state.data)
+        else:
+            st.info("⚠️ Please upload data first.")
+            if st.button("📤 Upload Data Now"):
+                st.session_state.current_page = "Upload Data"
+                st.rerun()
+    
     # Show AI Next Move on Dashboard page too
     if st.session_state.current_page == "Dashboard" and st.session_state.data is not None:
-        render_ai_next_move(st.session_state.data)
+        try:
+            from advanced_techniques import render_ai_next_move
+            render_ai_next_move(st.session_state.data)
+        except ImportError:
+            st.info("AI recommendations not available.")
     
     # Professional Footer
     st.markdown("""

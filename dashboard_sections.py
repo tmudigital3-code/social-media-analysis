@@ -21,6 +21,10 @@ def render_content_performance(data):
     st.markdown('<div class="pro-header-subtitle">Analyze what kind of content performs best</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
     
+    # Add AI recommendations for content performance
+    from advanced_techniques import render_trending_content_suggestions
+    render_trending_content_suggestions(data)
+    
     # Row 1: Media Type Performance & Top Posts
     col1, col2 = st.columns(2)
     
@@ -28,6 +32,7 @@ def render_content_performance(data):
         st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🎭 Media Type Performance</div>', unsafe_allow_html=True)
         
+
         if 'media_type' in data.columns and 'likes' in data.columns:
             media_performance = data.groupby('media_type').agg({
                 'likes': 'mean',
@@ -57,6 +62,8 @@ def render_content_performance(data):
             best_type = media_performance['likes'].idxmax()
             best_likes = media_performance['likes'].max()
             st.markdown(f"💡 **{best_type}** performs best with {best_likes:.0f} avg likes")
+        else:
+            st.info("⚠️ Data missing for Media Type analysis. Required columns: 'media_type', 'likes'")
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -73,6 +80,8 @@ def render_content_performance(data):
             top_posts['caption'] = top_posts['caption'].astype(str).str[:50] + '...'
             
             st.dataframe(top_posts, use_container_width=True, hide_index=True)
+        else:
+            st.info("⚠️ Data missing for Top Posts. Required: 'likes', 'comments', 'shares'")
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -174,6 +183,97 @@ def render_content_performance(data):
                     st.plotly_chart(fig, use_container_width=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Additional Content Performance Charts
+    
+    # Row 3: Content Length Analysis & Emoji Usage
+    col5, col6 = st.columns(2)
+    
+    with col5:
+        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">📝 Content Length Impact</div>', unsafe_allow_html=True)
+        
+        if 'caption' in data.columns and 'likes' in data.columns:
+            # Calculate caption length and group for analysis
+            data_caption = data.copy()
+            data_caption['caption_length'] = data_caption['caption'].astype(str).str.len()
+            
+            # Create length groups
+            bins = [0, 50, 100, 150, 200, 500]
+            labels = ['0-50', '51-100', '101-150', '151-200', '200+']
+            data_caption['length_group'] = pd.cut(data_caption['caption_length'], bins=bins, labels=labels, right=False)
+            
+            length_performance = data_caption.groupby('length_group').agg({
+                'likes': 'mean',
+                'comments': 'mean' if 'comments' in data.columns else 'count',
+                'shares': 'mean' if 'shares' in data.columns else 'count'
+            }).round(1)
+            
+            fig_length = go.Figure()
+            fig_length.add_trace(go.Bar(name='Avg Likes', x=length_performance.index, y=length_performance['likes'],
+                                       marker_color='#667eea'))
+            if 'comments' in data.columns:
+                fig_length.add_trace(go.Bar(name='Avg Comments', x=length_performance.index, y=length_performance['comments'],
+                                           marker_color='#f093fb'))
+            if 'shares' in data.columns:
+                fig_length.add_trace(go.Bar(name='Avg Shares', x=length_performance.index, y=length_performance['shares'],
+                                           marker_color='#10b981'))
+            
+            fig_length.update_layout(
+                template='plotly_white',
+                height=300,
+                margin=dict(l=0, r=0, t=10, b=0),
+                barmode='group',
+                xaxis_title='Caption Length (characters)',
+                yaxis_title='Average Engagement'
+            )
+            st.plotly_chart(fig_length, use_container_width=True)
+            
+            # Best length insight
+            best_length = length_performance['likes'].idxmax()
+            best_likes = length_performance['likes'].max()
+            st.markdown(f"💡 Optimal caption length: **{best_length}** chars ({best_likes:.1f} avg likes)")
+        else:
+            st.info("⚠️ Data missing for Content Length analysis. Required: 'caption', 'likes'")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with col6:
+        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">📊 Posting Frequency Analysis</div>', unsafe_allow_html=True)
+        
+        if 'timestamp' in data.columns:
+            # Daily posting frequency
+            daily_posts = data.groupby(pd.Grouper(key='timestamp', freq='D')).size()
+            
+            fig_freq = go.Figure()
+            fig_freq.add_trace(go.Scatter(
+                x=daily_posts.index,
+                y=daily_posts.values,
+                mode='lines+markers',
+                name='Posts per Day',
+                line=dict(color='#667eea', width=3),
+                marker=dict(size=6)
+            ))
+            
+            fig_freq.update_layout(
+                template='plotly_white',
+                height=300,
+                margin=dict(l=0, r=0, t=10, b=0),
+                xaxis_title='Date',
+                yaxis_title='Number of Posts'
+            )
+            st.plotly_chart(fig_freq, use_container_width=True)
+            
+            # Frequency insights
+            avg_frequency = daily_posts.mean()
+            max_frequency = daily_posts.max()
+            st.markdown(f"📊 Average: **{avg_frequency:.1f}** posts/day")
+            st.markdown(f"📈 Peak: **{max_frequency}** posts/day")
+        else:
+            st.info("⚠️ Data missing for Frequency analysis. Required: 'timestamp'")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ==================== 2. Audience Insights ====================
@@ -183,6 +283,10 @@ def render_audience_insights(data):
     st.markdown('<div class="pro-header-title">👥 Audience Insights</div>', unsafe_allow_html=True)
     st.markdown('<div class="pro-header-subtitle">Understand followers and their activity patterns</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Add AI recommendations for optimal posting times
+    from advanced_techniques import render_optimal_posting_times
+    render_optimal_posting_times(data)
     
     col1, col2 = st.columns(2)
     
@@ -245,6 +349,94 @@ def render_audience_insights(data):
             st.markdown('<div class="pro-insights">', unsafe_allow_html=True)
             st.markdown(f'💡 <strong>Most followers active at {hour_12}:00 {am_pm}</strong>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    # Additional Audience Insights Charts
+    
+    # Row 3: Follower Growth & Engagement Rate Over Time
+    col5, col6 = st.columns(2)
+    
+    with col5:
+        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">📈 Follower Growth Over Time</div>', unsafe_allow_html=True)
+        
+        if 'timestamp' in data.columns and 'follower_count' in data.columns:
+            # Resample to weekly data for smoother visualization
+            follower_growth = data.set_index('timestamp').resample('W')['follower_count'].last().dropna()
+            
+            fig_follower = go.Figure()
+            fig_follower.add_trace(go.Scatter(
+                x=follower_growth.index,
+                y=follower_growth.values,
+                mode='lines+markers',
+                name='Followers',
+                line=dict(color='#667eea', width=3),
+                marker=dict(size=6)
+            ))
+            
+            fig_follower.update_layout(
+                template='plotly_white',
+                height=300,
+                margin=dict(l=0, r=0, t=10, b=0),
+                xaxis_title='Date',
+                yaxis_title='Follower Count'
+            )
+            st.plotly_chart(fig_follower, use_container_width=True)
+            
+            # Growth insights
+            if len(follower_growth) > 1:
+                growth_rate = ((follower_growth.iloc[-1] - follower_growth.iloc[0]) / follower_growth.iloc[0] * 100)
+                st.markdown(f"📊 Total growth: **{growth_rate:+.1f}%**")
+        else:
+            st.info("⚠️ Data missing for Follower Growth. Required: 'timestamp', 'follower_count'")
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    with col6:
+        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">⚡ Engagement Rate by Day</div>', unsafe_allow_html=True)
+        
+        if all(col in data.columns for col in ['timestamp', 'likes', 'impressions']) and len(data) > 0:
+            # Calculate daily engagement rate
+            data_er = data.copy()
+            data_er['date'] = pd.to_datetime(data_er['timestamp']).dt.date
+            daily_metrics = data_er.groupby('date').agg({
+                'likes': 'sum',
+                'impressions': 'sum'
+            }).reset_index()
+            
+            # Calculate engagement rate (avoid division by zero)
+            daily_metrics['engagement_rate'] = np.where(
+                daily_metrics['impressions'] > 0,
+                (daily_metrics['likes'] / daily_metrics['impressions']) * 100,
+                0
+            )
+            
+            fig_er = go.Figure()
+            fig_er.add_trace(go.Scatter(
+                x=daily_metrics['date'],
+                y=daily_metrics['engagement_rate'],
+                mode='lines+markers',
+                name='Engagement Rate',
+                line=dict(color='#10b981', width=3),
+                marker=dict(size=6)
+            ))
+            
+            fig_er.update_layout(
+                template='plotly_white',
+                height=300,
+                margin=dict(l=0, r=0, t=10, b=0),
+                xaxis_title='Date',
+                yaxis_title='Engagement Rate (%)'
+            )
+            st.plotly_chart(fig_er, use_container_width=True)
+            
+            # Average engagement rate
+            avg_er = daily_metrics['engagement_rate'].mean()
+            st.markdown(f"📊 Avg engagement rate: **{avg_er:.2f}%**")
+        else:
+            st.info("⚠️ Data missing for Engagement Rate. Required: 'timestamp', 'likes', 'impressions'")
         
         st.markdown('</div>', unsafe_allow_html=True)
     
