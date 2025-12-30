@@ -16,19 +16,27 @@ def fetch_google_trends(geo='US'):
     Fetch trending topics from Google Trends RSS Feed.
     Returns a list of trend dictionaries.
     """
-    url = f"https://trends.google.com/trends/trendingsearches/daily/rss?geo={geo}"
-    try:
-        response = requests.get(url, timeout=5)
-        if response.status_code == 200:
-            root = ET.fromstring(response.content)
-            trends = []
-            for item in root.findall('.//item'):
-                title = item.find('title').text
-                description = item.find('description').text if item.find('description') is not None else ""
-                trends.append({'topic': title, 'traffic': 'High', 'context': description, 'source': 'Google Trends'})
-            return trends[:10]
-    except Exception:
-        return []
+    feeds = [
+        f"https://trends.google.com/trends/trendingsearches/daily/rss?geo={geo}",
+        "https://feeds.bbci.co.uk/news/world/rss.xml",
+        "https://www.reutersagency.com/feed/?best-topics=digital-media-environment"
+    ]
+    
+    for url in feeds:
+        try:
+            response = requests.get(url, timeout=5)
+            if response.status_code == 200:
+                root = ET.fromstring(response.content)
+                trends = []
+                for item in root.findall('.//item'):
+                    title = item.find('title').text
+                    desc = item.find('description').text if item.find('description') is not None else ""
+                    trends.append({'topic': title, 'traffic': 'High', 'context': desc, 'source': 'Global News' if 'google' not in url else 'Google Trends'})
+                if trends:
+                    return trends[:10]
+        except Exception:
+            continue
+            
     return []
 def fetch_platform_trends(platform='Instagram', niche='All'):
     """
