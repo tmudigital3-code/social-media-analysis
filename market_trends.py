@@ -394,6 +394,10 @@ def render_market_trends_page():
             st.markdown("""
             **How to build a loyal audience:**
             - **Reply-to-Video:** When a student asks a question in comments, answer it with a *Video Reply*. This builds extreme trust.
+            - **The Poll-to-Post Pipeline:** Run a poll in Stories, then make a main-feed post based on the winning result.
+            - **Consistent Aesthetics:** Use a signature filter or font so users recognize your content instantly in their feed.
+            """)
+            
         with tab3:
             st.markdown("### 📽️ Viral Scripting Blueprint")
             st.code("""
