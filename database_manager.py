@@ -4,7 +4,9 @@ import os
 import json
 from datetime import datetime
 
-DB_FILE = 'social_media_analytics.db'
+# Use absolute path for database file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_FILE = os.path.join(BASE_DIR, 'social_media_analytics.db')
 
 def get_db_connection():
     """Create a database connection"""

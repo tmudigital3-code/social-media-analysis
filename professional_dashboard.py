@@ -2359,7 +2359,7 @@ def main():
         st.session_state.current_page = "Dashboard"
         
     # Database Initialization and Auto-loading
-    if 'db_initialized' not in st.session_state:
+    if 'db_initialized' not in st.session_state or st.session_state.get('data') is None:
         with st.spinner("🔄 Initializing system and connecting to database..."):
             # Initialize DB
             database_manager.init_db()
