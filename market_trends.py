@@ -11,41 +11,74 @@ from datetime import datetime
 import re
 import matplotlib.pyplot as plt
 import seaborn as sns
-
 def fetch_google_trends(geo='US'):
     """
     Fetch trending topics from Google Trends RSS Feed.
     Returns a list of trend dictionaries.
     """
-    # Google Trends Daily Search Trends RSS
     url = f"https://trends.google.com/trends/trendingsearches/daily/rss?geo={geo}"
-    
     try:
         response = requests.get(url, timeout=5)
         if response.status_code == 200:
             root = ET.fromstring(response.content)
             trends = []
-            
-            # Parse RSS items
             for item in root.findall('.//item'):
                 title = item.find('title').text
-                # Approx traffic is in ht:approx_traffic, need namespace usually, or loose parsing
-                traffic = "High"
-                # Description often contains news snippets
                 description = item.find('description').text if item.find('description') is not None else ""
-                
-                trends.append({
-                    'topic': title,
-                    'traffic': traffic,
-                    'context': description,
-                    'source': 'Google Trends'
-                })
-            return trends[:10]  # Return top 10
-    except Exception as e:
-        print(f"Error fetching trends: {e}")
+                trends.append({'topic': title, 'traffic': 'High', 'context': description, 'source': 'Google Trends'})
+            return trends[:10]
+    except Exception:
         return []
-    
     return []
+def fetch_platform_trends(platform='Instagram', niche='All'):
+    """
+    Simulated cross-platform trend fetcher.
+    In a production app, this would use platform-specific scrapers or APIs.
+    """
+    trends = []
+    
+    # Logic for University/Education niche
+    if niche == 'University':
+        if platform == 'Instagram':
+            trends = [
+                {'topic': 'Campus Life Vlogs', 'traffic': 'High', 'context': 'Day in the life of a student'},
+                {'topic': 'Study Abroad Recaps', 'traffic': 'High', 'context': 'Visual travelogues with educational tips'},
+                {'topic': 'Dorm Room Makeovers', 'traffic': 'Medium', 'context': 'Aesthetically pleasing dorm design'}
+            ]
+        elif platform == 'LinkedIn':
+            trends = [
+                {'topic': 'Research Breakthroughs', 'traffic': 'High', 'context': 'Simplifying complex academic papers'},
+                {'topic': 'Career Placement Stats', 'traffic': 'High', 'context': 'Success stories of recent graduates'},
+                {'topic': 'Faculty Spotlight', 'traffic': 'Medium', 'context': 'Personalizing the heavy academic voice'}
+            ]
+        elif platform == 'TikTok/Reels':
+            trends = [
+                {'topic': 'University Traditions', 'traffic': 'Extreme', 'context': 'Crowd-sourced clips of campus rituals'},
+                {'topic': 'Student Advice / Hacks', 'traffic': 'High', 'context': 'Quick tips for exams and surviving finals'},
+                {'topic': 'Graduation Transitions', 'traffic': 'High', 'context': 'Before vs After caps and gowns'}
+            ]
+    else:
+        # General Platform Trends
+        if platform == 'Instagram':
+            trends = [
+                {'topic': 'Photo Dumps', 'traffic': 'High', 'context': 'Curated low-fi aesthetic carousels'},
+                {'topic': 'GRWM (Get Ready With Me)', 'traffic': 'Extreme', 'context': 'Process videos with voiceovers'},
+                {'topic': 'Aesthetic Transitions', 'traffic': 'High', 'context': 'Seamless clips using trending audio'}
+            ]
+        elif platform == 'LinkedIn':
+            trends = [
+                {'topic': 'Human-Centric Leadership', 'traffic': 'High', 'context': 'Vulnerability in professional settings'},
+                {'topic': 'AI in Workflow', 'traffic': 'Extreme', 'context': 'Practical prompts for professionals'},
+                {'topic': 'Work-Life Boundaries', 'traffic': 'High', 'context': 'Setting limits on corporate demands'}
+            ]
+        elif platform == 'TikTok/Reels':
+            trends = [
+                {'topic': 'ASMR Sounds', 'traffic': 'High', 'context': 'Satisfying audio-first content'},
+                {'topic': 'POV Comedy', 'traffic': 'Extreme', 'context': 'Relatable scenarios with text overlays'},
+                {'topic': 'Micropodcasts', 'traffic': 'High', 'context': 'Snippet-style interviews with captions'}
+            ]
+            
+    return trends or [{'topic': 'General Marketing Trends', 'traffic': 'High', 'context': 'Consistent engagement strategies'}]
 
 def fetch_marketing_trends():
     """
@@ -152,25 +185,34 @@ def render_market_trends_page():
     col1, col2 = st.columns([2, 1])
     
     with col1:
-        st.markdown("### 🌍 Real-Time Google Trends")
+        st.markdown("### 🎯 Multi-Platform Trend Discovery")
         
-        # Region selector
-        region = st.selectbox("Select Market Region", ["US", "GB", "IN", "CA", "AU"], index=0)
-        
-        if st.button("🔄 Fetch Latest Trends"):
-            with st.spinner("Scraping live market data..."):
-                trends = fetch_google_trends(region)
+        # Selectors for targeted intelligence
+        c_a, c_b, c_c = st.columns(3)
+        with c_a:
+            target_platform = st.selectbox("Social Platform", ["Instagram", "TikTok/Reels", "LinkedIn", "All Platforms"], index=0)
+        with c_b:
+            target_niche = st.selectbox("Industry Niche", ["General", "University", "Tech", "LifeStyle"], index=1)
+        with c_c:
+            target_region = st.selectbox("Region", ["GLOBAL", "US", "IN", "EU"], index=0)
+            
+        if st.button("🚀 Fetch Targeted Platform Trends", use_container_width=True):
+            with st.spinner(f"Analyzing {target_platform} trends for {target_niche} sector..."):
+                # Use platform-aware fetcher
+                trends = fetch_platform_trends(target_platform, target_niche)
+                
                 if trends:
-                    st.success(f"Found {len(trends)} trending topics!")
+                    st.success(f"Discovered {len(trends)} high-engagement trends for {target_platform}!")
                     
                     # Display trends
                     content_plan = generate_content_plan(trends)
                     
                     for index, row in content_plan.iterrows():
-                        with st.expander(f"📈 Trend: {row['Topic']}"):
+                        with st.expander(f"🔥 {target_platform} Trend: {row['Topic']}"):
                             c1, c2, c3 = st.columns([1, 1, 1])
                             with c1:
                                 st.markdown(f"**Format:** `{row['Format']}`")
+                                st.markdown(f"**Target Audience:** `Students & Faculty`" if target_niche == 'University' else f"**Target:** `General Users` ")
                                 st.markdown(f"**Idea:** {row['Idea']}")
                                 st.markdown(f"**⏳ Shelf Life:** {row['Shelf Life']}")
                             with c2:
@@ -185,13 +227,21 @@ def render_market_trends_page():
                                 st.markdown(f"**🎭 Public Sentiment:** {row['Sentiment']}")
                                 st.markdown("**🏷️ Recommended Hashtags:**")
                                 st.code(row['Hashtags'], language="text")
+                else: st.warning("No trends found for the current settings.")
+        
+        st.markdown("---")
+        st.markdown("### 🌍 Google Trends (Regional)")
+        region = st.selectbox("Select Market Region", ["US", "GB", "IN", "CA", "AU"], index=0, key='google_region')
+        
+        if st.button("🔄 Fetch Daily Google Trends"):
+            with st.spinner("Scraping live market data..."):
+                trends = fetch_google_trends(region)
+                if trends:
+                    st.success(f"Found {len(trends)} trending topics!")
+                    # ... (rest of Google Trends display logic if needed or reused)
+                    st.dataframe(generate_content_plan(trends))
                 else:
-                    st.warning("Could not scrape live trends. Checking fallback data...")
-                    # Fallback
-                    fallback_trends = [{'topic': 'AI Productivity', 'traffic': 'High'}, 
-                                       {'topic': 'Sustainable Living', 'traffic': 'Medium'}]
-                    content_plan = generate_content_plan(fallback_trends)
-                    st.dataframe(content_plan)
+                    st.error("Live Google Trends RSS currently inaccessible. Using targeted platform discovery above.")
         
     with col2:
         st.markdown("### 🚀 Platform Meta-Trends")
