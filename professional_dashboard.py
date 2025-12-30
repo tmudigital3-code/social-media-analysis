@@ -2350,10 +2350,10 @@ def main():
             "👥 Audience Insights",
             "⏰ Time Trends",
             "🔮 Predictive Analytics",
+            "🔥 Market Trends",
             "💬 Sentiment Analysis",
             "📋 Reports",
-            "🤖 Advanced ML",
-            "🔥 AI Recommendations"
+            "🤖 Advanced ML"
         ]
         
         # Enhanced page mapping
@@ -2365,10 +2365,10 @@ def main():
             "👥 Audience Insights": "Audience Insights",
             "⏰ Time Trends": "Time Trends",
             "🔮 Predictive Analytics": "Predictive Analytics",
+            "🔥 Market Trends": "Market Trends",
             "💬 Sentiment Analysis": "Sentiment Analysis",
             "📋 Reports": "Reports",
-            "🤖 Advanced ML": "🤖 Advanced ML",
-            "🔥 AI Recommendations": "AI Recommendations"
+            "🤖 Advanced ML": "🤖 Advanced ML"
         }
         
         # Find current selection index
@@ -2498,6 +2498,22 @@ def main():
                 render_ai_next_move(st.session_state.data)
             except Exception as e:
                 st.warning("AI recommendations not available.")
+    
+    elif st.session_state.current_page == "Market Trends":
+        # Render the trending content page
+        try:
+            import market_trends
+            market_trends.render_market_trends_page()
+            
+            # If dashboard extensions are available, show a radar chart or similar
+            if EXTENSIONS_AVAILABLE and st.session_state.data is not None:
+                st.markdown("---")
+                st.markdown("### 📊 Your Performance vs Trends")
+                dashboard_extensions.render_metric_radar(st.session_state.data)
+        except ImportError:
+            st.error("Market Trends module not found.")
+        except Exception as e:
+            st.error(f"Error loading trends: {e}")
                 # st.error(f"Debug: Error in AI recommendations: {str(e)}")  # Uncomment for debugging
         else:
             st.info("⚠️ Please upload data first.")
