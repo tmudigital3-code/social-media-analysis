@@ -11,7 +11,8 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Import functions from ml_advanced
-from ml_advanced import render_deep_learning_forecast, render_sentiment_analysis, render_audience_clustering
+# Avoid circular imports by not importing render functions at top level
+# from ml_advanced import render_deep_learning_forecast, render_sentiment_analysis, render_audience_clustering
 
 
 def render_visual_analysis(data):
@@ -189,12 +190,15 @@ def render_ml_dashboard(data):
     ])
     
     with ml_tabs[0]:
+        from ml_advanced import render_deep_learning_forecast
         render_deep_learning_forecast(data)
     
     with ml_tabs[1]:
+        from ml_advanced import render_sentiment_analysis
         render_sentiment_analysis(data)
     
     with ml_tabs[2]:
+        from ml_advanced import render_audience_clustering
         render_audience_clustering(data)
     
     with ml_tabs[3]:
