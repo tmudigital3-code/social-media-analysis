@@ -264,6 +264,39 @@ def render_market_trends_page():
                                 st.code(row['Hashtags'], language="text")
                 else: st.warning("No trends found for the current settings.")
         
+        # --- NEW: Actionable Engagement Strategy Section ---
+        st.markdown("---")
+        st.markdown("### 🏆 Engagement Growth Masterclass")
+        st.info("Tactical blueprints to turn trends into followers and community growth.")
+        
+        tab1, tab2, tab3 = st.tabs(["🚀 Growth Hacks", "🤝 Community Building", "📽️ Viral Scripting"])
+        
+        with tab1:
+            st.markdown("""
+            **High-Impact Tactics for 2025:**
+            - **The 'Value-Loop' Carousel:** Don't just share news; end every post with a 'Save for Later' prompt. Saved posts are the #1 signal for algorithm reach.
+            - **Trend Hijacking:** Use the 'Trending Audio' found in Reels/TikTok within the first 48 hours of it going viral.
+            - **Niche SEO:** Use keywords like *'Best Universities in [Region]'* or *'[Topic] for Students'* in the first 2 lines of your caption.
+            """)
+            if target_niche == 'University':
+                st.success("🎓 **University Growth Hack:** Tag your location as the 'Campus Library' or 'Student Union'. These geotags have 3x higher local discovery.")
+        
+        with tab2:
+            st.markdown("""
+            **How to build a loyal audience:**
+            - **Reply-to-Video:** When a student asks a question in comments, answer it with a *Video Reply*. This builds extreme trust.
+            - **The Poll-to-Post Pipeline:** Run a poll in Stories, then make a main-feed post based on the winning result.
+            - **Consistent Aesthetics:** Use a signature filter or font so users recognize your content instantly in their feed.
+            """)
+            
+        with tab3:
+            st.markdown("**Viral Scripting Blueprint (The 3-Part Hook):**")
+            st.code("""
+1. THE HOOK (0-3s): "Everyone's talking about [Trend], but they're missing this..."
+2. THE MEAT (3-20s): Show 3 quick, value-packed points.
+3. THE PAYOFF (20s+): "If you want the full guide, comment 'UNIVERSITY' below."
+            """, language="markdown")
+
         st.markdown("---")
         st.markdown("### 🌍 Google Trends (Regional)")
         region = st.selectbox("Select Market Region", ["US", "GB", "IN", "CA", "AU"], index=0, key='google_region')
@@ -309,9 +342,21 @@ def render_market_trends_page():
         except Exception as e:
             st.error(f"Could not render trend chart: {e}")
             
-        st.markdown("### 💡 Content Gap Analysis")
-        st.info("Based on your uploaded data vs Market Trends:")
-        st.markdown("- **Missing:** Reels about AI Tools")
-        st.markdown("- **Opportunity:** Carousel posts on weekends")
-        st.markdown("- **Gap:** Short-form video under 30s")
+        st.markdown("### 💡 Strategic Content Gaps")
+        st.info("High-priority gaps to increase your engagement rates:")
+        
+        if target_niche == 'University':
+            st.markdown("- **📢 Student Stories:** Missing 'Raw & Unfiltered' campus tours.")
+            st.markdown("- **💡 Career Advice:** High demand for 'Salary expectations' content.")
+            st.markdown("- **⏰ Posting Window:** You are missing the 7 PM - 10 PM student peak.")
+        else:
+            st.markdown("- **Missing:** Reels about AI Tools")
+            st.markdown("- **Opportunity:** Carousel posts on weekends")
+            st.markdown("- **Gap:** Short-form video under 30s")
+            
+        st.markdown("### 🛠️ Engagement Checklist")
+        st.checkbox("Added a clear CTA (Call to Action)?", value=True)
+        st.checkbox("First 3 seconds have a text hook?", value=True)
+        st.checkbox("Used local/niche geotags?", value=False)
+        st.checkbox("Replied to all comments in first hour?", value=False)
 
