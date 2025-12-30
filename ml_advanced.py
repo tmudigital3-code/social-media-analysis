@@ -131,7 +131,6 @@ def render_deep_learning_forecast(data):
                     forecast = calculate_prophet_forecast(daily[['timestamp', 'follower_count']])
                     
                     if forecast is not None:
-                    if forecast is not None:
                         # Matplotlib Prophet Forecast
                         fig, ax = plt.subplots(figsize=(10, 5))
                         ax.plot(daily['timestamp'], daily['follower_count'], label='Actual', color='#667eea', linewidth=3)

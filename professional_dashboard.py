@@ -2533,20 +2533,6 @@ def main():
                 st.session_state.current_page = "Upload Data"
                 st.rerun()
     
-    elif st.session_state.current_page == "Sentiment Analysis":
-        if st.session_state.data is not None:
-            if SENTIMENT_AVAILABLE:
-                render_sentiment_analysis(st.session_state.data)
-            else:
-                st.warning("⚠️ Sentiment analysis not available")
-                st.info("📦 Install TextBlob: `pip install textblob`")
-                st.code("python -m textblob.download_corpora", language="bash")
-        else:
-            st.info("⚠️ Please upload data first.")
-            if st.button("📤 Upload Data Now"):
-                st.session_state.current_page = "Upload Data"
-                st.rerun()
-    
     elif st.session_state.current_page == "🤖 Advanced ML":
         if st.session_state.data is not None:
             if ML_MODULES_AVAILABLE:
