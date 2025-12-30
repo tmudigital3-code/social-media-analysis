@@ -246,6 +246,12 @@ def generate_content_plan(trends):
             'SEO Caption': generate_seo_captions(topic),
             'Comment Bait': get_comment_bait(topic),
             'UGC': get_ugc_strategy(topic),
+            'Ad Blueprint': {
+                'Audience': 'Parents (45-55) & Students (17-21) in UP/Delhi NCR',
+                'Copy': f'Scale your future with {topic} at TMU. 🎓 #Admissions2025',
+                'Creative': 'High-angle campus shot with students focusing on innovation.'
+            },
+            'Collab Type': random.choice(['Study YouTuber', 'Career Coach', 'Alumni Professional', 'Student Lifestyle Vlogger']),
             'Traffic': trend.get('traffic', 'Medium')
         })
         
@@ -350,6 +356,21 @@ def render_market_trends_page():
                             
                             st.markdown("**🏷️ Recommended Hashtags:**")
                             st.code(row['Hashtags'], language="text")
+                            
+                            st.markdown("---")
+                            
+                            # 4. Digital Marketing Team Suite
+                            st.markdown("#### 📢 Digital Marketing Team Suite")
+                            a1, a2 = st.columns(2)
+                            with a1:
+                                st.markdown("**🎯 Ad Campaign Blueprint:**")
+                                st.info(f"**Target:** {row['Ad Blueprint']['Audience']}\n\n**Hook:** {row['Ad Blueprint']['Copy']}")
+                                st.markdown(f"**Creative Direction:** {row['Ad Blueprint']['Creative']}")
+                            with a2:
+                                st.markdown("**🤝 Collab Opportunity:**")
+                                st.success(f"Partner with a **{row['Collab Type']}** for this trend to maximize reach in the UP/Delhi region.")
+                                st.markdown("**📲 WhatsApp/Email Snippet:**")
+                                st.code(f"Hi [Name]! Did you know about the latest {row['Topic']} shifts at TMU? Check out how we are prepairing for 2025: [Link]", language="markdown")
                 else: st.warning("No trends found for the current settings.")
         
         # --- NEW: Actionable Engagement Strategy Section ---
@@ -373,17 +394,32 @@ def render_market_trends_page():
             st.markdown("""
             **How to build a loyal audience:**
             - **Reply-to-Video:** When a student asks a question in comments, answer it with a *Video Reply*. This builds extreme trust.
-            - **The Poll-to-Post Pipeline:** Run a poll in Stories, then make a main-feed post based on the winning result.
-            - **Consistent Aesthetics:** Use a signature filter or font so users recognize your content instantly in their feed.
-            """)
-            
         with tab3:
-            st.markdown("**Viral Scripting Blueprint (The 3-Part Hook):**")
+            st.markdown("### 📽️ Viral Scripting Blueprint")
             st.code("""
 1. THE HOOK (0-3s): "Everyone's talking about [Trend], but they're missing this..."
 2. THE MEAT (3-20s): Show 3 quick, value-packed points.
 3. THE PAYOFF (20s+): "If you want the full guide, comment 'UNIVERSITY' below."
             """, language="markdown")
+
+        # --- NEW: TMU 7-Day Growth Calendar ---
+        st.markdown("---")
+        st.markdown("### 📅 TMU 7-Day Growth Calendar")
+        st.success("A balanced strategy of Awareness, Consideration, and Decision-stage content.")
+        
+        days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        plan = [
+            "Awareness: Campus Life Reel (Trending Audio)",
+            "Consideration: Labs/Infrastructure Showcase (Detailed Photo)",
+            "Awareness: Student POV/UGC Challenge #HelloTMU",
+            "Decision: Placement/Salary Success Story (Carousel)",
+            "Consideration: Faculty Spotlight / Research Breakthru",
+            "Awareness: Weekend Campus Event Hijack",
+            "Decision: Admission Deadline Reminder / Scholarship Info"
+        ]
+        
+        cal_df = pd.DataFrame({'Day': days, 'Content Pillar': plan})
+        st.table(cal_df)
 
         st.markdown("---")
         st.markdown("### 🌍 Google Trends (Regional)")
