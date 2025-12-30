@@ -15,7 +15,7 @@ seaborn>=0.12.0
 
 # Advanced Machine Learning Dependencies
 textblob>=0.17.0
-prophet>=1.1.0
+# prophet>=1.1.0  <-- Commented out to avoid build timeouts/failures on Cloud
 
 # Development & Testing
 typeguard>=2.13.0
