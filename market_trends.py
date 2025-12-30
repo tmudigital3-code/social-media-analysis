@@ -40,53 +40,52 @@ def fetch_google_trends(geo='US'):
     return []
 def fetch_platform_trends(platform='Instagram', niche='All'):
     """
-    Simulated cross-platform trend fetcher.
-    In a production app, this would use platform-specific scrapers or APIs.
+    Simulated cross-platform trend fetcher with India focus.
     """
     trends = []
     
-    # Logic for University/Education niche
+    # India-Specific University Logic
     if niche == 'University':
         if platform == 'Instagram':
             trends = [
-                {'topic': 'Campus Life Vlogs', 'traffic': 'High', 'context': 'Day in the life of a student'},
-                {'topic': 'Study Abroad Recaps', 'traffic': 'High', 'context': 'Visual travelogues with educational tips'},
-                {'topic': 'Dorm Room Makeovers', 'traffic': 'Medium', 'context': 'Aesthetically pleasing dorm design'}
+                {'topic': 'CUET Preparation Tips', 'traffic': 'High', 'context': 'Cracking entrance exams in India'},
+                {'topic': 'Campus Life in UP', 'traffic': 'High', 'context': 'Vibrant student life at TMU'},
+                {'topic': 'Engineering Projects India', 'traffic': 'Medium', 'context': 'Innovation in local colleges'}
             ]
         elif platform == 'LinkedIn':
             trends = [
-                {'topic': 'Research Breakthroughs', 'traffic': 'High', 'context': 'Simplifying complex academic papers'},
-                {'topic': 'Career Placement Stats', 'traffic': 'High', 'context': 'Success stories of recent graduates'},
-                {'topic': 'Faculty Spotlight', 'traffic': 'Medium', 'context': 'Personalizing the heavy academic voice'}
+                {'topic': 'Placements 2025 India', 'traffic': 'High', 'context': 'Current job market in Delhi NCR'},
+                {'topic': 'Upskilling for Indian Tech', 'traffic': 'High', 'context': 'Skills requested by top MNCs'},
+                {'topic': 'NEP 2020 Implementation', 'traffic': 'Medium', 'context': 'Changes in Indian Higher Ed'}
             ]
         elif platform == 'TikTok/Reels':
             trends = [
-                {'topic': 'University Traditions', 'traffic': 'Extreme', 'context': 'Crowd-sourced clips of campus rituals'},
-                {'topic': 'Student Advice / Hacks', 'traffic': 'High', 'context': 'Quick tips for exams and surviving finals'},
-                {'topic': 'Graduation Transitions', 'traffic': 'High', 'context': 'Before vs After caps and gowns'}
+                {'topic': 'Student Budget Food UP', 'traffic': 'Extreme', 'context': 'Hidden street food gems near campus'},
+                {'topic': 'Hostel Hacks India', 'traffic': 'High', 'context': 'Survival guide for Indian hostels'},
+                {'topic': 'Festival Celebs at Campus', 'traffic': 'High', 'context': 'Celebrity visits and cultural fests'}
             ]
     else:
-        # General Platform Trends
+        # General India Platform Trends
         if platform == 'Instagram':
             trends = [
-                {'topic': 'Photo Dumps', 'traffic': 'High', 'context': 'Curated low-fi aesthetic carousels'},
-                {'topic': 'GRWM (Get Ready With Me)', 'traffic': 'Extreme', 'context': 'Process videos with voiceovers'},
-                {'topic': 'Aesthetic Transitions', 'traffic': 'High', 'context': 'Seamless clips using trending audio'}
+                {'topic': 'Desi Aesthetic Carousels', 'traffic': 'High', 'context': 'Indian fashion and lifestyle dumps'},
+                {'topic': 'Regional Language Content', 'traffic': 'Extreme', 'context': 'Hindi/Hinglish engagement spikes'},
+                {'topic': 'Cricket World Cup Buzz', 'traffic': 'High', 'context': 'Sporting fever across platforms'}
             ]
         elif platform == 'LinkedIn':
             trends = [
-                {'topic': 'Human-Centric Leadership', 'traffic': 'High', 'context': 'Vulnerability in professional settings'},
-                {'topic': 'AI in Workflow', 'traffic': 'Extreme', 'context': 'Practical prompts for professionals'},
-                {'topic': 'Work-Life Boundaries', 'traffic': 'High', 'context': 'Setting limits on corporate demands'}
+                {'topic': 'Startups in Noida/Pune', 'traffic': 'High', 'context': 'The booming Indian SaaS ecosystem'},
+                {'topic': 'Remote Work India', 'traffic': 'Extreme', 'context': 'Hybrid work shifts in tier-1 cities'},
+                {'topic': 'Workplace Culture in India', 'traffic': 'High', 'context': 'Addressing corporate mental health'}
             ]
         elif platform == 'TikTok/Reels':
             trends = [
-                {'topic': 'ASMR Sounds', 'traffic': 'High', 'context': 'Satisfying audio-first content'},
-                {'topic': 'POV Comedy', 'traffic': 'Extreme', 'context': 'Relatable scenarios with text overlays'},
-                {'topic': 'Micropodcasts', 'traffic': 'High', 'context': 'Snippet-style interviews with captions'}
+                {'topic': 'Bollywood Remakes', 'traffic': 'High', 'context': 'Dancing to trending movie tracks'},
+                {'topic': 'Relatable Desi Parents', 'traffic': 'Extreme', 'context': 'Comedy skits on Indian households'},
+                {'topic': 'Quick Recipes India', 'traffic': 'High', 'context': '5-minute Indian breakfast ideas'}
             ]
             
-    return trends or [{'topic': 'General Marketing Trends', 'traffic': 'High', 'context': 'Consistent engagement strategies'}]
+    return trends
 
 def fetch_university_news():
     """Scrape real-time higher education news trends"""
@@ -239,7 +238,7 @@ def generate_content_plan(trends):
             'Virality Score': get_virality_score(topic),
             'Funnel Stage': get_funnel_stage(topic),
             'Peak Time': f"{random.randint(6, 11)} {'PM' if random.random() > 0.4 else 'AM'}",
-            'Backups': [f"{random.randint(7, 9)} AM", f"{random.randint(12, 2)} PM"],
+            'Backups': [f"{random.randint(7, 10)} AM", f"{random.randint(1, 4)} PM"],
             'Competitor Buzz': random.choice(['High', 'Growing', 'Saturated', 'Untapped']),
             'Sentiment': random.choice(['Very Positive 😊', 'Positive 🙂', 'Neutral 😐', 'Curiosity 🤔']),
             'Scripts': generate_ai_scripts(topic),
@@ -285,9 +284,9 @@ def render_market_trends_page():
         with c_b:
             target_niche = st.selectbox("Industry Niche", ["General", "University", "Tech", "LifeStyle"], index=1)
         with c_c:
-            target_region = st.selectbox("Region", ["GLOBAL", "US", "IN", "EU"], index=0)
+            target_region = st.selectbox("Region", ["India (UP/NCR)", "GLOBAL", "US", "EU"], index=0)
             
-        if st.button("🚀 Fetch Targeted Platform Trends", use_container_width=True):
+        if st.button("🚀 Fetch Targeted India-Only Trends", use_container_width=True):
             with st.spinner(f"Analyzing {target_platform} trends for {target_niche} sector..."):
                 # Use platform-aware fetcher + Live News for University
                 if target_niche == 'University':
@@ -455,6 +454,23 @@ def render_market_trends_page():
         st.pyplot(fig)
         
         st.info("💡 **Fix**: Improve CTA for Save; add study notes or checklists to carousels.")
+        
+        st.markdown("---")
+        st.markdown("### 🗺️ Interest by Indian State")
+        st.caption("Interest in 'TMU Admissions' or 'Higher Ed' across India")
+        state_data = {
+            'State': ['Uttar Pradesh', 'Delhi', 'Haryana', 'Bihar', 'Rajasthan', 'Uttarakhand'],
+            'Interest Score': [98, 85, 72, 65, 54, 88]
+        }
+        df_states = pd.DataFrame(state_data)
+        
+        fig, ax = plt.subplots(figsize=(6, 4))
+        sns.barplot(data=df_states, x='Interest Score', y='State', palette='rocket', ax=ax)
+        ax.set_xlabel('Trend Intensity (0-100)')
+        ax.set_ylabel('')
+        ax.set_title('Regional Engagement Potential')
+        sns.despine()
+        st.pyplot(fig)
         
         st.markdown("---")
         st.markdown("### 🚀 Platform Meta-Trends")
