@@ -421,19 +421,7 @@ def render_market_trends_page():
         cal_df = pd.DataFrame({'Day': days, 'Content Pillar': plan})
         st.table(cal_df)
 
-        st.markdown("---")
-        st.markdown("### 🌍 Google Trends (Regional)")
-        region = st.selectbox("Select Market Region", ["US", "GB", "IN", "CA", "AU"], index=0, key='google_region')
-        
-        if st.button("🔄 Fetch Daily Google Trends"):
-            with st.spinner("Scraping live market data..."):
-                trends = fetch_google_trends(region)
-                if trends:
-                    st.success(f"Found {len(trends)} trending topics!")
-                    # ... (rest of Google Trends display logic if needed or reused)
-                    st.dataframe(generate_content_plan(trends))
-                else:
-                    st.error("Live Google Trends RSS currently inaccessible. Using targeted platform discovery above.")
+
         
     with col2:
         # Funnel Analysis Widget
