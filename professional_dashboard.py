@@ -8,6 +8,8 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import seaborn as sns
 from datetime import datetime, timedelta
 import os
 import io
@@ -643,17 +645,32 @@ def render_professional_kpi(title, value, change=None, change_type="neutral"):
     """
 
 def render_powerbi_style_kpi(title, value, change=None, change_type="neutral", icon="📊"):
-    """Render Power BI style KPI card without change indicators"""
+    """Render Power BI style KPI card with change indicators"""
     # Format value only if it's a number
     if isinstance(value, (int, float)):
         formatted_value = f"{value:,}"
     else:
         formatted_value = str(value)
     
+    # Generate delta HTML
+    delta_html = ""
+    if change:
+        color = "#10b981" if change_type == "positive" else "#ef4444" if change_type == "negative" else "#64748b"
+        arrow = "▲" if change_type == "positive" else "▼" if change_type == "negative" else "•"
+        delta_html = f'<div style="color: {color}; font-size: 0.85rem; margin-top: 0.4rem; font-weight: 500;">{arrow} {change}</div>'
+    
     return f"""
-    <div class="metric-tile fade-in">
-        <div class="label">{title}</div>
-        <div class="value">{formatted_value}</div>
+    <div class="pro-kpi-card fade-in" style="border-left: 4px solid #0078D7;">
+        <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+                <div class="pro-kpi-title">{title}</div>
+                <div class="pro-kpi-value">{formatted_value}</div>
+                {delta_html}
+            </div>
+            <div style="background: #f0f8ff; padding: 0.5rem; border-radius: 50%; color: #0078D7;">
+                <span style="font-size: 1.2rem;">{icon}</span>
+            </div>
+        </div>
     </div>
     """
 
@@ -789,12 +806,12 @@ def render_professional_upload():
                     filter_value = st.selectbox(f"Filter {filter_col} by", ["All"] + list(unique_values))
                     if filter_value != "All":
                         filtered_data = combined_data[combined_data[filter_col] == filter_value]
-                        st.dataframe(filtered_data.head(10), width='stretch')
+                        st.dataframe(filtered_data.head(10), use_container_width=True)
                         st.caption(f"Showing {len(filtered_data)} of {len(combined_data)} records")
                     else:
-                        st.dataframe(combined_data.head(10), width='stretch')
+                        st.dataframe(combined_data.head(10), use_container_width=True)
                 else:
-                    st.dataframe(combined_data.head(10), width='stretch')
+                    st.dataframe(combined_data.head(10), use_container_width=True)
                 
                 # Enhanced Column Analysis
                 st.markdown("### ✓ Column Analysis")
@@ -844,7 +861,7 @@ def render_professional_upload():
                 """)
                 
                 # Enhanced button with confirmation
-                if st.button("✅ Use This Data for Analysis", type="primary", width='stretch', help="Load data for analytics"):
+                if st.button("✅ Use This Data for Analysis", type="primary", use_container_width=True, help="Load data for analytics"):
                     st.session_state.data = combined_data
                     st.success("✅ Data loaded successfully! You can now navigate to other sections.")
                     st.balloons()
@@ -898,7 +915,7 @@ def render_professional_upload():
         st.markdown("### 📥 Sample Data")
         st.info("Download sample data to understand the expected format")
         
-        if st.button("📥 Download Sample Data", width='stretch', help="Get sample CSV file"):
+        if st.button("📥 Download Sample Data", use_container_width=True, help="Get sample CSV file"):
             sample_data = pd.DataFrame({
                 'post_id': ['post_001', 'post_002', 'post_003'],
                 'timestamp': ['2025-01-15 10:00:00', '2025-01-16 14:30:00', '2025-01-17 09:15:00'],
@@ -1067,41 +1084,23 @@ def render_professional_dashboard(data):
             sampled_data = data if len(data) <= 1000 else data.sample(n=1000, random_state=42)
             daily_followers = sampled_data.groupby(pd.Grouper(key='timestamp', freq='D'))['follower_count'].last()
             
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=daily_followers.index,
-                y=daily_followers.values,
-                mode='lines+markers',
-                name='Followers',
-                line=dict(color='#10b981', width=3),
-                marker=dict(size=6, color='#10b981'),
-                fill='tozeroy',
-                fillcolor='rgba(16, 185, 129, 0.2)'
-            ))
+            # Matplotlib Follower Growth
+            fig, ax = plt.subplots(figsize=(8, 4))
+            ax.plot(daily_followers.index, daily_followers.values, color='#10b981', linewidth=2, marker='o', markersize=4, label='Followers')
+            ax.fill_between(daily_followers.index, daily_followers.values, color='#10b981', alpha=0.2)
             
-            # Add trend line
+            # Trend line
             if len(daily_followers) > 1:
                 x_numeric = np.arange(len(daily_followers))
                 z = np.polyfit(x_numeric, daily_followers.values, 1)
                 p = np.poly1d(z)
-                fig.add_trace(go.Scatter(
-                    x=daily_followers.index,
-                    y=p(x_numeric),
-                    mode='lines',
-                    name='Trend',
-                    line=dict(color='#f59e0b', width=2, dash='dash')
-                ))
+                ax.plot(daily_followers.index, p(x_numeric), color='#f59e0b', linestyle='--', linewidth=2, label='Trend')
             
-            fig.update_layout(
-                template='plotly_white',
-                height=300,
-                margin=dict(l=0, r=0, t=10, b=0),
-                showlegend=True,
-                xaxis=dict(showgrid=False),
-                yaxis=dict(showgrid=True, gridcolor='#f0f0f0'),
-                hovermode='x unified'
-            )
-            st.plotly_chart(fig, width='stretch')
+            ax.set_title('Real-time Follower Growth', fontsize=12)
+            ax.legend()
+            ax.grid(True, linestyle='--', alpha=0.3)
+            sns.despine()
+            st.pyplot(fig)
             
             # Add growth insights
             if len(daily_followers) > 1 and 'z' in locals():
@@ -1295,36 +1294,30 @@ def render_professional_dashboard(data):
         follower_counts = [total_followers, total_followers * 0.4, total_followers * 0.2, total_followers * 0.6]
         reach_values = [current_reach, current_reach * 0.5, current_reach * 0.3, current_reach * 0.7]
         
-        fig = go.Figure()
+        # Matplotlib Multi-Platform
+        fig, ax = plt.subplots(figsize=(8, 4))
+        x = np.arange(len(platforms))
+        width = 0.35
         
-        fig.add_trace(go.Bar(
-            name='Engagement Rate (%)',
-            x=platforms,
-            y=engagement_rates,
-            marker_color='#667eea',
-            text=[f'{rate:.1f}%' for rate in engagement_rates],
-            textposition='outside'
-        ))
+        rects1 = ax.bar(x - width/2, engagement_rates, width, label='Engagement Rate (%)', color='#667eea')
+        rects2 = ax.bar(x + width/2, [f/1000 for f in follower_counts], width, label='Followers (K)', color='#10b981')
         
-        fig.add_trace(go.Bar(
-            name='Followers (K)',
-            x=platforms,
-            y=[f/1000 for f in follower_counts],
-            marker_color='#10b981',
-            text=[f'{f/1000:.0f}K' for f in follower_counts],
-            textposition='outside'
-        ))
+        ax.set_ylabel('Value')
+        ax.set_title('Multi-Platform Performance')
+        ax.set_xticks(x)
+        ax.set_xticklabels(platforms)
+        ax.legend()
+        ax.grid(axis='y', linestyle='--', alpha=0.3)
         
-        fig.update_layout(
-            template='plotly_white',
-            height=350,
-            margin=dict(l=0, r=0, t=10, b=0),
-            barmode='group',
-            legend=dict(orientation="h", yanchor="bottom", y=1.02),
-            yaxis_title="Value"
-        )
+        # Add labels logic - using try-except for compatibility versions
+        try:
+            ax.bar_label(rects1, fmt='%.1f%%', padding=3)
+            ax.bar_label(rects2, fmt='%.0fK', padding=3)
+        except:
+            pass # bar_label might not be available in older matplotlib
         
-        st.plotly_chart(fig, width='stretch')
+        sns.despine()
+        st.pyplot(fig)
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col6:
@@ -1341,22 +1334,20 @@ def render_professional_dashboard(data):
             engagement_values = [total_likes, total_comments, total_shares]
             colors_dist = ['#667eea', '#f093fb', '#10b981']
             
-            fig_dist = go.Figure(data=[go.Pie(
-                labels=engagement_types,
-                values=engagement_values,
-                hole=0.4,
-                marker_colors=colors_dist,
-                textinfo='label+percent',
-                textfont_size=13
-            )])
+            # Matplotlib Engagement Distribution (Donut)
+            fig, ax = plt.subplots(figsize=(6, 6))
+            colors = ['#667eea', '#f093fb', '#10b981']
+            wedges, texts, autotexts = ax.pie(engagement_values, labels=engagement_types, autopct='%1.1f%%',
+                                              startangle=90, colors=colors, pctdistance=0.85, wedgeprops=dict(width=0.4))
             
-            fig_dist.update_layout(
-                template='plotly_white',
-                height=350,
-                margin=dict(l=0, r=0, t=10, b=0),
-                annotations=[dict(text='Engagement', x=0.5, y=0.5, font_size=16, showarrow=False)]
-            )
-            st.plotly_chart(fig_dist, width='stretch')
+            # Draw center circle for donut
+            centre_circle = plt.Circle((0,0),0.60,fc='white')
+            fig.gca().add_artist(centre_circle)
+            
+            ax.axis('equal')  
+            ax.set_title('Engagement Distribution')
+            
+            st.pyplot(fig)
             
             # Add engagement insights
             total_engagement = sum(engagement_values)
@@ -1446,24 +1437,22 @@ def render_professional_dashboard(data):
             if all_hashtags:
                 hashtag_counts = pd.Series(all_hashtags).value_counts().head(10)
                 
-                fig_hashtags = go.Figure(data=[go.Bar(
-                    x=hashtag_counts.values,
-                    y=hashtag_counts.index,
-                    orientation='h',
-                    marker_color='#667eea',
-                    text=hashtag_counts.values,
-                    textposition='auto'
-                )])
+                # Matplotlib Top Hashtags
+                fig, ax = plt.subplots(figsize=(8, 4))
+                y_pos = np.arange(len(hashtag_counts))
+                ax.barh(y_pos, hashtag_counts.values, align='center', color='#667eea')
+                ax.set_yticks(y_pos)
+                ax.set_yticklabels(hashtag_counts.index)
+                ax.invert_yaxis()
+                ax.set_xlabel('Usage Count')
+                ax.set_title('Top Hashtags Performance')
                 
-                fig_hashtags.update_layout(
-                    template='plotly_white',
-                    height=400,
-                    margin=dict(l=0, r=0, t=10, b=0),
-                    xaxis_title="Usage Count",
-                    yaxis_title="Hashtag"
-                )
+                # Add counts
+                for i, v in enumerate(hashtag_counts.values):
+                     ax.text(v, i, f" {v}", va='center', fontsize=9)
                 
-                st.plotly_chart(fig_hashtags, width='stretch')
+                sns.despine()
+                st.pyplot(fig)
             else:
                 st.info("No hashtag data available for analysis.")
         else:
@@ -1483,35 +1472,30 @@ def render_professional_dashboard(data):
                 'shares': 'mean'
             }).round(1)
             
-            # Melt for better visualization
-            content_melted = content_performance.reset_index().melt(
-                id_vars='media_type',
-                var_name='Metric',
-                value_name='Average'
-            )
+            # Matplotlib Content Type Performance
+            fig, ax = plt.subplots(figsize=(8, 4))
             
-            fig_content = px.bar(
-                content_melted,
-                x='media_type',
-                y='Average',
-                color='Metric',
-                barmode='group',
-                color_discrete_sequence=['#667eea', '#f093fb', '#10b981']
-            )
+            # Simple grouped bar plot
+            width = 0.25
+            x = np.arange(len(content_performance))
             
-            fig_content.update_layout(
-                template='plotly_white',
-                height=400,
-                margin=dict(l=0, r=0, t=10, b=0),
-                xaxis_title="Content Type",
-                yaxis_title="Average Engagement"
-            )
+            ax.bar(x - width, content_performance['likes'], width, label='Likes', color='#667eea')
+            ax.bar(x, content_performance['comments'], width, label='Comments', color='#f093fb')
+            ax.bar(x + width, content_performance['shares'], width, label='Shares', color='#10b981')
             
-            st.plotly_chart(fig_content, width='stretch')
+            ax.set_ylabel('Average Engagement')
+            ax.set_title('Content Type Performance')
+            ax.set_xticks(x)
+            ax.set_xticklabels(content_performance.index)
+            ax.legend()
+            ax.grid(axis='y', linestyle='--', alpha=0.3)
+            
+            sns.despine()
+            st.pyplot(fig)
             
             # Show content type stats
             st.markdown("#### Content Type Statistics")
-            st.dataframe(content_performance.style.format("{:.1f}"), width='stretch')
+            st.dataframe(content_performance.style.format("{:.1f}"), use_container_width=True)
         else:
             st.info("Required columns (media_type, likes) not found in the dataset.")
         
@@ -1534,45 +1518,21 @@ def render_professional_dashboard(data):
             'shares': 'mean'
         }).round(1)
         
-        fig_hourly = go.Figure()
+        # Matplotlib Hourly Engagement Line Chart
+        fig, ax = plt.subplots(figsize=(10, 4))
         
-        fig_hourly.add_trace(go.Scatter(
-            x=hourly_engagement.index,
-            y=hourly_engagement['likes'],
-            mode='lines+markers',
-            name='Avg Likes',
-            line=dict(color='#667eea', width=3),
-            marker=dict(size=8)
-        ))
+        ax.plot(hourly_engagement.index, hourly_engagement['likes'], label='Avg Likes', color='#667eea', marker='o')
+        ax.plot(hourly_engagement.index, hourly_engagement['comments'], label='Avg Comments', color='#f093fb', marker='s')
+        ax.plot(hourly_engagement.index, hourly_engagement['shares'], label='Avg Shares', color='#10b981', marker='^')
         
-        fig_hourly.add_trace(go.Scatter(
-            x=hourly_engagement.index,
-            y=hourly_engagement['comments'],
-            mode='lines+markers',
-            name='Avg Comments',
-            line=dict(color='#f093fb', width=3),
-            marker=dict(size=8)
-        ))
-        
-        fig_hourly.add_trace(go.Scatter(
-            x=hourly_engagement.index,
-            y=hourly_engagement['shares'],
-            mode='lines+markers',
-            name='Avg Shares',
-            line=dict(color='#10b981', width=3),
-            marker=dict(size=8)
-        ))
-        
-        fig_hourly.update_layout(
-            template='plotly_white',
-            height=400,
-            margin=dict(l=0, r=0, t=10, b=0),
-            xaxis=dict(title="Hour of Day", tickmode='linear', dtick=1),
-            yaxis=dict(title="Average Engagement"),
-            legend=dict(orientation="h", yanchor="bottom", y=1.02)
-        )
-        
-        st.plotly_chart(fig_hourly, width='stretch')
+        ax.set_title('Time-Based Engagement Patterns')
+        ax.set_xlabel('Hour of Day')
+        ax.set_ylabel('Average Engagement')
+        ax.set_xticks(range(0, 24))
+        ax.legend()
+        ax.grid(True, linestyle='--', alpha=0.3)
+        sns.despine()
+        st.pyplot(fig)
         
         # Best posting times insight
         best_hour = hourly_engagement['likes'].idxmax()
@@ -1607,32 +1567,21 @@ def render_deep_research_analytics(data):
                 y = daily_data['likes'].values
                 
                 model = LinearRegression()
+                # Matplotlib Predicted vs Actual
+                model = LinearRegression()
                 model.fit(X, y)
                 predictions = model.predict(X)
                 
-                fig = go.Figure()
-                fig.add_trace(go.Scatter(
-                    x=daily_data['timestamp'],
-                    y=daily_data['likes'],
-                    name='Actual',
-                    line=dict(color='#667eea', width=3),
-                    mode='lines+markers'
-                ))
-                fig.add_trace(go.Scatter(
-                    x=daily_data['timestamp'],
-                    y=predictions,
-                    name='Predicted',
-                    line=dict(color='#f093fb', width=2, dash='dash')
-                ))
+                fig, ax = plt.subplots(figsize=(8, 4))
+                ax.plot(daily_data['timestamp'], daily_data['likes'], label='Actual', color='#667eea', linewidth=2, marker='o')
+                ax.plot(daily_data['timestamp'], predictions, label='Predicted', color='#f093fb', linestyle='--', linewidth=2)
                 
-                fig.update_layout(
-                    template='plotly_white',
-                    height=300,
-                    margin=dict(l=0, r=0, t=10, b=0),
-                    hovermode='x unified',
-                    legend=dict(orientation="h", yanchor="bottom", y=1.02)
-                )
-                st.plotly_chart(fig, width='stretch')
+                ax.set_title('Predicted vs Actual Engagement')
+                ax.legend()
+                ax.grid(True, linestyle='--', alpha=0.3)
+                plt.xticks(rotation=45)
+                sns.despine()
+                st.pyplot(fig)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -1644,24 +1593,17 @@ def render_deep_research_analytics(data):
         if 'caption' in data.columns and 'likes' in data.columns:
             data['caption_length'] = data['caption'].astype(str).str.len()
             
-            fig = px.scatter(
-                data,
-                x='caption_length',
-                y='likes',
-                color='likes',
-                size='likes',
-                color_continuous_scale=['#667eea', '#764ba2', '#f093fb'],
-                opacity=0.6
-            )
+            # Matplotlib Post Length Scatter
+            fig, ax = plt.subplots(figsize=(6, 5))
+            sc = ax.scatter(data['caption_length'], data['likes'], 
+                            c=data['likes'], cmap='cool', alpha=0.6, edgecolors='none')
             
-            fig.update_layout(
-                template='plotly_white',
-                height=300,
-                margin=dict(l=0, r=0, t=10, b=0),
-                xaxis_title="Caption Length (characters)",
-                yaxis_title="Likes"
-            )
-            st.plotly_chart(fig, width='stretch')
+            ax.set_xlabel('Caption Length (characters)')
+            ax.set_ylabel('Likes')
+            ax.set_title('Post Length vs Likes')
+            ax.grid(True, linestyle='--', alpha=0.3)
+            sns.despine()
+            st.pyplot(fig)
             
             # AI Insight
             optimal_length = data.groupby(pd.cut(data['caption_length'], bins=5))['likes'].mean().idxmax()
@@ -1707,23 +1649,19 @@ def render_deep_research_analytics(data):
             
             factors_df = pd.DataFrame(factors_data)
             
-            fig = px.bar(
-                factors_df,
-                x='Factor',
-                y='Impact Score',
-                color='Impact Score',
-                color_continuous_scale=['#667eea', '#764ba2', '#f093fb'],
-                text='Impact Score'
-            )
+            # Matplotlib Virality Factors
+            fig, ax = plt.subplots(figsize=(6, 5))
             
-            fig.update_traces(texttemplate='%{text:.0f}', textposition='outside')
-            fig.update_layout(
-                template='plotly_white',
-                height=300,
-                margin=dict(l=0, r=0, t=10, b=0),
-                showlegend=False
-            )
-            st.plotly_chart(fig, width='stretch')
+            bars = ax.bar(factors_df['Factor'], factors_df['Impact Score'], color=['#667eea', '#764ba2', '#f093fb'])
+            ax.set_title('Factors Affecting Virality')
+            ax.set_ylabel('Impact Score')
+            
+            try:
+                ax.bar_label(bars, fmt='%.1f')
+            except:
+                pass
+            sns.despine()
+            st.pyplot(fig)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -1749,24 +1687,13 @@ def render_deep_research_analytics(data):
             day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
             heatmap_data = heatmap_data.reindex([d for d in day_order if d in heatmap_data.index])
             
-            fig = go.Figure(data=go.Heatmap(
-                z=heatmap_data.values,
-                x=heatmap_data.columns,
-                y=heatmap_data.index,
-                colorscale='Purples',
-                text=heatmap_data.values.round(0),
-                texttemplate="%{text}",
-                textfont={"size": 8}
-            ))
-            
-            fig.update_layout(
-                template='plotly_white',
-                height=300,
-                margin=dict(l=0, r=0, t=10, b=0),
-                xaxis_title="Hour of Day",
-                yaxis_title="Day of Week"
-            )
-            st.plotly_chart(fig, width='stretch')
+            # Seaborn Heatmap
+            fig, ax = plt.subplots(figsize=(7, 4))
+            sns.heatmap(heatmap_data, annot=True, fmt=".0f", cmap='Purples', cbar_kws={'label': 'Avg Likes'}, ax=ax, linewidths=0.5)
+            ax.set_title('Engagement Heatmap')
+            ax.set_xlabel('Hour of Day')
+            ax.set_ylabel('Day of Week')
+            st.pyplot(fig)
             
             # AI Insight
             best_hour = data.groupby('hour')['likes'].mean().idxmax()
@@ -1819,18 +1746,15 @@ def render_advanced_content_analysis(data):
                 
                 sentiment_counts = pd.Series(sentiments).value_counts()
                 
-                fig = px.pie(
-                    values=sentiment_counts.values,
-                    names=sentiment_counts.index,
-                    color_discrete_sequence=['#10b981', '#64748b', '#ef4444']
-                )
+                # Matplotlib Sentiment Distribution
+                fig, ax = plt.subplots(figsize=(6, 6))
+                # Ensure we have enough colors or map them
+                color_map = {'Positive': '#10b981', 'Neutral': '#64748b', 'Negative': '#ef4444'}
+                colors = [color_map.get(idx, '#999999') for idx in sentiment_counts.index]
                 
-                fig.update_layout(
-                    template='plotly_white',
-                    height=350,
-                    margin=dict(l=0, r=0, t=10, b=0)
-                )
-                st.plotly_chart(fig, width='stretch')
+                ax.pie(sentiment_counts.values, labels=sentiment_counts.index, autopct='%1.1f%%', colors=colors)
+                ax.set_title('Sentiment Distribution')
+                st.pyplot(fig)
             
             st.markdown('</div>', unsafe_allow_html=True)
         
@@ -1842,22 +1766,13 @@ def render_advanced_content_analysis(data):
                 data['sentiment'] = sentiments
                 sentiment_performance = data.groupby('sentiment')['likes'].mean()
                 
-                fig = px.bar(
-                    x=sentiment_performance.index,
-                    y=sentiment_performance.values,
-                    color=sentiment_performance.values,
-                    color_continuous_scale=['#667eea', '#764ba2', '#f093fb']
-                )
-                
-                fig.update_layout(
-                    template='plotly_white',
-                    height=350,
-                    margin=dict(l=0, r=0, t=10, b=0),
-                    showlegend=False,
-                    xaxis_title="Sentiment",
-                    yaxis_title="Average Likes"
-                )
-                st.plotly_chart(fig, width='stretch')
+                # Matplotlib Sentiment vs Engagement
+                fig, ax = plt.subplots(figsize=(8, 4))
+                ax.bar(sentiment_performance.index, sentiment_performance.values, color=['#667eea', '#764ba2', '#f093fb'])
+                ax.set_title('Sentiment vs Engagement')
+                ax.set_ylabel('Average Likes')
+                sns.despine()
+                st.pyplot(fig)
             
             st.markdown('</div>', unsafe_allow_html=True)
     
@@ -1873,23 +1788,18 @@ def render_advanced_content_analysis(data):
             
             word_freq = pd.Series(words).value_counts().head(20)
             
-            fig = px.bar(
-                x=word_freq.values,
-                y=word_freq.index,
-                orientation='h',
-                color=word_freq.values,
-                color_continuous_scale=['#667eea', '#764ba2', '#f093fb']
-            )
+            # Matplotlib Word Frequency
+            fig, ax = plt.subplots(figsize=(8, 5))
+            y_pos = np.arange(len(word_freq))
+            ax.barh(y_pos, word_freq.values, align='center', color='#667eea')
+            ax.set_yticks(y_pos)
+            ax.set_yticklabels(word_freq.index)
+            ax.invert_yaxis()
+            ax.set_xlabel('Frequency')
+            ax.set_title('Word Frequency Analysis')
             
-            fig.update_layout(
-                template='plotly_white',
-                height=500,
-                margin=dict(l=0, r=0, t=10, b=0),
-                showlegend=False,
-                xaxis_title="Frequency",
-                yaxis_title="Words"
-            )
-            st.plotly_chart(fig, width='stretch')
+            sns.despine()
+            st.pyplot(fig)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -1906,22 +1816,16 @@ def render_advanced_content_analysis(data):
             
             hashtag_freq = pd.Series(all_hashtags).value_counts().head(15)
             
-            fig = px.bar(
-                x=hashtag_freq.index,
-                y=hashtag_freq.values,
-                color=hashtag_freq.values,
-                color_continuous_scale=['#667eea', '#764ba2', '#f093fb']
-            )
-            
-            fig.update_layout(
-                template='plotly_white',
-                height=400,
-                margin=dict(l=0, r=0, t=10, b=0),
-                showlegend=False,
-                xaxis_title="Hashtag",
-                yaxis_title="Frequency"
-            )
-            st.plotly_chart(fig, width='stretch')
+            # Matplotlib Hashtag Performance
+            fig, ax = plt.subplots(figsize=(8, 4))
+            x = np.arange(len(hashtag_freq))
+            ax.bar(x, hashtag_freq.values, color='#10b981')
+            ax.set_xticks(x)
+            ax.set_xticklabels(hashtag_freq.index, rotation=45, ha='right')
+            ax.set_ylabel('Frequency')
+            ax.set_title('# Hashtag Performance Analysis')
+            sns.despine()
+            st.pyplot(fig)
         
         st.markdown('</div>', unsafe_allow_html=True)
 
@@ -2311,19 +2215,19 @@ def render_professional_reports(data):
         
         with cols[0]:
             total_likes = safe_int(data['likes'].sum()) if 'likes' in data.columns else 0
-            st.metric("Total Likes", f"{total_likes:,}")
+            st.markdown(render_powerbi_style_kpi("Total Likes", total_likes, icon="👍"), unsafe_allow_html=True)
         
         with cols[1]:
             total_comments = safe_int(data['comments'].sum()) if 'comments' in data.columns else 0
-            st.metric("Total Comments", f"{total_comments:,}")
+            st.markdown(render_powerbi_style_kpi("Total Comments", total_comments, icon="💬"), unsafe_allow_html=True)
         
         with cols[2]:
             total_shares = safe_int(data['shares'].sum()) if 'shares' in data.columns else 0
-            st.metric("Total Shares", f"{total_shares:,}")
+            st.markdown(render_powerbi_style_kpi("Total Shares", total_shares, icon="🔄"), unsafe_allow_html=True)
         
         with cols[3]:
             avg_engagement = safe_int((total_likes + total_comments + total_shares) / len(data)) if len(data) > 0 else 0
-            st.metric("Avg Engagement", f"{avg_engagement:,}")
+            st.markdown(render_powerbi_style_kpi("Avg Engagement", avg_engagement, icon="⚡"), unsafe_allow_html=True)
     
     if 'Content Performance' in include_sections:
         st.markdown("#### 🎬 Top Performing Posts")
@@ -2331,7 +2235,7 @@ def render_professional_reports(data):
             data_copy = data.copy()
             data_copy['total_engagement'] = data_copy['likes'] + data_copy['comments'] + data_copy['shares']
             top_posts = data_copy.nlargest(5, 'total_engagement')[['timestamp', 'caption', 'likes', 'comments', 'shares', 'total_engagement']]
-            st.dataframe(top_posts, width='stretch')
+            st.dataframe(top_posts, use_container_width=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
     

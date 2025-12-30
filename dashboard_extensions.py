@@ -39,7 +39,7 @@ def render_engagement_funnel(data):
             margin=dict(l=0, r=0, t=10, b=0)
         )
         
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(fig, use_container_width=True)
         
         # Insight
         if total_reach > 0:
@@ -97,7 +97,7 @@ def render_metric_radar(data):
             legend=dict(orientation="h", yanchor="bottom", y=1.02)
         )
         
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(fig, use_container_width=True)
         
     else:
         st.info("Missing media type or metric columns for radar analysis")
@@ -143,7 +143,7 @@ def render_treemap_content(data):
             margin=dict(l=0, r=0, t=10, b=0)
         )
         
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(fig, use_container_width=True)
         
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -176,7 +176,7 @@ def render_correlation_heatmap(data):
             margin=dict(l=0, r=0, t=10, b=0)
         )
         
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(fig, use_container_width=True)
     else:
         st.info("Not enough numeric metrics for correlation analysis")
         

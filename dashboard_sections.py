@@ -57,7 +57,7 @@ def render_content_performance(data):
                 barmode='group',
                 yaxis_title='Average Count'
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
             
             best_type = media_performance['likes'].idxmax()
             best_likes = media_performance['likes'].max()
@@ -79,7 +79,7 @@ def render_content_performance(data):
             # Truncate long captions
             top_posts['caption'] = top_posts['caption'].astype(str).str[:50] + '...'
             
-            st.dataframe(top_posts, width='stretch', hide_index=True)
+            st.dataframe(top_posts, use_container_width=True, hide_index=True)
         else:
             st.info("⚠️ Data missing for Top Posts. Required: 'likes', 'comments', 'shares'")
         
@@ -132,7 +132,7 @@ def render_content_performance(data):
                         xaxis_title="Hashtag Frequency",
                         yaxis_title="Total Likes"
                     )
-                    st.plotly_chart(fig, width='stretch')
+                    st.plotly_chart(fig, use_container_width=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -180,7 +180,7 @@ def render_content_performance(data):
                         margin=dict(l=0, r=0, t=10, b=0),
                         showlegend=False
                     )
-                    st.plotly_chart(fig, width='stretch')
+                    st.plotly_chart(fig, use_container_width=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -227,7 +227,7 @@ def render_content_performance(data):
                 xaxis_title='Caption Length (characters)',
                 yaxis_title='Average Engagement'
             )
-            st.plotly_chart(fig_length, width='stretch')
+            st.plotly_chart(fig_length, use_container_width=True)
             
             # Best length insight
             best_length = length_performance['likes'].idxmax()
@@ -263,7 +263,7 @@ def render_content_performance(data):
                 xaxis_title='Date',
                 yaxis_title='Number of Posts'
             )
-            st.plotly_chart(fig_freq, width='stretch')
+            st.plotly_chart(fig_freq, use_container_width=True)
             
             # Frequency insights
             avg_frequency = daily_posts.mean()
@@ -321,7 +321,7 @@ def render_content_performance(data):
                 xaxis_title="Content Type",
                 yaxis_title="Engagement Rate (%)"
             )
-            st.plotly_chart(fig_er_type, width='stretch')
+            st.plotly_chart(fig_er_type, use_container_width=True)
             
             # Best content type insight
             if not type_metrics.empty:
@@ -362,7 +362,7 @@ def render_content_performance(data):
                 xaxis_title="Content Type",
                 yaxis_title="Average Saves"
             )
-            st.plotly_chart(fig_saves, width='stretch')
+            st.plotly_chart(fig_saves, use_container_width=True)
             
             # Best saving content insight
             if not saves_by_type.empty:
@@ -402,7 +402,7 @@ def render_content_performance(data):
                 xaxis_title="Metrics",
                 yaxis_title="Metrics"
             )
-            st.plotly_chart(fig_corr, width='stretch')
+            st.plotly_chart(fig_corr, use_container_width=True)
             
             # Correlation insights
             likes_comments_corr = corr_data.loc['likes', 'comments']
@@ -454,7 +454,7 @@ def render_content_performance(data):
                 xaxis_title="Content Type",
                 yaxis_title="Average Engagement"
             )
-            st.plotly_chart(fig_compare, width='stretch')
+            st.plotly_chart(fig_compare, use_container_width=True)
         else:
             st.info("⚠️ Data missing for Content Type comparison. Required: 'media_type', 'likes'")
         
@@ -495,7 +495,7 @@ def render_audience_insights(data):
                 margin=dict(l=0, r=0, t=10, b=0),
                 showlegend=True
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -524,7 +524,7 @@ def render_audience_insights(data):
                 margin=dict(l=0, r=0, t=10, b=0),
                 xaxis_title="Hour of Day"
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
             
             # Best hour insight
             best_hour = hourly_activity.idxmax()
@@ -567,7 +567,7 @@ def render_audience_insights(data):
                 xaxis_title='Date',
                 yaxis_title='Follower Count'
             )
-            st.plotly_chart(fig_follower, width='stretch')
+            st.plotly_chart(fig_follower, use_container_width=True)
             
             # Growth insights
             if len(follower_growth) > 1:
@@ -615,7 +615,7 @@ def render_audience_insights(data):
                 xaxis_title='Date',
                 yaxis_title='Engagement Rate (%)'
             )
-            st.plotly_chart(fig_er, width='stretch')
+            st.plotly_chart(fig_er, use_container_width=True)
             
             # Average engagement rate
             avg_er = daily_metrics['engagement_rate'].mean()
@@ -653,7 +653,7 @@ def render_audience_insights(data):
                 xaxis_title="Age Group",
                 yaxis_title="Count"
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -680,7 +680,7 @@ def render_audience_insights(data):
                 margin=dict(l=0, r=0, t=10, b=0),
                 xaxis_title="Follower Count"
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -727,7 +727,7 @@ def render_audience_insights(data):
                 yaxis_title="Average Engagement",
                 showlegend=True
             )
-            st.plotly_chart(fig_gender, width='stretch')
+            st.plotly_chart(fig_gender, use_container_width=True)
             
             # Best performing gender insight
             if not gender_engagement.empty:
@@ -781,7 +781,7 @@ def render_audience_insights(data):
                 xaxis_title="Total Engagement",
                 yaxis_title="Location"
             )
-            st.plotly_chart(fig_location, width='stretch')
+            st.plotly_chart(fig_location, use_container_width=True)
             
             # Best performing location insight
             if not top_locations.empty:
@@ -822,7 +822,7 @@ def render_audience_insights(data):
                 xaxis_title="Age Group",
                 yaxis_title="Gender"
             )
-            st.plotly_chart(fig_cross, width='stretch')
+            st.plotly_chart(fig_cross, use_container_width=True)
         else:
             st.info("⚠️ Data missing for Gender-Age analysis. Required: 'audience_gender', 'audience_age'")
         
@@ -861,7 +861,7 @@ def render_audience_insights(data):
                     margin=dict(l=0, r=0, t=10, b=0),
                     xaxis_title="Date",
                     yaxis_title="Growth Rate (%)")
-                st.plotly_chart(fig_growth, width='stretch')
+                st.plotly_chart(fig_growth, use_container_width=True)
                 
                 # Growth insights
                 avg_growth = growth_rate.mean()
@@ -923,7 +923,7 @@ def render_time_based_trends(data):
                 margin=dict(l=0, r=0, t=10, b=0),
                 hovermode='x unified'
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -960,7 +960,7 @@ def render_time_based_trends(data):
                 xaxis_title="Hour of Day",
                 yaxis_title="Day of Week"
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
             
             # AI Insight
             best_hour = data_copy.groupby('hour')['likes'].mean().idxmax()
@@ -1023,7 +1023,7 @@ def render_time_based_trends(data):
                 yaxis_title='Average Engagement',
                 hovermode='x unified'
             )
-            st.plotly_chart(fig_hourly, width='stretch')
+            st.plotly_chart(fig_hourly, use_container_width=True)
             
             # Best hour insight
             if not hourly_engagement.empty:
@@ -1088,7 +1088,7 @@ def render_time_based_trends(data):
                 yaxis_title='Average Engagement',
                 barmode='group'
             )
-            st.plotly_chart(fig_dow, width='stretch')
+            st.plotly_chart(fig_dow, use_container_width=True)
             
             # Best day insight
             if not dow_engagement.empty:
@@ -1147,7 +1147,7 @@ def render_time_based_trends(data):
                 yaxis_title="Engagement Count",
                 hovermode='x unified'
             )
-            st.plotly_chart(fig_monthly, width='stretch')
+            st.plotly_chart(fig_monthly, use_container_width=True)
         else:
             st.info("⚠️ Data missing for Monthly analysis. Required: 'timestamp', 'likes'")
         
@@ -1192,7 +1192,7 @@ def render_time_based_trends(data):
                 xaxis_title="Season",
                 yaxis_title="Average Likes"
             )
-            st.plotly_chart(fig_seasonal, width='stretch')
+            st.plotly_chart(fig_seasonal, use_container_width=True)
             
             # Seasonal insights
             best_season = seasonal_performance['likes'].idxmax()
@@ -1258,7 +1258,7 @@ def render_predictive_analytics(data):
                     margin=dict(l=0, r=0, t=10, b=0),
                     hovermode='x unified'
                 )
-                st.plotly_chart(fig, width='stretch')
+                st.plotly_chart(fig, use_container_width=True)
                 
                 # Insights
                 current_avg = daily_data['likes'].tail(7).mean()
@@ -1312,7 +1312,7 @@ def render_predictive_analytics(data):
                     margin=dict(l=0, r=0, t=10, b=0),
                     hovermode='x unified'
                 )
-                st.plotly_chart(fig, width='stretch')
+                st.plotly_chart(fig, use_container_width=True)
                 
                 # Insights
                 current_followers = int(daily_followers['follower_count'].iloc[-1])
@@ -1374,7 +1374,7 @@ def render_predictive_analytics(data):
                     yaxis_title='Likes',
                     hovermode='x unified'
                 )
-                st.plotly_chart(fig_trend, width='stretch')
+                st.plotly_chart(fig_trend, use_container_width=True)
                 
                 # Trend insights
                 if len(daily_data) >= 30:
@@ -1422,7 +1422,7 @@ def render_predictive_analytics(data):
                     yaxis_title='Growth Acceleration (%)',
                     hovermode='x unified'
                 )
-                st.plotly_chart(fig_accel, width='stretch')
+                st.plotly_chart(fig_accel, use_container_width=True)
                 
                 # Acceleration insights
                 recent_accel = daily_followers['acceleration'].tail(7).mean()
@@ -1469,7 +1469,7 @@ def render_predictive_analytics(data):
                     xaxis_title='Date',
                     yaxis_title='Engagement Volatility (Std Dev)'
                 )
-                st.plotly_chart(fig_vol, width='stretch')
+                st.plotly_chart(fig_vol, use_container_width=True)
                 
                 # Volatility insights
                 avg_volatility = daily_data['volatility'].mean()
@@ -1550,7 +1550,7 @@ def render_predictive_analytics(data):
                     yaxis_title='Likes',
                     hovermode='x unified'
                 )
-                st.plotly_chart(fig_ci, width='stretch')
+                st.plotly_chart(fig_ci, use_container_width=True)
                 
                 # Confidence insights
                 st.markdown(f"🎯 Forecast range: {int(ci_lower[0])} - {int(ci_upper[0])} likes (next day)")

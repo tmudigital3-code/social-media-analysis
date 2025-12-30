@@ -101,7 +101,7 @@ def render_deep_learning_forecast(data):
                     growth_metrics.append((horizon, growth, color))
                 
                 fig.update_layout(template='plotly_white', height=350, margin=dict(l=0, r=0, t=10, b=0), hovermode='x unified')
-                st.plotly_chart(fig, width='stretch')
+                st.plotly_chart(fig, use_container_width=True)
                 
                 for horizon, growth, color in growth_metrics:
                      st.markdown(f'<span style="color:{color}">▪ {horizon}d: +{growth:,} ({(growth/current*100):+.1f}%)</span>', unsafe_allow_html=True)
@@ -133,7 +133,7 @@ def render_deep_learning_forecast(data):
                                                fill='toself', fillcolor='rgba(240,147,251,0.2)', line=dict(color='rgba(255,255,255,0)'), name='Confidence'))
                         
                         fig.update_layout(template='plotly_white', height=350, margin=dict(l=0, r=0, t=10, b=0), hovermode='x unified')
-                        st.plotly_chart(fig, width='stretch')
+                        st.plotly_chart(fig, use_container_width=True)
                         
                         pred30 = int(forecast['yhat'].iloc[-1])
                         curr = int(daily['follower_count'].iloc[-1])
@@ -222,7 +222,7 @@ def render_sentiment_analysis(data):
                                      textinfo='label+percent', textfont_size=13)])
         fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0),
                          annotations=[dict(text='Emotions', x=0.5, y=0.5, font_size=16, showarrow=False)])
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(fig, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
@@ -235,7 +235,7 @@ def render_sentiment_analysis(data):
                                   marker_color=[colors_emotion.get(e, '#94a3b8') for e in emotion_eng.index],
                                   text=emotion_eng.values.round(0), textposition='outside'))
             fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0), xaxis_title='Avg Likes')
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
             if not emotion_eng.empty:
                 st.markdown(f'💡 **{emotion_eng.idxmax()}** performs best ({emotion_eng.max():.0f} likes)')
         st.markdown('</div>', unsafe_allow_html=True)
@@ -289,7 +289,7 @@ def render_audience_clustering(data):
                                      textinfo='label+percent', textfont_size=13)])
         fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0),
                          annotations=[dict(text=f'{len(data)} Posts', x=0.5, y=0.5, font_size=14, showarrow=False)])
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(fig, use_container_width=True)
         st.markdown(f'**Quality:** {silhouette_score(features_scaled, clusters):.3f}')
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -309,7 +309,7 @@ def render_audience_clustering(data):
                                      marker_color=['#ef4444' if 'Outliers' in l else '#667eea' for l in labels],
                                      text=summary.values, textposition='outside')])
         fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0), yaxis_title='Posts')
-        st.plotly_chart(fig, width='stretch')
+        st.plotly_chart(fig, use_container_width=True)
         st.markdown(f'**Outliers:** {(clusters_db==-1).sum()}')
         st.markdown('</div>', unsafe_allow_html=True)
     
