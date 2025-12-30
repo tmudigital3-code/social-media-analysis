@@ -19,6 +19,14 @@ from sklearn.metrics import mean_squared_error, accuracy_score
 import warnings
 warnings.filterwarnings('ignore')
 
+# Page Configuration (Must be first Streamlit command)
+st.set_page_config(
+    page_title="Professional Social Media Analytics",
+    page_icon="📊",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 # Import Database Manager
 try:
     import database_manager
@@ -911,7 +919,7 @@ def render_professional_upload():
                 data=csv,
                 file_name="sample_social_media_data.csv",
                 mime="text/csv",
-                width='stretch'
+                use_container_width=True
             )
         
         # Data Tips Section
@@ -2219,7 +2227,7 @@ def render_professional_reports(data):
     with col_a:
         # PDF Download with all charts and analytics
         if PDF_AVAILABLE:
-            if st.button("📊 Generate Comprehensive PDF", width='stretch', type="primary"):
+            if st.button("📊 Generate Comprehensive PDF", use_container_width=True, type="primary"):
                 with st.spinner("🔄 Generating comprehensive PDF report with all analytics..."):
                     pdf_buffer = generate_comprehensive_pdf_report(data)
                     if pdf_buffer:
@@ -2228,7 +2236,7 @@ def render_professional_reports(data):
                             data=pdf_buffer,
                             file_name=f"social_media_comprehensive_report_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.pdf",
                             mime="application/pdf",
-                            width='stretch',
+                            use_container_width=True,
                             type="primary"
                         )
                         st.success("✅ PDF report generated successfully!")
@@ -2243,7 +2251,7 @@ def render_professional_reports(data):
             data=csv_data,
             file_name=f"social_media_report_{pd.Timestamp.now().strftime('%Y%m%d')}.csv",
             mime="text/csv",
-            width='stretch'
+            use_container_width=True
         )
     
     with col_c:
@@ -2274,7 +2282,7 @@ def render_professional_reports(data):
             data=excel_data,
             file_name=f"social_media_report_{pd.Timestamp.now().strftime('%Y%m%d')}.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            width='stretch',
+            use_container_width=True,
             type="primary"
         )
     
@@ -2286,7 +2294,7 @@ def render_professional_reports(data):
             data=json_data,
             file_name=f"social_media_report_{pd.Timestamp.now().strftime('%Y%m%d')}.json",
             mime="application/json",
-            width='stretch'
+            use_container_width=True
         )
     
     st.markdown('</div>', unsafe_allow_html=True)
@@ -2332,15 +2340,16 @@ def render_professional_reports(data):
     st.markdown('✅ <strong>Reports are ready to download!</strong> Select a format above to download your analytics report.', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
+# ==================== Cached Data Loading ====================
+@st.cache_data(ttl=300)  # Cache for 5 minutes
+def get_cached_data():
+    """Load data from database with caching"""
+    return database_manager.load_data()
+
 # ==================== Main Application ====================
 def main():
-    # Page Configuration
-    st.set_page_config(
-        page_title="Professional Social Media Analytics",
-        page_icon="📊",
-        layout="wide",
-        initial_sidebar_state="expanded"
-    )
+    # Page Configuration moved to top of file
+
     
     # Apply Professional CSS
     add_professional_css()
@@ -2352,11 +2361,6 @@ def main():
     # Database Initialization and Auto-loading
     if 'db_initialized' not in st.session_state:
         with st.spinner("🔄 Initializing system and connecting to database..."):
-            # Wrapper for cached data loading
-            @st.cache_data(ttl=300)  # Cache for 5 minutes
-            def get_cached_data():
-                return database_manager.load_data()
-
             # Initialize DB
             database_manager.init_db()
             
@@ -2493,11 +2497,11 @@ def main():
         st.markdown("### ⚡ Quick Actions")
         col1, col2 = st.columns(2)
         with col1:
-            if st.button("📊 Refresh Data", width='stretch'):
+            if st.button("📊 Refresh Data", use_container_width=True):
                 st.cache_data.clear()
                 st.rerun()
         with col2:
-            if st.button("🔄 Reset App", width='stretch'):
+            if st.button("🔄 Reset App", use_container_width=True):
                 st.session_state.clear()
                 st.rerun()
         
