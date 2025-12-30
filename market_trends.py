@@ -237,7 +237,7 @@ def render_market_trends_page():
                     trends = fetch_platform_trends(target_platform, target_niche)
                 
                 if trends:
-                    st.success(f"Discovered {len(trends)} high-engagement trends for {target_platform}!")
+                    st.success(f"📈 **Live Trends Engine v2.1 Active**: Found {len(trends)} high-impact trends for {target_platform}!")
                     
                     # Display trends
                     content_plan = generate_content_plan(trends)
