@@ -80,6 +80,36 @@ def fetch_platform_trends(platform='Instagram', niche='All'):
             
     return trends or [{'topic': 'General Marketing Trends', 'traffic': 'High', 'context': 'Consistent engagement strategies'}]
 
+def fetch_university_news():
+    """Scrape real-time higher education news trends"""
+    feeds = [
+        "https://www.insidehighered.com/rss/feed/news",
+        "https://www.timeshighereducation.com/rss.xml"
+    ]
+    news_trends = []
+    
+    for url in feeds:
+        try:
+            response = requests.get(url, timeout=5)
+            if response.status_code == 200:
+                root = ET.fromstring(response.content)
+                for item in root.findall('.//item'):
+                    title = item.find('title').text
+                    desc = item.find('description').text if item.find('description') is not None else ""
+                    # Clean desc (simple HTML tag removal)
+                    desc = re.sub('<[^<]+?>', '', desc)[:150] + "..."
+                    
+                    news_trends.append({
+                        'topic': title,
+                        'traffic': 'Trending',
+                        'context': desc,
+                        'source': 'Higher Ed News'
+                    })
+        except:
+            continue
+            
+    return news_trends[:10]
+
 def fetch_marketing_trends():
     """
     Simulated scraper for 'Social Media Marketing Trends' 
@@ -198,8 +228,13 @@ def render_market_trends_page():
             
         if st.button("🚀 Fetch Targeted Platform Trends", use_container_width=True):
             with st.spinner(f"Analyzing {target_platform} trends for {target_niche} sector..."):
-                # Use platform-aware fetcher
-                trends = fetch_platform_trends(target_platform, target_niche)
+                # Use platform-aware fetcher + Live News for University
+                if target_niche == 'University':
+                    trends = fetch_university_news()
+                    if not trends: # Fallback to hardcoded university trends
+                        trends = fetch_platform_trends(target_platform, target_niche)
+                else:
+                    trends = fetch_platform_trends(target_platform, target_niche)
                 
                 if trends:
                     st.success(f"Discovered {len(trends)} high-engagement trends for {target_platform}!")
