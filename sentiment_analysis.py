@@ -190,137 +190,68 @@ def render_sentiment_analysis(data):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
-        st.markdown('<div class="pro-chart-title">😊 Sentiment Distribution</div>', unsafe_allow_html=True)
-        
-        sentiment_counts = data['sentiment'].value_counts()
-        colors = {'Positive': '#10b981', 'Neutral': '#f59e0b', 'Negative': '#ef4444'}
-        
-        fig = go.Figure(data=[go.Pie(
-            labels=sentiment_counts.index,
-            values=sentiment_counts.values,
-            hole=0.5,
-            marker_colors=[colors.get(s, '#94a3b8') for s in sentiment_counts.index],
-            textinfo='label+percent',
-            textfont_size=14
-        )])
-        
-        fig.update_layout(
-            template='plotly_white',
-            height=300,
-            margin=dict(l=0, r=0, t=10, b=0),
-            annotations=[dict(text=f'{len(data)}<br>Posts', x=0.5, y=0.5, font_size=16, showarrow=False)]
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        # Matplotlib Sentiment Distribution
+        fig, ax = plt.subplots(figsize=(6, 6))
+        ax.pie(sentiment_counts.values, labels=sentiment_counts.index, autopct='%1.1f%%', 
+               colors=[colors.get(s, '#94a3b8') for s in sentiment_counts.index], wedgeprops={'width': 0.4})
+        ax.set_title('Sentiment Distribution')
+        st.pyplot(fig)
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
-        st.markdown('<div class="pro-chart-title">🎭 Emotion Breakdown</div>', unsafe_allow_html=True)
-        
-        emotion_counts = data['emotion'].value_counts()
-        emotion_colors = {
-            '😍 Joy': '#10b981',
-            '😊 Happy': '#34d399',
-            '😌 Content': '#6ee7b7',
-            '😲 Surprise': '#fbbf24',
-            '😐 Neutral': '#94a3b8',
-            '😢 Sad': '#fb923c',
-            '😡 Anger': '#ef4444'
-        }
-        
-        fig = go.Figure(data=[go.Bar(
-            x=emotion_counts.values,
-            y=emotion_counts.index,
-            orientation='h',
-            marker_color=[emotion_colors.get(e, '#94a3b8') for e in emotion_counts.index],
-            text=emotion_counts.values,
-            textposition='outside'
-        )])
-        
-        fig.update_layout(
-            template='plotly_white',
-            height=300,
-            margin=dict(l=0, r=0, t=10, b=0),
-            xaxis_title='Post Count',
-            showlegend=False
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        # Matplotlib Emotion Breakdown
+        fig, ax = plt.subplots(figsize=(8, 5))
+        y_pos = np.arange(len(emotion_counts))
+        ax.barh(y_pos, emotion_counts.values, color=[emotion_colors.get(e, '#94a3b8') for e in emotion_counts.index])
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(emotion_counts.index)
+        ax.invert_yaxis()
+        ax.set_xlabel('Post Count')
+        ax.set_title('Emotion Breakdown')
+        sns.despine()
+        st.pyplot(fig)
         st.markdown('</div>', unsafe_allow_html=True)
     
     # Row 2: Sentiment vs Engagement & Polarity Timeline
     col3, col4 = st.columns(2)
     
     with col3:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
-        st.markdown('<div class="pro-chart-title">📈 Sentiment vs Engagement</div>', unsafe_allow_html=True)
+        # Matplotlib Sentiment vs Engagement
+        fig, ax = plt.subplots(figsize=(8, 5))
+        x = np.arange(len(sentiment_engagement))
+        width = 0.25
         
-        if 'likes' in data.columns:
-            sentiment_engagement = data.groupby('sentiment').agg({
-                'likes': 'mean',
-                'comments': 'mean' if 'comments' in data.columns else 'count',
-                'shares': 'mean' if 'shares' in data.columns else 'count'
-            }).round(0)
+        ax.bar(x - width, sentiment_engagement['likes'], width, label='Likes', color='#667eea')
+        if 'comments' in sentiment_engagement.columns:
+            ax.bar(x, sentiment_engagement['comments'], width, label='Comments', color='#f093fb')
+        if 'shares' in sentiment_engagement.columns:
+            ax.bar(x + width, sentiment_engagement['shares'], width, label='Shares', color='#10b981')
             
-            fig = go.Figure()
-            fig.add_trace(go.Bar(name='Likes', x=sentiment_engagement.index, y=sentiment_engagement['likes'],
-                                marker_color='#667eea'))
-            if 'comments' in data.columns:
-                fig.add_trace(go.Bar(name='Comments', x=sentiment_engagement.index, y=sentiment_engagement['comments'],
-                                    marker_color='#f093fb'))
-            if 'shares' in data.columns:
-                fig.add_trace(go.Bar(name='Shares', x=sentiment_engagement.index, y=sentiment_engagement['shares'],
-                                    marker_color='#10b981'))
-            
-            fig.update_layout(
-                template='plotly_white',
-                height=300,
-                margin=dict(l=0, r=0, t=10, b=0),
-                barmode='group',
-                yaxis_title='Average Count'
-            )
-            st.plotly_chart(fig, use_container_width=True)
-            
-            best_sentiment = sentiment_engagement['likes'].idxmax()
-            best_likes = sentiment_engagement['likes'].max()
-            st.markdown(f"💡 **{best_sentiment} posts** perform best with {best_likes:.0f} avg likes")
+        ax.set_xticks(x)
+        ax.set_xticklabels(sentiment_engagement.index)
+        ax.set_ylabel('Average Count')
+        ax.set_title('Sentiment vs Engagement')
+        ax.legend()
+        sns.despine()
+        st.pyplot(fig)
         
+        best_sentiment = sentiment_engagement['likes'].idxmax()
+        best_likes = sentiment_engagement['likes'].max()
+        st.markdown(f"💡 **{best_sentiment} posts** perform best with {best_likes:.0f} avg likes")
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col4:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
-        st.markdown('<div class="pro-chart-title">📊 Polarity Over Time</div>', unsafe_allow_html=True)
-        
-        if 'timestamp' in data.columns:
-            data['timestamp'] = pd.to_datetime(data['timestamp'])
-            daily_polarity = data.groupby(pd.Grouper(key='timestamp', freq='D')).agg({
-                'polarity': 'mean',
-                'subjectivity': 'mean'
-            })
-            
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=daily_polarity.index,
-                y=daily_polarity['polarity'],
-                name='Polarity',
-                line=dict(color='#667eea', width=3),
-                fill='tozeroy',
-                fillcolor='rgba(102, 126, 234, 0.2)'
-            ))
-            
-            fig.add_hline(y=0, line_dash="dash", line_color="#94a3b8", 
-                         annotation_text="Neutral", annotation_position="right")
-            
-            fig.update_layout(
-                template='plotly_white',
-                height=300,
-                margin=dict(l=0, r=0, t=10, b=0),
-                yaxis_title='Polarity Score',
-                yaxis_range=[-1, 1],
-                hovermode='x unified'
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        
+        # Matplotlib Polarity Over Time
+        fig, ax = plt.subplots(figsize=(8, 4))
+        ax.plot(daily_polarity.index, daily_polarity['polarity'], color='#667eea', linewidth=3)
+        ax.fill_between(daily_polarity.index, daily_polarity['polarity'], color='#667eea', alpha=0.2)
+        ax.axhline(0, color='#94a3b8', linestyle='--')
+        ax.set_ylabel('Polarity Score')
+        ax.set_ylim(-1.1, 1.1)
+        ax.set_title('Polarity Over Time')
+        plt.xticks(rotation=45)
+        sns.despine()
+        st.pyplot(fig)
         st.markdown('</div>', unsafe_allow_html=True)
     
     # Row 3: Hashtag Sentiment & Word Analysis
@@ -351,26 +282,15 @@ def render_sentiment_analysis(data):
                 top_hashtags['total'] = top_hashtags.sum(axis=1)
                 top_hashtags = top_hashtags.nlargest(10, 'total')
                 
-                fig = go.Figure()
-                if 'Positive' in top_hashtags.columns:
-                    fig.add_trace(go.Bar(name='Positive', x=top_hashtags.index, y=top_hashtags['Positive'],
-                                        marker_color='#10b981'))
-                if 'Neutral' in top_hashtags.columns:
-                    fig.add_trace(go.Bar(name='Neutral', x=top_hashtags.index, y=top_hashtags['Neutral'],
-                                        marker_color='#f59e0b'))
-                if 'Negative' in top_hashtags.columns:
-                    fig.add_trace(go.Bar(name='Negative', x=top_hashtags.index, y=top_hashtags['Negative'],
-                                        marker_color='#ef4444'))
-                
-                fig.update_layout(
-                    template='plotly_white',
-                    height=300,
-                    margin=dict(l=0, r=0, t=10, b=0),
-                    barmode='stack',
-                    xaxis_tickangle=-45,
-                    yaxis_title='Post Count'
-                )
-                st.plotly_chart(fig, use_container_width=True)
+                # Matplotlib Hashtag Sentiment
+                fig, ax = plt.subplots(figsize=(8, 6))
+                top_hashtags[['Positive', 'Neutral', 'Negative']].plot(kind='bar', stacked=True, 
+                                                                    color=['#10b981', '#f59e0b', '#ef4444'], ax=ax)
+                ax.set_title('Top Hashtags by Sentiment')
+                ax.set_ylabel('Post Count')
+                plt.xticks(rotation=45)
+                sns.despine()
+                st.pyplot(fig)
             else:
                 st.info("No hashtag data available")
         else:
@@ -384,24 +304,18 @@ def render_sentiment_analysis(data):
         
         data['caption_length'] = data[text_column].astype(str).str.len()
         
-        fig = px.scatter(
-            data,
-            x='caption_length',
-            y='polarity',
-            color='sentiment',
-            color_discrete_map=colors,
-            hover_data=['emotion'],
-            opacity=0.6
-        )
+        # Matplotlib Caption Length vs Sentiment
+        fig, ax = plt.subplots(figsize=(8, 5))
+        for sentiment in ['Positive', 'Neutral', 'Negative']:
+            subset = data[data['sentiment'] == sentiment]
+            ax.scatter(subset['caption_length'], subset['polarity'], label=sentiment, alpha=0.6, color=colors.get(sentiment, '#94a3b8'))
         
-        fig.update_layout(
-            template='plotly_white',
-            height=300,
-            margin=dict(l=0, r=0, t=10, b=0),
-            xaxis_title='Caption Length (chars)',
-            yaxis_title='Polarity Score'
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        ax.set_xlabel('Caption Length (chars)')
+        ax.set_ylabel('Polarity Score')
+        ax.set_title('Caption Length vs Sentiment')
+        ax.legend()
+        sns.despine()
+        st.pyplot(fig)
         
         avg_length_by_sentiment = data.groupby('sentiment')['caption_length'].mean()
         optimal_sentiment = avg_length_by_sentiment.idxmax()
@@ -416,22 +330,16 @@ def render_sentiment_analysis(data):
     if 'timestamp' in data.columns:
         emotion_timeline = data.groupby([pd.Grouper(key='timestamp', freq='D'), 'emotion']).size().reset_index(name='count')
         
-        fig = px.area(
-            emotion_timeline,
-            x='timestamp',
-            y='count',
-            color='emotion',
-            color_discrete_map=emotion_colors
-        )
+        # Matplotlib Emotion Timeline (Simplified area chart)
+        fig, ax = plt.subplots(figsize=(10, 5))
+        pivoted_emotions = emotion_timeline.pivot(index='timestamp', columns='emotion', values='count').fillna(0)
+        pivoted_emotions.plot.area(ax=ax, color=[emotion_colors.get(c, '#94a3b8') for c in pivoted_emotions.columns], alpha=0.6)
         
-        fig.update_layout(
-            template='plotly_white',
-            height=300,
-            margin=dict(l=0, r=0, t=10, b=0),
-            yaxis_title='Post Count',
-            hovermode='x unified'
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        ax.set_title('Emotion Timeline')
+        ax.set_ylabel('Post Count')
+        plt.xticks(rotation=45)
+        sns.despine()
+        st.pyplot(fig)
     
     st.markdown('</div>', unsafe_allow_html=True)
     

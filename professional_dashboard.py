@@ -2417,17 +2417,12 @@ def main():
         else:
             st.warning("⚠️ No Data Loaded")
         
-        # Version Info
-        st.markdown("---")
-        st.markdown("### ℹ️ Platform Info")
-        st.caption("Professional Social Media Analytics v2.0")
-        st.caption("🚀 Powered by Advanced AI & ML")
-        st.caption("Last Updated: November 2025")
-        
+        # Platform Info
         st.markdown("---")
         st.markdown("### ℹ️ About")
         st.caption("Professional Social Media Analytics Platform v2.0")
         st.caption("🚀 Powered by Advanced AI & ML")
+        st.caption("Last Updated: December 2025")
         
         # Quick Stats
         if st.session_state.data is not None:
@@ -2514,7 +2509,15 @@ def main():
             st.error("Market Trends module not found.")
         except Exception as e:
             st.error(f"Error loading trends: {e}")
-                # st.error(f"Debug: Error in AI recommendations: {str(e)}")  # Uncomment for debugging
+    
+    elif st.session_state.current_page == "Sentiment Analysis":
+        if st.session_state.data is not None:
+            if SENTIMENT_AVAILABLE:
+                render_sentiment_analysis(st.session_state.data)
+            else:
+                st.warning("⚠️ Sentiment analysis not available")
+                st.info("📦 Install TextBlob: `pip install textblob`")
+                st.code("python -m textblob.download_corpora", language="bash")
         else:
             st.info("⚠️ Please upload data first.")
             if st.button("📤 Upload Data Now"):

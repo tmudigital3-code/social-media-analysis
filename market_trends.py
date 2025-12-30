@@ -9,6 +9,8 @@ import streamlit as st
 import random
 from datetime import datetime
 import re
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def fetch_google_trends(geo='US'):
     """
@@ -155,6 +157,22 @@ def render_market_trends_page():
                 </div>
             </div>
             """, unsafe_allow_html=True)
+            
+        # Matplotlib visualization for growth rates
+        st.markdown("#### 📊 Trend Growth Potential")
+        try:
+            trends_df = pd.DataFrame(meta_trends)
+            trends_df['growth_num'] = trends_df['growth'].str.replace('+', '', regex=False).str.replace('%', '', regex=False).astype(float)
+            
+            fig, ax = plt.subplots(figsize=(6, 4))
+            sns.barplot(data=trends_df, x='growth_num', y='trend', palette='viridis', ax=ax)
+            ax.set_xlabel('Projected Growth (%)')
+            ax.set_ylabel('')
+            ax.set_title('Meta-Trend Impact Forecast')
+            sns.despine()
+            st.pyplot(fig)
+        except Exception as e:
+            st.error(f"Could not render trend chart: {e}")
             
         st.markdown("### 💡 Content Gap Analysis")
         st.info("Based on your uploaded data vs Market Trends:")

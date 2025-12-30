@@ -6,6 +6,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import seaborn as sns
 from datetime import timedelta
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.cluster import KMeans, DBSCAN
@@ -83,8 +85,9 @@ def render_deep_learning_forecast(data):
                 horizons = [7, 30, 60, 90]
                 colors = ['#10b981', '#f59e0b', '#f97316', '#ef4444']
                 
-                fig = go.Figure()
-                fig.add_trace(go.Scatter(x=daily['timestamp'], y=daily['follower_count'], name='Actual', line=dict(color='#667eea', width=3)))
+                # Matplotlib 90-Day Follower Forecast
+                fig, ax = plt.subplots(figsize=(10, 5))
+                ax.plot(daily['timestamp'], daily['follower_count'], label='Actual', color='#667eea', linewidth=3)
                 
                 current = int(daily['follower_count'].iloc[-1])
                 growth_metrics = []
@@ -94,14 +97,17 @@ def render_deep_learning_forecast(data):
                     future_y = calculate_gb_forecast(daily[['timestamp', 'follower_count']], horizon)
                     
                     future_dates = pd.date_range(daily['timestamp'].iloc[-1] + timedelta(days=1), periods=horizon, freq='D')
-                    fig.add_trace(go.Scatter(x=future_dates, y=future_y, name=f'{horizon}D', line=dict(color=color, width=2, dash='dash')))
+                    ax.plot(future_dates, future_y, label=f'{horizon}D', color=color, linewidth=2, linestyle='--')
                     
                     predicted = int(future_y[-1])
                     growth = predicted - current
                     growth_metrics.append((horizon, growth, color))
                 
-                fig.update_layout(template='plotly_white', height=350, margin=dict(l=0, r=0, t=10, b=0), hovermode='x unified')
-                st.plotly_chart(fig, use_container_width=True)
+                ax.set_title('90-Day Follower Forecast')
+                ax.legend()
+                plt.xticks(rotation=45)
+                sns.despine()
+                st.pyplot(fig)
                 
                 for horizon, growth, color in growth_metrics:
                      st.markdown(f'<span style="color:{color}">▪ {horizon}d: +{growth:,} ({(growth/current*100):+.1f}%)</span>', unsafe_allow_html=True)
@@ -125,15 +131,18 @@ def render_deep_learning_forecast(data):
                     forecast = calculate_prophet_forecast(daily[['timestamp', 'follower_count']])
                     
                     if forecast is not None:
-                        fig = go.Figure()
-                        fig.add_trace(go.Scatter(x=daily['timestamp'], y=daily['follower_count'], name='Actual', line=dict(color='#667eea', width=3)))
-                        fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], name='Forecast', line=dict(color='#f093fb', width=2, dash='dash')))
-                        fig.add_trace(go.Scatter(x=list(forecast['ds']) + list(forecast['ds'][::-1]), 
-                                               y=list(forecast['yhat_upper']) + list(forecast['yhat_lower'][::-1]),
-                                               fill='toself', fillcolor='rgba(240,147,251,0.2)', line=dict(color='rgba(255,255,255,0)'), name='Confidence'))
+                    if forecast is not None:
+                        # Matplotlib Prophet Forecast
+                        fig, ax = plt.subplots(figsize=(10, 5))
+                        ax.plot(daily['timestamp'], daily['follower_count'], label='Actual', color='#667eea', linewidth=3)
+                        ax.plot(forecast['ds'], forecast['yhat'], label='Forecast', color='#f093fb', linewidth=2, linestyle='--')
+                        ax.fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'], color='#f093fb', alpha=0.2, label='Confidence')
                         
-                        fig.update_layout(template='plotly_white', height=350, margin=dict(l=0, r=0, t=10, b=0), hovermode='x unified')
-                        st.plotly_chart(fig, use_container_width=True)
+                        ax.set_title('Prophet Seasonal Forecast')
+                        ax.legend()
+                        plt.xticks(rotation=45)
+                        sns.despine()
+                        st.pyplot(fig)
                         
                         pred30 = int(forecast['yhat'].iloc[-1])
                         curr = int(daily['follower_count'].iloc[-1])
@@ -210,19 +219,12 @@ def render_sentiment_analysis(data):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
-        st.markdown('<div class="pro-chart-title">😊 Emotion Distribution</div>', unsafe_allow_html=True)
-        
-        emotion_counts = analysis_df['emotion'].value_counts()
-        colors_emotion = {'😍 Joy': '#10b981', '😊 Happy': '#34d399', '😲 Surprise': '#fbbf24', 
-                         '😐 Neutral': '#94a3b8', '😢 Sad': '#fb923c', '😡 Anger': '#ef4444'}
-        
-        fig = go.Figure(data=[go.Pie(labels=emotion_counts.index, values=emotion_counts.values, hole=0.4,
-                                     marker_colors=[colors_emotion.get(e, '#94a3b8') for e in emotion_counts.index],
-                                     textinfo='label+percent', textfont_size=13)])
-        fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0),
-                         annotations=[dict(text='Emotions', x=0.5, y=0.5, font_size=16, showarrow=False)])
-        st.plotly_chart(fig, use_container_width=True)
+        # Matplotlib Emotion Distribution
+        fig, ax = plt.subplots(figsize=(6, 6))
+        ax.pie(emotion_counts.values, labels=emotion_counts.index, autopct='%1.1f%%', 
+               colors=[colors_emotion.get(e, '#94a3b8') for e in emotion_counts.index], wedgeprops={'width': 0.4})
+        ax.set_title('Emotion Distribution')
+        st.pyplot(fig)
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
@@ -230,12 +232,17 @@ def render_sentiment_analysis(data):
         st.markdown('<div class="pro-chart-title">📊 Emotion vs Engagement</div>', unsafe_allow_html=True)
         
         if 'likes' in analysis_df.columns:
+            # Matplotlib Emotion vs Engagement
             emotion_eng = analysis_df.groupby('emotion')['likes'].mean().sort_values(ascending=True)
-            fig = go.Figure(go.Bar(x=emotion_eng.values, y=emotion_eng.index, orientation='h',
-                                  marker_color=[colors_emotion.get(e, '#94a3b8') for e in emotion_eng.index],
-                                  text=emotion_eng.values.round(0), textposition='outside'))
-            fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0), xaxis_title='Avg Likes')
-            st.plotly_chart(fig, use_container_width=True)
+            fig, ax = plt.subplots(figsize=(8, 5))
+            y_pos = np.arange(len(emotion_eng))
+            ax.barh(y_pos, emotion_eng.values, color=[colors_emotion.get(e, '#94a3b8') for e in emotion_eng.index])
+            ax.set_yticks(y_pos)
+            ax.set_yticklabels(emotion_eng.index)
+            ax.set_xlabel('Avg Likes')
+            ax.set_title('Emotion vs Engagement')
+            sns.despine()
+            st.pyplot(fig)
             if not emotion_eng.empty:
                 st.markdown(f'💡 **{emotion_eng.idxmax()}** performs best ({emotion_eng.max():.0f} likes)')
         st.markdown('</div>', unsafe_allow_html=True)
@@ -285,11 +292,11 @@ def render_audience_clustering(data):
         counts = df_cluster['segment_label'].value_counts()
         colors = ['#ef4444', '#f59e0b', '#10b981']
         
-        fig = go.Figure(data=[go.Pie(labels=counts.index, values=counts.values, hole=0.5, marker_colors=colors,
-                                     textinfo='label+percent', textfont_size=13)])
-        fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0),
-                         annotations=[dict(text=f'{len(data)} Posts', x=0.5, y=0.5, font_size=14, showarrow=False)])
-        st.plotly_chart(fig, use_container_width=True)
+        # Matplotlib K-Means Segments
+        fig, ax = plt.subplots(figsize=(6, 6))
+        ax.pie(counts.values, labels=counts.index, autopct='%1.1f%%', colors=colors, wedgeprops={'width': 0.4})
+        ax.set_title('K-Means Segments')
+        st.pyplot(fig)
         st.markdown(f'**Quality:** {silhouette_score(features_scaled, clusters):.3f}')
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -305,11 +312,15 @@ def render_audience_clustering(data):
         summary = pd.Series(clusters_db).value_counts().sort_index()
         labels = ['Outliers (Viral)' if cid == -1 else f'Pattern {cid+1}' for cid in summary.index]
         
-        fig = go.Figure(data=[go.Bar(x=labels, y=summary.values, 
-                                     marker_color=['#ef4444' if 'Outliers' in l else '#667eea' for l in labels],
-                                     text=summary.values, textposition='outside')])
-        fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0), yaxis_title='Posts')
-        st.plotly_chart(fig, use_container_width=True)
+        # Matplotlib DBSCAN Patterns
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.bar(labels, summary.values, color=['#ef4444' if 'Outliers' in l else '#667eea' for l in labels])
+        for i, v in enumerate(summary.values):
+            ax.text(i, v + 0.1, str(v), ha='center')
+        ax.set_ylabel('Posts')
+        ax.set_title('DBSCAN Patterns')
+        sns.despine()
+        st.pyplot(fig)
         st.markdown(f'**Outliers:** {(clusters_db==-1).sum()}')
         st.markdown('</div>', unsafe_allow_html=True)
     

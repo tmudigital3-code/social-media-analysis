@@ -33,12 +33,16 @@ def render_visual_analysis(data):
         palettes = ['Warm Tones', 'Cool Blues', 'Vibrant', 'Pastel', 'Monochrome']
         scores = [8.5, 7.2, 9.1, 6.8, 5.9]
         
-        fig = go.Figure(go.Bar(x=palettes, y=scores, 
-                              marker_color=['#f97316', '#3b82f6', '#a855f7', '#fbbf24', '#64748b'],
-                              text=[f'{s:.1f}' for s in scores], textposition='outside'))
-        fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0),
-                         yaxis_title='Engagement Score', xaxis_tickangle=-30)
-        st.plotly_chart(fig, use_container_width=True)
+        # Matplotlib Color Palette Impact
+        fig, ax = plt.subplots(figsize=(8, 4))
+        ax.bar(palettes, scores, color=['#f97316', '#3b82f6', '#a855f7', '#fbbf24', '#64748b'])
+        for i, v in enumerate(scores):
+            ax.text(i, v + 0.1, f'{v:.1f}', ha='center')
+        ax.set_ylabel('Engagement Score')
+        ax.set_title('Color Palette Impact')
+        plt.xticks(rotation=-30)
+        sns.despine()
+        st.pyplot(fig)
         st.markdown('💡 **Vibrant colors** drive +23% higher engagement')
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -49,11 +53,15 @@ def render_visual_analysis(data):
         categories = ['No Faces', '1 Face', '2-3 Faces', '4+ Faces']
         avg_likes = [450, 890, 1250, 780]
         
-        fig = go.Figure(go.Bar(x=categories, y=avg_likes, marker_color='#667eea',
-                              text=avg_likes, textposition='outside'))
-        fig.update_layout(template='plotly_white', height=300, margin=dict(l=0, r=0, t=10, b=0),
-                         yaxis_title='Average Likes')
-        st.plotly_chart(fig, use_container_width=True)
+        # Matplotlib Face Detection Correlation
+        fig, ax = plt.subplots(figsize=(8, 4))
+        ax.bar(categories, avg_likes, color='#667eea')
+        for i, v in enumerate(avg_likes):
+            ax.text(i, v + 20, str(v), ha='center')
+        ax.set_ylabel('Average Likes')
+        ax.set_title('Face Detection Correlation')
+        sns.despine()
+        st.pyplot(fig)
         st.markdown('💡 **Posts with 2-3 faces** get +40% more likes')
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -103,11 +111,14 @@ def render_advanced_optimization(data):
                 else:
                     hour_labels.append(f'{h-12} PM')
             
-            fig = go.Figure(data=go.Heatmap(z=heatmap_data.values, x=hour_labels, y=heatmap_data.index,
-                                           colorscale='Viridis', text=heatmap_data.values.round(0),
-                                           texttemplate='%{text}', textfont={"size": 8}, colorbar=dict(title="Likes")))
-            fig.update_layout(template='plotly_white', height=350, margin=dict(l=0, r=0, t=10, b=0), xaxis_title='Time')
-            st.plotly_chart(fig, use_container_width=True)
+            # Seaborn Heatmap for Optimal Posting Times
+            fig, ax = plt.subplots(figsize=(10, 5))
+            sns.heatmap(heatmap_data, annot=True, fmt=".0f", cmap='viridis', 
+                        xticklabels=hour_labels, ax=ax, cbar_kws={'label': 'Likes'})
+            ax.set_title('Optimal Posting Times (Genetic Algorithm)')
+            ax.set_xlabel('Time')
+            ax.set_ylabel('Day of Week')
+            st.pyplot(fig)
             
             best_idx = np.unravel_index(heatmap_data.values.argmax(), heatmap_data.values.shape)
             best_day = heatmap_data.index[best_idx[0]]
@@ -128,17 +139,20 @@ def render_advanced_optimization(data):
             
             comparison = pd.DataFrame({'Current (%)': current_mix, 'Optimal (%)': optimal_mix}).fillna(0)
             
-            fig = go.Figure()
-            fig.add_trace(go.Bar(name='Current', x=comparison.index, y=comparison['Current (%)'],
-                                marker_color='#667eea', text=comparison['Current (%)'].round(1),
-                                texttemplate='%{text}%', textposition='outside'))
-            fig.add_trace(go.Bar(name='Optimal', x=comparison.index, y=comparison['Optimal (%)'],
-                                marker_color='#10b981', text=comparison['Optimal (%)'].round(1),
-                                texttemplate='%{text}%', textposition='outside'))
+            # Matplotlib Content Mix Optimizer
+            fig, ax = plt.subplots(figsize=(10, 5))
+            x_arr = np.arange(len(comparison))
+            w = 0.35
+            ax.bar(x_arr - w/2, comparison['Current (%)'], w, label='Current', color='#667eea')
+            ax.bar(x_arr + w/2, comparison['Optimal (%)'], w, label='Optimal', color='#10b981')
             
-            fig.update_layout(template='plotly_white', height=350, margin=dict(l=0, r=0, t=10, b=0),
-                            barmode='group', yaxis_title='Percentage (%)')
-            st.plotly_chart(fig, use_container_width=True)
+            ax.set_xticks(x_arr)
+            ax.set_xticklabels(comparison.index)
+            ax.set_ylabel('Percentage (%)')
+            ax.set_title('Content Mix Optimizer')
+            ax.legend()
+            sns.despine()
+            st.pyplot(fig)
         st.markdown('</div>', unsafe_allow_html=True)
     
     # A/B Testing Framework
