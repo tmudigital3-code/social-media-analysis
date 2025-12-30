@@ -169,6 +169,47 @@ def get_virality_score(topic):
     """Calculate a projected virality score (1-100)"""
     return random.randint(65, 98)
 
+def get_funnel_stage(topic):
+    """Map topic to student journey stage"""
+    topic_l = topic.lower()
+    if any(x in topic_l for x in ['fee', 'scholarship', 'admissions', 'roi', 'placement', 'salary']):
+        return "Decision 💰"
+    if any(x in topic_l for x in ['recap', 'abroad', 'research', 'faculty', 'ranking', 'course']):
+        return "Consideration 🤔"
+    return "Awareness 📢"
+
+def generate_ai_scripts(topic, niche='University'):
+    """Generate mode-based scripts for a trend"""
+    if niche == 'University':
+        return {
+            'Student POV': f"Hook: 'I bet nobody told you this about {topic} at TMU...'\nBody: Show a quick clip of {topic} in action. Add 'POV: You realized {topic} is actually easy.'\nCTA: 'Tag a friend who needs to see this!'",
+            'Faculty POV': f"Hook: 'From a faculty perspective, {topic} is changing everything.'\nBody: Explain the 3 main benefits of {topic} for student success.\nCTA: 'Read our full research in bio.'",
+            'Brand POV': f"Hook: 'Why TMU is leading the way in {topic}.'\nBody: Cinematic shots of campus facilities related to {topic}.\nCTA: 'Apply for the 2025 session today.'"
+        }
+    return {}
+
+def generate_seo_captions(topic, niche='University'):
+    """Generate SEO-optimized captions"""
+    if niche == 'University':
+        return f"Looking for the best universities in India? 🇮🇳 At TMU, we're mastering {topic} to help our students succeed in 2025. Whether it's campus life in UP or global placements, we've got you covered. ✨\n\n#TMU #BestUniversity #HigherEd #{topic.replace(' ', '')}"
+    return f"Mastering {topic} in 2025. Here is what you need to know about the latest market shift. #growth #strategy #{topic.replace(' ', '')}"
+
+def get_comment_bait(topic):
+    """Generate questions to drive replies"""
+    return [
+        f"Which part of {topic} do you want us to show next?",
+        f"What's your biggest fear about {topic} in 2025?",
+        f"Scale of 1-10, how useful is {topic} to you?"
+    ]
+
+def get_ugc_strategy(topic):
+    """Generate UGC/Ambassador tasks"""
+    return {
+        'Campaign': f"#{topic.replace(' ', '')}Challenge",
+        'Ambassador Task': f"Create 1 Reel showing your {topic} routine on campus.",
+        'Challenge Prompt': f"Share your {topic} journey with #TMUAmbassador"
+    }
+
 def generate_content_plan(trends):
     """Generate a content plan based on fetched trends"""
     plan = []
@@ -196,9 +237,15 @@ def generate_content_plan(trends):
             'Hashtags': generate_trending_hashtags(topic),
             'Shelf Life': get_trend_shelf_life(topic),
             'Virality Score': get_virality_score(topic),
+            'Funnel Stage': get_funnel_stage(topic),
             'Peak Time': f"{random.randint(6, 11)} {'PM' if random.random() > 0.4 else 'AM'}",
+            'Backups': [f"{random.randint(7, 9)} AM", f"{random.randint(12, 2)} PM"],
             'Competitor Buzz': random.choice(['High', 'Growing', 'Saturated', 'Untapped']),
             'Sentiment': random.choice(['Very Positive 😊', 'Positive 🙂', 'Neutral 😐', 'Curiosity 🤔']),
+            'Scripts': generate_ai_scripts(topic),
+            'SEO Caption': generate_seo_captions(topic),
+            'Comment Bait': get_comment_bait(topic),
+            'UGC': get_ugc_strategy(topic),
             'Traffic': trend.get('traffic', 'Medium')
         })
         
@@ -251,25 +298,58 @@ def render_market_trends_page():
                     content_plan = generate_content_plan(trends)
                     
                     for index, row in content_plan.iterrows():
-                        with st.expander(f"🔥 {target_platform} Trend: {row['Topic']}"):
+                        with st.expander(f"🔥 {target_platform} Trend: {row['Topic']} ({row['Funnel Stage']})"):
+                            # 1. Execution Playbook
+                            st.markdown("#### 📋 Execution Playbook")
                             c1, c2, c3 = st.columns([1, 1, 1])
                             with c1:
-                                st.markdown(f"**Format:** `{row['Format']}`")
-                                st.markdown(f"**Target Audience:** `Students & Faculty`" if target_niche == 'University' else f"**Target:** `General Users` ")
-                                st.markdown(f"**Idea:** {row['Idea']}")
+                                st.markdown(f"**Format Variants:**")
+                                st.markdown("- **A:** Talking-head Reel")
+                                st.markdown("- **B:** B-roll + Captions")
+                                st.markdown("- **C:** Carousel Summary")
                                 st.markdown(f"**⏳ Shelf Life:** {row['Shelf Life']}")
                             with c2:
-                                st.markdown("**🪝 Viral Hooks:**")
-                                for hook in row['Hooks']:
-                                    st.markdown(f"- *{hook}*")
+                                st.markdown(f"**⏰ Posting Matrix:**")
+                                st.markdown(f"- **Primary:** `{row['Peak Time']}`")
+                                st.markdown(f"- **Backups:** `{', '.join(row['Backups'])}`")
+                                st.markdown(f"**🏢 Competitor Buzz:** `{row['Competitor Buzz']}`")
                             with c3:
+                                st.markdown("**✅ Hook-Hold-Reward:**")
+                                st.markdown(f"1. Hook: *\"{row['Hooks'][0]}\"*")
+                                st.markdown("2. Hold: 30-45s Value meat")
+                                st.markdown("3. Reward: Save/CTA")
+                            
+                            st.markdown("---")
+                            
+                            # 2. AI Creative Assets
+                            st.markdown("#### 🎬 AI Creative Assets")
+                            t1, t2, t3 = st.tabs(["🎥 Video Scripts", "📝 SEO Captions", "💬 Comment Bait"])
+                            with t1:
+                                for mode, script in row['Scripts'].items():
+                                    st.markdown(f"**{mode}:**")
+                                    st.code(script, language="markdown")
+                            with t2:
+                                st.code(row['SEO Caption'], language="text")
+                            with t3:
+                                st.markdown("Questions to drive replies:")
+                                for q in row['Comment Bait']:
+                                    st.markdown(f"- *{q}*")
+                                    
+                            st.markdown("---")
+                            
+                            # 3. UGC & Engagement Health
+                            st.markdown("#### 🤝 UGC & Strategy Layers")
+                            u1, u2 = st.columns(2)
+                            with u1:
+                                st.markdown(f"**Campaign:** `{row['UGC']['Campaign']}`")
+                                st.markdown(f"**Ambassador Task:** {row['UGC']['Ambassador Task']}")
+                            with u2:
                                 st.markdown(f"**🔥 Virality Score:** {row['Virality Score']}%")
                                 st.progress(row['Virality Score']/100)
-                                st.markdown(f"**⏰ Peak Performance:** {row['Peak Time']}")
-                                st.markdown(f"**🏢 Competitor Buzz:** `{row['Competitor Buzz']}`")
                                 st.markdown(f"**🎭 Public Sentiment:** {row['Sentiment']}")
-                                st.markdown("**🏷️ Recommended Hashtags:**")
-                                st.code(row['Hashtags'], language="text")
+                            
+                            st.markdown("**🏷️ Recommended Hashtags:**")
+                            st.code(row['Hashtags'], language="text")
                 else: st.warning("No trends found for the current settings.")
         
         # --- NEW: Actionable Engagement Strategy Section ---
@@ -320,6 +400,35 @@ def render_market_trends_page():
                     st.error("Live Google Trends RSS currently inaccessible. Using targeted platform discovery above.")
         
     with col2:
+        # Funnel Analysis Widget
+        st.markdown("### 🧬 Journey Funnel Analysis")
+        funnel_cols = st.columns(3)
+        with funnel_cols[0]: st.metric("Awareness", "80%", "-5%", help="Top of Funnel")
+        with funnel_cols[1]: st.metric("Consideration", "20%", "0", help="Middle of Funnel")
+        with funnel_cols[2]: st.metric("Decision", "0%", "-10%", delta_color="inverse", help="Bottom of Funnel")
+        
+        st.warning("⚠️ **Funnel Gap Warning**: You are underposting Decision-stage content (fees, ROI).")
+        
+        st.markdown("---")
+        st.markdown("### 📊 Performance Benchmarks")
+        st.caption("Average metrics for University/Education niche")
+        bench_data = {
+            'Metric': ['Reel Watch Time', 'Completion Rate', 'Save Rate', 'Share Rate'],
+            'Market': [12.5, 45, 8.2, 5.4],
+            'TMU': [8.2, 32, 4.1, 2.8]
+        }
+        df_bench = pd.DataFrame(bench_data)
+        
+        fig, ax = plt.subplots(figsize=(6, 4))
+        sns.barplot(data=df_bench.melt(id_vars='Metric'), x='Metric', y='value', hue='variable', ax=ax, palette=['#94a3b8', '#667eea'])
+        ax.set_ylabel('Percentage / Seconds')
+        ax.set_title('TMU vs Market Benchmarks')
+        plt.xticks(rotation=45)
+        st.pyplot(fig)
+        
+        st.info("💡 **Fix**: Improve CTA for Save; add study notes or checklists to carousels.")
+        
+        st.markdown("---")
         st.markdown("### 🚀 Platform Meta-Trends")
         meta_trends = fetch_marketing_trends()
         
@@ -362,9 +471,15 @@ def render_market_trends_page():
             st.markdown("- **Opportunity:** Carousel posts on weekends")
             st.markdown("- **Gap:** Short-form video under 30s")
             
-        st.markdown("### 🛠️ Engagement Checklist")
-        st.checkbox("Added a clear CTA (Call to Action)?", value=True)
-        st.checkbox("First 3 seconds have a text hook?", value=True)
-        st.checkbox("Used local/niche geotags?", value=False)
-        st.checkbox("Replied to all comments in first hour?", value=False)
+        st.markdown("### 🛠️ Engagement Health (v2.0)")
+        score = st.slider("Engagement Health Score", 0, 100, 65)
+        st.progress(score/100)
+        
+        st.checkbox("Reply to 80%+ comments in 1hr?", value=False)
+        st.checkbox("Use question-based caption?", value=True)
+        st.checkbox("Pin a top-performing comment?", value=False)
+        st.checkbox("Cross-promote on WhatsApp/Telegam?", value=False)
+        
+        st.markdown("#### 🧪 Next Experiment")
+        st.info("Host a Live Q&A about Entrance Exams this Wednesday.")
 
