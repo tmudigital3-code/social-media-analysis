@@ -178,13 +178,16 @@ def get_funnel_stage(topic):
     return "Awareness 📢"
 
 def generate_ai_scripts(topic, niche='University'):
-    """Generate mode-based scripts for a trend"""
+    """Generate mode-based scripts for a trend with multiple templates"""
     if niche == 'University':
-        return {
-            'Student POV': f"Hook: 'I bet nobody told you this about {topic} at TMU...'\nBody: Show a quick clip of {topic} in action. Add 'POV: You realized {topic} is actually easy.'\nCTA: 'Tag a friend who needs to see this!'",
-            'Faculty POV': f"Hook: 'From a faculty perspective, {topic} is changing everything.'\nBody: Explain the 3 main benefits of {topic} for student success.\nCTA: 'Read our full research in bio.'",
-            'Brand POV': f"Hook: 'Why TMU is leading the way in {topic}.'\nBody: Cinematic shots of campus facilities related to {topic}.\nCTA: 'Apply for the 2025 session today.'"
+        templates = {
+            'Student POV (Authentic)': f"Hook: 'I bet nobody told you this about {topic} at TMU...'\nBody: Show a quick clip of {topic} in action. Add 'POV: You realized {topic} is actually easy.'\nCTA: 'Tag a friend who needs to see this!'",
+            'Faculty POV (Expert)': f"Hook: 'From a faculty perspective, {topic} is changing everything.'\nBody: Explain the 3 main benefits of {topic} for student success.\nCTA: 'Read our full research in bio.'",
+            'Brand POV (Cinematic)': f"Hook: 'Why TMU is leading the way in {topic}.'\nBody: Cinematic shots of campus facilities related to {topic}.\nCTA: 'Apply for the 2025 session today.'",
+            'Myth vs Fact (Viral)': f"Hook: '3 Myths about {topic} at TMU you need to stop believing.'\nBody: 1. It's too hard (Fact: We have 24/7 labs). 2. No placements (Fact: 90% rate). 3. {topic} is boring (Fact: It's hands-on).\nCTA: 'Check our stories for more facts!'",
+            'Day in the Life (Relatable)': f"Hook: 'What using {topic} looks like as a TMU student.'\nBody: Morning coffee -> Lab session with {topic} -> Group project -> Success!\nCTA: 'Comment JOURNEY to see our full day vlog.'"
         }
+        return templates
     return {}
 
 def generate_seo_captions(topic, niche='University'):
@@ -202,11 +205,19 @@ def get_comment_bait(topic):
     ]
 
 def get_ugc_strategy(topic):
-    """Generate UGC/Ambassador tasks"""
+    """Generate UGC/Ambassador tasks and campaign briefs"""
+    campaign_name = f"#{topic.replace(' ', '')}Challenge"
     return {
-        'Campaign': f"#{topic.replace(' ', '')}Challenge",
+        'Campaign': campaign_name,
         'Ambassador Task': f"Create 1 Reel showing your {topic} routine on campus.",
-        'Challenge Prompt': f"Share your {topic} journey with #TMUAmbassador"
+        'Challenge Prompt': f"Share your {topic} journey with #TMUAmbassador",
+        'Brief': {
+            'Objective': f"Drive awareness for {topic} among prospective students.",
+            'Key Message': f"TMU makes mastering {topic} fun and accessible.",
+            'Visual Style': "Raw, handheld, authentic student-led camera work.",
+            'Deliverables': "1x Reel (15-30s), 2x In-situ Stories.",
+            'Reward': "Featured on main university handle + Amazon Voucher."
+        }
     }
 
 def generate_content_plan(trends):
@@ -348,6 +359,12 @@ def render_market_trends_page():
                             with u1:
                                 st.markdown(f"**Campaign:** `{row['UGC']['Campaign']}`")
                                 st.markdown(f"**Ambassador Task:** {row['UGC']['Ambassador Task']}")
+                                with st.expander("📄 View Campaign Brief"):
+                                    brief = row['UGC']['Brief']
+                                    st.write(f"**Objective:** {brief['Objective']}")
+                                    st.write(f"**Visual Style:** {brief['Visual Style']}")
+                                    st.write(f"**Deliverables:** {brief['Deliverables']}")
+                                    st.write(f"**Incentive:** {brief['Reward']}")
                             with u2:
                                 st.markdown(f"**🔥 Virality Score:** {row['Virality Score']}%")
                                 st.progress(row['Virality Score']/100)
@@ -429,12 +446,20 @@ def render_market_trends_page():
     with col2:
         # Funnel Analysis Widget
         st.markdown("### 🧬 Journey Funnel Analysis")
-        funnel_cols = st.columns(3)
-        with funnel_cols[0]: st.metric("Awareness", "80%", "-5%", help="Top of Funnel")
-        with funnel_cols[1]: st.metric("Consideration", "20%", "0", help="Middle of Funnel")
-        with funnel_cols[2]: st.metric("Decision", "0%", "-10%", delta_color="inverse", help="Bottom of Funnel")
+        funnel_data = {
+            'Stage': ['Awareness', 'Consideration', 'Decision'],
+            'Users': [1000, 200, 50],  # Example absolute numbers
+            'Conversion': ['100%', '20%', '5%']
+        }
         
-        st.warning("⚠️ **Funnel Gap Warning**: You are underposting Decision-stage content (fees, ROI).")
+        # Visual Funnel Layout
+        for i, stage in enumerate(['Awareness 📢', 'Consideration 🤔', 'Decision 💰']):
+            progress_val = [1.0, 0.4, 0.1][i]
+            st.markdown(f"**{stage}**")
+            st.progress(progress_val)
+            st.caption(f"Conversion: {funnel_data['Conversion'][i]} | Target: 25%")
+            
+        st.warning("⚠️ **Funnel Gap Warning**: Critical drop-off between Consideration and Decision. You need more 'How to Apply' content.")
         
         st.markdown("---")
         st.markdown("### 📊 Performance Benchmarks")
@@ -473,16 +498,27 @@ def render_market_trends_page():
         st.pyplot(fig)
         
         st.markdown("---")
+        st.markdown("### 🕵️ Competitor Strategy Map")
+        st.info("Top themes being leveraged by 3 competing universities in UP.")
+        
+        comp_data = {
+            'Competitor': ['Univ A (Delhi)', 'Univ B (Noida)', 'Univ C (Local)'],
+            'Primary Hook': ['High Placements', 'Global Reach', 'Low Fees'],
+            'Ad Spend': ['High', 'Medium', 'Aggressive'],
+            'Gaps for TMU': ['Personalized POV', 'Lab Access', 'Hostel Life']
+        }
+        st.table(pd.DataFrame(comp_data))
+        
         st.markdown("### 🚀 Platform Meta-Trends")
         meta_trends = fetch_marketing_trends()
         
         for mt in meta_trends:
             st.markdown(f"""
-            <div style="padding: 1rem; background-color: #f8fafc; border-radius: 8px; margin-bottom: 0.5rem; border-left: 4px solid #667eea;">
-                <div style="font-weight: bold; color: #1e293b;">{mt['trend']}</div>
-                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">
-                    <span>{mt['platform']}</span>
-                    <span style="color: #10b981; font-weight: bold;">{mt['growth']}</span>
+            <div style="padding: 1rem; background-color: #f1f5f9; border-radius: 12px; margin-bottom: 0.75rem; border: 1px solid #e2e8f0; transition: transform 0.2s ease-in-out;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                <div style="font-weight: 800; color: #1e293b; font-size: 1.1rem;">{mt['trend']}</div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: #475569; margin-top: 0.5rem; border-top: 1px solid #cbd5e1; padding-top: 0.5rem;">
+                    <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px;">{mt['platform']}</span>
+                    <span style="color: #059669; font-weight: bold;">{mt['growth']} Growth</span>
                 </div>
             </div>
             """, unsafe_allow_html=True)
@@ -524,6 +560,25 @@ def render_market_trends_page():
         st.checkbox("Pin a top-performing comment?", value=False)
         st.checkbox("Cross-promote on WhatsApp/Telegam?", value=False)
         
-        st.markdown("#### 🧪 Next Experiment")
-        st.info("Host a Live Q&A about Entrance Exams this Wednesday.")
+        st.markdown("### 🧪 Experiment Planner (A/B Test)")
+        st.info("Plan your next content experiment to optimize reach.")
+        with st.container(border=True):
+            exp_type = st.selectbox("Experiment Type", ["Hook Variation", "Thumbnail Test", "CTA Swap", "Duration Test"])
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.text_input("Variant A (Control)", "Standard Hook")
+            with col_b:
+                st.text_input("Variant B (Test)", "Question-based Hook")
+            
+            st.write("**Hypothesis:** Variant B will increase 'Watch Time' by 15% because it piques curiosity immediately.")
+            if st.button("Log Experiment"):
+                st.toast("Experiment Logged to Growth Suite!")
+
+        st.markdown("#### 🚀 Growth Workflow Tracker")
+        st.checkbox(f"Scripts Drafted for {target_platform}", value=False)
+        st.checkbox("UGC Briefs Sent to Ambassadors", value=False)
+        st.checkbox("Ad Creative Approved by Team", value=False)
+        st.markdown("---")
+        st.markdown("#### 💡 Next Quick Win")
+        st.success("Host a Live Q&A about **Entrance Exams** this Wednesday to capture 'Decision' stage leads.")
 

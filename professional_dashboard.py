@@ -171,6 +171,47 @@ except ImportError:
     def render_sentiment_analysis(data):
         st.warning("⚠️ Sentiment analysis not available. Install: pip install textblob")
 
+# Import New Enterprise Features
+try:
+    from competitor_benchmarking import render_competitor_benchmarking
+    COMPETITOR_BENCHMARKING_AVAILABLE = True
+except ImportError:
+    COMPETITOR_BENCHMARKING_AVAILABLE = False
+    def render_competitor_benchmarking(your_data=None):
+        st.warning("⚠️ Competitor benchmarking module not available")
+
+try:
+    from social_listening import render_social_listening
+    SOCIAL_LISTENING_AVAILABLE = True
+except ImportError:
+    SOCIAL_LISTENING_AVAILABLE = False
+    def render_social_listening():
+        st.warning("⚠️ Social listening module not available")
+
+try:
+    from publishing_manager import render_publishing_dashboard
+    PUBLISHING_MANAGER_AVAILABLE = True
+except ImportError:
+    PUBLISHING_MANAGER_AVAILABLE = False
+    def render_publishing_dashboard():
+        st.warning("⚠️ Publishing manager module not available")
+
+try:
+    from influencer_discovery import render_influencer_discovery
+    INFLUENCER_DISCOVERY_AVAILABLE = True
+except ImportError:
+    INFLUENCER_DISCOVERY_AVAILABLE = False
+    def render_influencer_discovery():
+        st.warning("⚠️ Influencer discovery module not available")
+
+try:
+    from hashtag_tracker import render_hashtag_tracker
+    HASHTAG_TRACKER_AVAILABLE = True
+except ImportError:
+    HASHTAG_TRACKER_AVAILABLE = False
+    def render_hashtag_tracker():
+        st.warning("⚠️ Hashtag tracker module not available")
+
 # ==================== Helper Functions ====================
 def safe_int(value, default=0):
     """Safely convert value to integer, handling NaN"""
@@ -2353,7 +2394,12 @@ def main():
             "🔥 Market Trends",
             "💬 Sentiment Analysis",
             "📋 Reports",
-            "🤖 Advanced ML"
+            "🤖 Advanced ML",
+            "🎯 Competitor Benchmarking",
+            "👂 Social Listening",
+            "📅 Publishing Manager",
+            "⭐ Influencer Discovery",
+            "🏷️ Hashtag Tracker"
         ]
         
         # Enhanced page mapping
@@ -2368,7 +2414,12 @@ def main():
             "🔥 Market Trends": "Market Trends",
             "💬 Sentiment Analysis": "Sentiment Analysis",
             "📋 Reports": "Reports",
-            "🤖 Advanced ML": "🤖 Advanced ML"
+            "🤖 Advanced ML": "🤖 Advanced ML",
+            "🎯 Competitor Benchmarking": "Competitor Benchmarking",
+            "👂 Social Listening": "Social Listening",
+            "📅 Publishing Manager": "Publishing Manager",
+            "⭐ Influencer Discovery": "Influencer Discovery",
+            "🏷️ Hashtag Tracker": "Hashtag Tracker"
         }
         
         # Find current selection index
@@ -2575,6 +2626,42 @@ def main():
             if st.button("📤 Upload Data Now"):
                 st.session_state.current_page = "Upload Data"
                 st.rerun()
+    
+    # New Enterprise Features
+    elif st.session_state.current_page == "Competitor Benchmarking":
+        if COMPETITOR_BENCHMARKING_AVAILABLE:
+            render_competitor_benchmarking()
+        else:
+            st.error("⚠️ Competitor Benchmarking module not available")
+            st.info("Please ensure competitor_benchmarking.py is in the project directory")
+    
+    elif st.session_state.current_page == "Social Listening":
+        if SOCIAL_LISTENING_AVAILABLE:
+            render_social_listening()
+        else:
+            st.error("⚠️ Social Listening module not available")
+            st.info("Please ensure social_listening.py is in the project directory")
+    
+    elif st.session_state.current_page == "Publishing Manager":
+        if PUBLISHING_MANAGER_AVAILABLE:
+            render_publishing_dashboard()
+        else:
+            st.error("⚠️ Publishing Manager module not available")
+            st.info("Please ensure publishing_manager.py is in the project directory")
+    
+    elif st.session_state.current_page == "Influencer Discovery":
+        if INFLUENCER_DISCOVERY_AVAILABLE:
+            render_influencer_discovery()
+        else:
+            st.error("⚠️ Influencer Discovery module not available")
+            st.info("Please ensure influencer_discovery.py is in the project directory")
+    
+    elif st.session_state.current_page == "Hashtag Tracker":
+        if HASHTAG_TRACKER_AVAILABLE:
+            render_hashtag_tracker()
+        else:
+            st.error("⚠️ Hashtag Tracker module not available")
+            st.info("Please ensure hashtag_tracker.py is in the project directory")
     
     # Show AI Next Move on Dashboard page too
     if st.session_state.current_page == "Dashboard" and st.session_state.data is not None:
