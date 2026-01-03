@@ -18,14 +18,22 @@ def generate_influencer_database(num_influencers=50):
     platforms = ['Instagram', 'YouTube', 'LinkedIn', 'Twitter', 'TikTok']
     locations = ['Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai', 'Ahmedabad', 'Kolkata']
     
+    # Specific top private universities for recruitment focus
+    target_universities = [
+        'Parul University', 'Chandigarh University', 'LPU (Lovely Professional University)', 
+        'Amity University', 'SRM Institute', 'VIT (Vellore Institute of Technology)', 
+        'Manipal Academy', 'Shiv Nadar University', 'OP Jindal Global', 'Bennett University'
+    ]
+    
     # Names more likely to be associated with education/expert accounts
-    first_names = ['Dr. Aarti', 'Prof. Raj', 'Student', 'Edu', 'Expert', 'Counselor', 'Aman', 'Priya', 'Rohan', 'Sneha']
-    last_names = ['Sharma', 'Verma', 'Kumar', 'Patel', 'Guides', 'Consultancy', 'Akademy', 'Hub', 'Joshi', 'Nair']
+    first_names = ['Dr. Aarti', 'Prof. Raj', 'Student', 'Edu', 'Expert', 'Counselor', 'Aman', 'Priya', 'Rohan', 'Sneha', 'Official']
+    last_names = ['Sharma', 'Verma', 'Kumar', 'Patel', 'Guides', 'Consultancy', 'Akademy', 'Hub', 'Joshi', 'Ambassador']
     
     for i in range(num_influencers):
         followers = random.randint(5000, 500000)
         engagement_rate = round(random.uniform(2.0, 15.0), 2)
         avg_views = followers * random.uniform(0.3, 0.8)
+        university = random.choice(target_universities) if random.random() > 0.3 else "General Education"
         
         influencers.append({
             'id': i + 1,
@@ -33,6 +41,7 @@ def generate_influencer_database(num_influencers=50):
             'handle': f"@{random.choice(first_names).lower()}{random.choice(last_names).lower()}{random.randint(10, 99)}",
             'platform': random.choice(platforms),
             'niche': random.choice(niches),
+            'university_affinity': university,
             'followers': followers,
             'engagement_rate': engagement_rate,
             'avg_likes': int(followers * engagement_rate / 100 * 0.8),
@@ -231,6 +240,7 @@ def render_discovery_section(influencers_df):
             with col2:
                 st.markdown(f"""
                 **📍 Location:** {influencer['location']}  
+                **🏛️ University Affinity:** {influencer['university_affinity']}  
                 **👥 Followers:** {influencer['followers']:,}  
                 **📈 Engagement Rate:** {influencer['engagement_rate']}%  
                 **🎯 Authenticity Score:** {influencer['authenticity_score']}/100  
