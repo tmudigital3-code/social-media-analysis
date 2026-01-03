@@ -28,7 +28,7 @@ When you open your app, you'll see these **NEW** options in the sidebar:
 🎯 Competitor Benchmarking      ← ✨ NEW!
 👂 Social Listening             ← ✨ NEW!
 📅 Publishing Manager           ← ✨ NEW!
-⭐ Influencer Discovery         ← ✨ NEW!
+🎓 Admission Influencers         ← ✨ NEW!
 🏷️ Hashtag Tracker             ← ✨ NEW!
 ```
 
@@ -98,13 +98,13 @@ When you open your app, you'll see these **NEW** options in the sidebar:
 
 ---
 
-## ⭐ Feature #4: Influencer Discovery
+## 🎓 Feature #4: Admission Influencers
 
 **What it does:** Find and analyze influencers for collaborations
 
 **Try this:**
 
-1. Click **⭐ Influencer Discovery** in sidebar
+1. Click **🎓 Admission Influencers** in sidebar
 2. Set filters:
    - Platform (Instagram, YouTube, TikTok, etc.)
    - Niche (Education, Tech, Lifestyle, etc.)
@@ -233,11 +233,11 @@ When you open your app, you'll see these **NEW** options in the sidebar:
    - Use optimal posting times (6-9 PM for students)
    - Coordinate across departments
 
-4. **Influencer Discovery:**
+4. **Admission Influencers:**
 
-   - Find student ambassadors
-   - Connect with education influencers
-   - Track alumni with large followings
+   - Find student ambassadors and campus vloggers
+   - Connect with education influencers for recruitment
+   - Track alumni with large followings to boost trust
 
 5. **Hashtag Tracker:**
    - Use #TMU #University #HigherEducation

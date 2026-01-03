@@ -2398,7 +2398,7 @@ def main():
             "🎯 Competitor Benchmarking",
             "👂 Social Listening",
             "📅 Publishing Manager",
-            "⭐ Influencer Discovery",
+            "🎓 Admission Influencers",
             "🏷️ Hashtag Tracker"
         ]
         
@@ -2418,7 +2418,7 @@ def main():
             "🎯 Competitor Benchmarking": "Competitor Benchmarking",
             "👂 Social Listening": "Social Listening",
             "📅 Publishing Manager": "Publishing Manager",
-            "⭐ Influencer Discovery": "Influencer Discovery",
+            "🎓 Admission Influencers": "Influencer Discovery",
             "🏷️ Hashtag Tracker": "Hashtag Tracker"
         }
         

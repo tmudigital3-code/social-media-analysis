@@ -97,11 +97,11 @@ Manage and schedule content across multiple social media accounts from one dashb
 
 ---
 
-### 4. **Influencer Discovery & Analysis**
+### 4. **Admission & Education Influencer Discovery**
 
 **File:** `influencer_discovery.py`
 
-Find, analyze, and collaborate with the right influencers for your brand.
+Identify and collaborate with educational influencers, campus vloggers, and academic experts to boost college admissions.
 
 **Key Features:**
 
@@ -116,7 +116,7 @@ Find, analyze, and collaborate with the right influencers for your brand.
 
 **How to Use:**
 
-1. Go to **⭐ Influencer Discovery**
+1. Go to **🎓 Admission Influencers**
 2. **Discovery Tab:**
    - Set filters (platform, niche, location, budget range)
    - Use advanced filters for followers and engagement
@@ -197,7 +197,7 @@ All modules are **already integrated** into your main dashboard. No additional i
    - 🎯 Competitor Benchmarking
    - 👂 Social Listening
    - 📅 Publishing Manager
-   - ⭐ Influencer Discovery
+   - 🎓 Admission Influencers
    - 🏷️ Hashtag Tracker
 
 ---
@@ -249,11 +249,11 @@ Currently, all modules use **simulated data** for demonstration. To connect real
    - Coordinate event promotions
    - Manage multiple department accounts
 
-4. **Influencer Discovery:**
+4. **Admission Influencers:**
 
-   - Find student ambassadors
-   - Identify education influencers for collaborations
-   - Track alumni influencers
+   - Find student ambassadors and campus vloggers
+   - Identify educational influencers for recruitment collaborations
+   - Track alumni influencers who can boost brand trust for admissions
 
 5. **Hashtag Tracker:**
    - Optimize #Admissions2025 campaign

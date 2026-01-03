@@ -14,12 +14,13 @@ def generate_influencer_database(num_influencers=50):
     """Generate simulated influencer database"""
     influencers = []
     
-    niches = ['Education', 'Student Life', 'Career', 'Tech', 'Lifestyle', 'Motivation']
-    platforms = ['Instagram', 'YouTube', 'TikTok', 'Twitter', 'LinkedIn']
-    locations = ['Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Hyderabad', 'Noida', 'Gurgaon']
+    niches = ['Study Tips', 'Campus Life', 'Exam Prep', 'Career Counseling', 'Admission Consulting', 'Higher Education', 'Scholarships', 'Student Vlogs']
+    platforms = ['Instagram', 'YouTube', 'LinkedIn', 'Twitter', 'TikTok']
+    locations = ['Delhi', 'Mumbai', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai', 'Ahmedabad', 'Kolkata']
     
-    first_names = ['Priya', 'Rahul', 'Ananya', 'Arjun', 'Sneha', 'Rohan', 'Kavya', 'Aditya', 'Ishita', 'Karan']
-    last_names = ['Sharma', 'Patel', 'Kumar', 'Singh', 'Gupta', 'Verma', 'Reddy', 'Mehta', 'Joshi', 'Nair']
+    # Names more likely to be associated with education/expert accounts
+    first_names = ['Dr. Aarti', 'Prof. Raj', 'Student', 'Edu', 'Expert', 'Counselor', 'Aman', 'Priya', 'Rohan', 'Sneha']
+    last_names = ['Sharma', 'Verma', 'Kumar', 'Patel', 'Guides', 'Consultancy', 'Akademy', 'Hub', 'Joshi', 'Nair']
     
     for i in range(num_influencers):
         followers = random.randint(5000, 500000)
@@ -74,8 +75,8 @@ def calculate_influencer_score(influencer):
 def render_influencer_discovery():
     """Main rendering function for influencer discovery"""
     
-    st.markdown("## ⭐ Influencer Discovery & Analysis")
-    st.markdown("Find, analyze, and collaborate with the right influencers for your brand")
+    st.markdown("## 🎓 Academic & Campus Influencer Discovery")
+    st.markdown("Identify and collaborate with educational influencers to boost college admissions and brand reach")
     
     # Generate influencer database
     influencers_df = generate_influencer_database(num_influencers=100)
@@ -102,7 +103,7 @@ def render_influencer_discovery():
 
 def render_discovery_section(influencers_df):
     """Render influencer discovery and search"""
-    st.markdown("### 🔍 Find Influencers")
+    st.markdown("### 🎓 Find Education Influencers")
     
     # Search filters
     col1, col2, col3, col4 = st.columns(4)
@@ -155,10 +156,10 @@ def render_discovery_section(influencers_df):
         
         with col3:
             budget_range = st.slider(
-                "Budget Range (₹)",
+                "Campaign Budget (₹)",
                 min_value=0,
-                max_value=100000,
-                value=(10000, 50000),
+                max_value=200000,
+                value=(20000, 100000),
                 step=5000
             )
     
@@ -369,11 +370,11 @@ def render_campaign_management():
         col1, col2 = st.columns(2)
         
         with col1:
-            campaign_name = st.text_input("Campaign Name", placeholder="e.g., Admissions 2025")
-            campaign_budget = st.number_input("Total Budget (₹)", min_value=0, value=100000, step=10000)
+            campaign_name = st.text_input("Campaign Name", placeholder="e.g., Undergraduate Admissions 2026")
+            campaign_budget = st.number_input("Total Recruitment Budget (₹)", min_value=0, value=500000, step=50000)
             campaign_objective = st.selectbox(
-                "Objective",
-                ["Brand Awareness", "Engagement", "Conversions", "Reach", "Traffic"]
+                "Primary Objective",
+                ["Admission Applications", "Campus Visit Requests", "Brand Awareness", "Direct Lead Generation", "Scholarship Awareness"]
             )
         
         with col2:
@@ -392,34 +393,34 @@ def render_campaign_management():
     
     campaigns = [
         {
-            'name': 'Admissions 2025',
+            'name': 'Undergraduate Admissions 2026',
             'status': 'Active',
-            'influencers': 8,
-            'budget': 150000,
-            'spent': 95000,
-            'reach': 450000,
-            'engagement': 23500,
-            'conversions': 1250
+            'influencers': 12,
+            'budget': 500000,
+            'spent': 320000,
+            'reach': 1250000,
+            'engagement': 85000,
+            'conversions': 4500 # Conversions here are Admission Leads
         },
         {
-            'name': 'Campus Life Showcase',
+            'name': 'Campus Life & Infrastructure Showcase',
             'status': 'Active',
+            'influencers': 7,
+            'budget': 200000,
+            'spent': 110000,
+            'reach': 680000,
+            'engagement': 42000,
+            'conversions': 1200
+        },
+        {
+            'name': 'Alumni Success & Placements',
+            'status': 'Draft',
             'influencers': 5,
-            'budget': 75000,
-            'spent': 45000,
-            'reach': 280000,
-            'engagement': 15600,
-            'conversions': 890
-        },
-        {
-            'name': 'Placement Success Stories',
-            'status': 'Completed',
-            'influencers': 6,
-            'budget': 100000,
-            'spent': 98000,
-            'reach': 520000,
-            'engagement': 31200,
-            'conversions': 1850
+            'budget': 150000,
+            'spent': 0,
+            'reach': 0,
+            'engagement': 0,
+            'conversions': 0
         }
     ]
     
