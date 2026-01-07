@@ -482,6 +482,33 @@ def add_professional_css(mode="dark"):
         border-radius: 2px 2px 0 0;
     }
     
+    /* Elite Chart Title */
+    .pro-chart-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    /* Content Card */
+    .content-card {
+        background: var(--bg-surface);
+        padding: 1.25rem;
+        border-radius: 16px;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        transition: transform 0.2s;
+    }
+    .content-card:hover {
+        transform: translateX(4px);
+        border-color: var(--primary);
+    }
+
     /* Animations */
     @keyframes eliteFadeIn {
         from { opacity: 0; transform: translateY(16px); }
@@ -1056,9 +1083,14 @@ def render_professional_dashboard(data):
             
             # Growth Insight
             st.markdown(f"""
-            <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(16, 185, 129, 0.05); border-radius: 12px; border-left: 3px solid #10b981;">
-                <span style="font-weight: 700; color: #10b981;">PRO TIP:</span> 
-                Your audience grew by <b>{follower_change:+.1f}%</b> this period. Keep up the high-value reels!
+            <div style="margin-top: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                <span style="font-weight: 700; color: #34d399; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    PRO TIP
+                </span> 
+                <span style="color: var(--text-main); font-size: 0.9rem;">
+                    Your audience grew by <b>{follower_change:+.1f}%</b> this period. Keep up the high-value reels!
+                </span>
             </div>
             """, unsafe_allow_html=True)
 
@@ -1082,19 +1114,20 @@ def render_professional_dashboard(data):
                 media_icon = "🎬" if post.get('media_type') == "Video" else "📸"
                 
                 st.markdown(f"""
-                <div style="background: white; padding: 1.25rem; border-radius: 16px; margin-bottom: 1rem; 
-                     border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                <div class="content-card">
                     <div style="display: flex; gap: 1rem; align-items: center;">
-                        <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 12px; font-size: 1.5rem;">{media_icon}</div>
+                        <div style="background: var(--bg-deep); padding: 0.75rem; border-radius: 12px; font-size: 1.5rem; border: 1px solid var(--border-color);">{media_icon}</div>
                         <div style="flex: 1;">
-                            <div style="font-weight: 700; color: #1e293b; font-size: 1rem;">{caption}</div>
-                            <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">
-                                💖 {safe_int(post['likes'])} &nbsp; 💬 {safe_int(post['comments'])} &nbsp; 🔄 {safe_int(post['shares'])}
+                            <div style="font-weight: 600; color: var(--text-main); font-size: 0.95rem; margin-bottom: 0.25rem; line-height: 1.4;">{caption}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 1rem;">
+                                <span>💖 {safe_int(post['likes'])}</span>
+                                <span>💬 {safe_int(post['comments'])}</span>
+                                <span>🔄 {safe_int(post['shares'])}</span>
                             </div>
                         </div>
                         <div style="text-align: right;">
-                            <div style="font-weight: 800; color: #6366f1; font-size: 1.1rem;">{engagement:,}</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Score</div>
+                            <div style="font-weight: 800; color: var(--primary); font-size: 1.1rem;">{engagement:,}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Score</div>
                         </div>
                     </div>
                 </div>
