@@ -239,40 +239,40 @@ def add_professional_css(mode="dark"):
     if mode == "light":
         theme_vars = """
         :root {
-            --primary: #8b5cf6;
-            --primary-glow: rgba(139, 92, 246, 0.1);
-            --accent: #0891b2;
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --accent: #0ea5e9;
             --bg-deep: #f8fafc;
             --bg-surface: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card: rgba(255, 255, 255, 0.7);
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --elite-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --primary-rgb: 139, 92, 246;
+            --elite-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --primary-rgb: 99, 102, 241;
         }
         """
     else:
         theme_vars = """
         :root {
-            --primary: #8b5cf6;
-            --primary-glow: rgba(139, 92, 246, 0.3);
-            --accent: #06b6d4;
+            --primary: #818cf8;
+            --primary-glow: rgba(129, 140, 248, 0.15);
+            --accent: #38bdf8;
             --bg-deep: #09090b;
             --bg-surface: #18181b;
-            --bg-card: rgba(24, 24, 27, 0.8);
-            --text-main: #fafafa;
-            --text-muted: #a1a1aa;
-            --border-color: rgba(39, 39, 42, 0.8);
-            --elite-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            --primary-rgb: 139, 92, 246;
+            --bg-card: rgba(24, 24, 27, 0.6);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --elite-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            --primary-rgb: 129, 140, 248;
         }
         """
 
     st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     
     {theme_vars}
     """ + """
@@ -281,99 +281,109 @@ def add_professional_css(mode="dark"):
     .stApp {
         background-color: var(--bg-deep);
         background-image: 
-            radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.05) 0px, transparent 50%),
-            radial-gradient(at 100% 100%, rgba(6, 118, 212, 0.05) 0px, transparent 50%);
+            radial-gradient(circle at 15% 50%, rgba(var(--primary-rgb), 0.08) 0%, transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.08) 0%, transparent 25%);
         color: var(--text-main);
         font-family: 'Inter', sans-serif;
     }
     
     h1, h2, h3, h4, .pro-header-title {
         font-family: 'Plus Jakarta Sans', sans-serif !important;
-        letter-spacing: -0.04em;
-        font-weight: 800;
+        letter-spacing: -0.025em;
+        font-weight: 700;
     }
     
     /* Elegant Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-deep); }
-    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
     
-    /* Elite Glass Cards */
+    /* Elite Glass Cards - Refined */
     .pro-glass-card {
         background: var(--bg-card);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border: 1px solid var(--border-color);
-        border-radius: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
         padding: 1.5rem;
         box-shadow: var(--elite-shadow);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-bottom: 1.25rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .pro-glass-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+        pointer-events: none;
     }
     
     .pro-glass-card:hover {
-        border-color: rgba(139, 92, 246, 0.4);
-        box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.7), 0 0 20px 0 rgba(139, 92, 246, 0.1);
+        border-color: var(--primary);
         transform: translateY(-2px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
     
     /* Elite Header */
     .pro-header {
         background: var(--bg-surface);
-        padding: 2.5rem;
-        border-radius: 16px;
-        margin-bottom: 2.5rem;
+        padding: 3rem 2rem;
+        border-radius: 20px;
+        margin-bottom: 3rem;
         border: 1px solid var(--border-color);
         position: relative;
         overflow: hidden;
-        box-shadow: var(--elite-shadow);
-    }
-
-    
-    .pro-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
-        pointer-events: none;
-    }
-    
-    .pro-header-title {
-        font-size: clamp(1.5rem, 5vw, 2.2rem);
-        font-weight: 800;
-        margin-bottom: 0.5rem;
-        background: linear-gradient(to right, var(--text-main), var(--text-muted));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    .pro-header-subtitle {
-        font-size: clamp(0.85rem, 2vw, 1rem);
-        color: var(--text-muted);
-        font-weight: 500;
-        max-width: 600px;
-    }
-
-    
-    /* KPI Cards Premium */
-    .pro-kpi-container {
         display: flex;
         flex-direction: column;
         justify-content: center;
+    }
+    
+    .pro-header-title {
+        font-size: clamp(2rem, 5vw, 2.75rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 0.75rem;
+        background: linear-gradient(to bottom right, var(--text-main), var(--text-muted));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        z-index: 2;
+    }
+    
+    .pro-header-subtitle {
+        font-size: clamp(1rem, 2vw, 1.125rem);
+        color: var(--text-muted);
+        font-weight: 400;
+        max-width: 650px;
+        line-height: 1.6;
+        z-index: 2;
+    }
+
+    
+    /* KPI Cards Premium Refined */
+    .pro-kpi-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         height: 100%;
+        position: relative;
+        z-index: 1;
     }
     
     .pro-kpi-title {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: var(--text-muted);
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        margin-bottom: 0.75rem;
+        margin-bottom: 1rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
@@ -381,80 +391,105 @@ def add_professional_css(mode="dark"):
     
     /* KPI Elite Grid */
     .pro-kpi-value {
-        font-size: clamp(1.4rem, 4vw, 2.2rem);
-        font-weight: 800;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 700;
         color: var(--text-main);
-        letter-spacing: -0.03em;
-        display: flex;
-        align-items: baseline;
-        gap: 0.75rem;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        font-feature-settings: "tnum";
+        font-variant-numeric: tabular-nums;
     }
     
     .pro-kpi-delta {
         font-size: 0.75rem;
-        font-weight: 700;
-        padding: 0.15rem 0.6rem;
-        border-radius: 20px;
-        background: rgba(var(--primary-rgb), 0.1);
-        border: 1px solid var(--border-color);
-        width: fit-content;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-top: 0.75rem;
+        border: 1px solid transparent;
     }
     
-    .delta-up { color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
-    .delta-down { color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
+    .delta-up { 
+        background: rgba(16, 185, 129, 0.1); 
+        color: #34d399; 
+        border-color: rgba(16, 185, 129, 0.2); 
+    }
+    .delta-down { 
+        background: rgba(244, 63, 94, 0.1); 
+        color: #fb7185; 
+        border-color: rgba(244, 63, 94, 0.2); 
+    }
     
     /* Elite Sidebar */
     [data-testid="stSidebar"] {
-        background-color: var(--bg-surface);
+        background-color: var(--bg-deep);
         border-right: 1px solid var(--border-color);
     }
-
     
     /* Elite Buttons */
     .stButton>button {
         background: var(--bg-surface);
         color: var(--text-main);
         border: 1px solid var(--border-color);
-        padding: 0.6rem 1.5rem;
+        padding: 0.6rem 1.25rem;
         border-radius: 8px;
-        font-weight: 600;
+        font-weight: 500;
+        font-size: 0.9rem;
         transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     
     .stButton>button:hover {
         border-color: var(--primary);
-        background: rgba(139, 92, 246, 0.05);
         color: var(--primary);
+        transform: translateY(-1px);
     }
     
     /* Elite Tabs */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 1.5rem;
+        gap: 2rem;
         border-bottom: 1px solid var(--border-color);
+        padding-bottom: 0;
     }
     
     .stTabs [data-baseweb="tab"] {
-        padding: 0.75rem 0.25rem;
-        border-bottom: 2px solid transparent;
+        padding: 1rem 0;
         color: var(--text-muted);
         font-weight: 500;
-        transition: all 0.2s ease;
+        border: none;
+        background: transparent;
+        transition: color 0.2s;
     }
     
     .stTabs [aria-selected="true"] {
         color: var(--primary) !important;
-        border-bottom: 2px solid var(--primary) !important;
+        font-weight: 600;
         background: transparent !important;
+        position: relative;
+    }
+    
+    .stTabs [aria-selected="true"]::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary);
+        border-radius: 2px 2px 0 0;
     }
     
     /* Animations */
     @keyframes eliteFadeIn {
-        from { opacity: 0; transform: translateY(10px); }
+        from { opacity: 0; transform: translateY(16px); }
         to { opacity: 1; transform: translateY(0); }
     }
     
     .fade-in {
-        animation: eliteFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        animation: eliteFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -524,17 +559,17 @@ def render_professional_kpi(title, value, delta=None, delta_type="up", icon_name
         delta_icon = "↑" if delta_type == "up" else "↓"
         delta_html = f'<div class="pro-kpi-delta {delta_class}">{delta_icon} {delta}</div>'
     
-    icon_svg = get_svg_icon(icon_name, color="var(--primary)", size=20)
+    icon_svg = get_svg_icon(icon_name, color="var(--primary)", size=18)
     
     st.markdown(f"""
     <div class="pro-glass-card fade-in">
         <div class="pro-kpi-container">
             <div class="pro-kpi-title">
-                <span style="display: flex; align-items: center;">{icon_svg}</span>
-                <span style="margin-left: 8px;">{title}</span>
+                {icon_svg}
+                <span>{title}</span>
             </div>
             <div class="pro-kpi-value">{formatted_value}</div>
-            <div style="margin-top: 10px;">{delta_html}</div>
+            {delta_html}
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -542,38 +577,38 @@ def render_professional_kpi(title, value, delta=None, delta_type="up", icon_name
 
 def render_quick_actions():
     """Elite Mission Control section with quick dashboard actions"""
-    st.markdown('<div class="pro-header-title" style="font-size: 1.25rem; margin: 2rem 0 1rem 0;">⚡ Mission Control</div>', unsafe_allow_html=True)
+    st.markdown('<div class="pro-header-title" style="font-size: 1.5rem; margin: 1.5rem 0 1.5rem 0;">⚡ Mission Control</div>', unsafe_allow_html=True)
     
     # 4-Column Quick Action Suite
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1rem; text-align: center; border-bottom: 3px solid #6366f1;">', unsafe_allow_html=True)
-        st.markdown('<div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📄</div>', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1.25rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size: 2rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(99,102,241,0.2));">📄</div>', unsafe_allow_html=True)
         if st.button("Generate Report", key="btn_pdf", use_container_width=True):
             st.session_state.current_page = "Reports"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
         
     with col2:
-        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1rem; text-align: center; border-bottom: 3px solid #10b981;">', unsafe_allow_html=True)
-        st.markdown('<div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🤖</div>', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1.25rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size: 2rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(16,185,129,0.2));">🤖</div>', unsafe_allow_html=True)
         if st.button("AI Forecast", key="btn_forecast", use_container_width=True):
-            st.session_state.current_page = "🔮 Predictive Engine"
+            st.session_state.current_page = "🔮 Engagement Forecast"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
         
     with col3:
-        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1rem; text-align: center; border-bottom: 3px solid #f59e0b;">', unsafe_allow_html=True)
-        st.markdown('<div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🏷️</div>', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1.25rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size: 2rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(245,158,11,0.2));">🏷️</div>', unsafe_allow_html=True)
         if st.button("Hashtag Analysis", key="btn_hashtags", use_container_width=True):
-            st.session_state.current_page = "🎬 Content Deep-Dive"
+            st.session_state.current_page = "🎬 Content Performance"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
         
     with col4:
-        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1rem; text-align: center; border-bottom: 3px solid #ef4444;">', unsafe_allow_html=True)
-        st.markdown('<div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔄</div>', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1.25rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size: 2rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(239,68,68,0.2));">🔄</div>', unsafe_allow_html=True)
         if st.button("Sync Data", key="btn_sync", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
