@@ -233,42 +233,39 @@ def safe_float(value, default=0.0):
 
 # ==================== Professional CSS Styling ====================
 def add_professional_css(mode="dark"):
-    """Enhanced design system based on User-requested Academic/Enterprise UI"""
+    """Add professional CSS styling with premium SaaS aesthetics"""
     
+    # Theme-specific variable sets
     if mode == "light":
         theme_vars = """
         :root {
-            --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.1);
-            --accent: #2563eb;
-            --bg-deep: #f3f4f6;
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.1);
+            --accent: #0891b2;
+            --bg-deep: #f8fafc;
             --bg-surface: #ffffff;
-            --bg-card: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border-color: #e5e7eb;
-            --elite-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            --sidebar-bg: #ffffff;
-            --nav-selected: #eff6ff;
-            --nav-selected-text: #2563eb;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --elite-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --primary-rgb: 139, 92, 246;
         }
         """
     else:
         theme_vars = """
         :root {
-            --primary: #60a5fa;
-            --primary-glow: rgba(96, 165, 250, 0.2);
-            --accent: #3b82f6;
-            --bg-deep: #0f172a;
-            --bg-surface: #1e293b;
-            --bg-card: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
-            --elite-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-            --sidebar-bg: #1e293b;
-            --nav-selected: rgba(59, 130, 246, 0.2);
-            --nav-selected-text: #60a5fa;
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.3);
+            --accent: #06b6d4;
+            --bg-deep: #09090b;
+            --bg-surface: #18181b;
+            --bg-card: rgba(24, 24, 27, 0.8);
+            --text-main: #fafafa;
+            --text-muted: #a1a1aa;
+            --border-color: rgba(39, 39, 42, 0.8);
+            --elite-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --primary-rgb: 139, 92, 246;
         }
         """
 
@@ -278,183 +275,187 @@ def add_professional_css(mode="dark"):
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     {theme_vars}
+    """ + """
     
-    .stApp {{
+    /* Global Styles */
+    .stApp {
         background-color: var(--bg-deep);
+        background-image: 
+            radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.05) 0px, transparent 50%),
+            radial-gradient(at 100% 100%, rgba(6, 118, 212, 0.05) 0px, transparent 50%);
         color: var(--text-main);
         font-family: 'Inter', sans-serif;
-    }}
+    }
     
-    /* Academic Breadcrumb & Header */
-    .breadcrumb-container {{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 0;
-        margin-bottom: 1rem;
+    h1, h2, h3, h4, .pro-header-title {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        letter-spacing: -0.04em;
+        font-weight: 800;
+    }
+    
+    /* Elegant Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+    
+    /* Elite Glass Cards */
+    .pro-glass-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: var(--elite-shadow);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 1.25rem;
+    }
+    
+    .pro-glass-card:hover {
+        border-color: rgba(139, 92, 246, 0.4);
+        box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.7), 0 0 20px 0 rgba(139, 92, 246, 0.1);
+        transform: translateY(-2px);
+    }
+    
+    /* Elite Header */
+    .pro-header {
+        background: var(--bg-surface);
+        padding: 2.5rem;
+        border-radius: 16px;
+        margin-bottom: 2.5rem;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--elite-shadow);
+    }
+
+    
+    .pro-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
+        pointer-events: none;
+    }
+    
+    .pro-header-title {
+        font-size: clamp(1.5rem, 5vw, 2.2rem);
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(to right, var(--text-main), var(--text-muted));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .pro-header-subtitle {
+        font-size: clamp(0.85rem, 2vw, 1rem);
         color: var(--text-muted);
-        font-size: 0.85rem;
-    }}
+        font-weight: 500;
+        max-width: 600px;
+    }
+
     
-    .breadcrumb-path {{
+    /* KPI Cards Premium */
+    .pro-kpi-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+    }
+    
+    .pro-kpi-title {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-    }}
+    }
     
-    .page-title {{
-        font-size: 1.75rem;
-        font-weight: 700;
+    /* KPI Elite Grid */
+    .pro-kpi-value {
+        font-size: clamp(1.4rem, 4vw, 2.2rem);
+        font-weight: 800;
         color: var(--text-main);
-        margin: 0.5rem 0 1.5rem 0;
-    }}
-
-    /* Horizontal Filter Bar */
-    .filter-bar {{
-        background: var(--bg-surface);
-        padding: 1rem;
-        border-radius: 12px;
-        border: 1px solid var(--border-color);
+        letter-spacing: -0.03em;
         display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--elite-shadow);
-        flex-wrap: wrap;
-    }}
-
-    /* Status Badges */
-    .badge {{
-        padding: 0.3rem 0.8rem;
-        border-radius: 50px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        border: 1px solid transparent;
-    }}
-    .badge-expired {{ background: #fee2e2; color: #ef4444; border-color: #fecaca; }}
-    .badge-live {{ background: #dcfce7; color: #10b981; border-color: #bbf7d0; }}
-    .badge-upcoming {{ background: #f3f4f6; color: #6b7280; border-color: #e5e7eb; }}
-    .badge-info {{ background: #e0f2fe; color: #0ea5e9; border-color: #bae6fd; }}
-
-    /* Action Link */
-    .action-link {{
-        color: #2563eb;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.85rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-    }}
-    .action-link:hover {{ text-decoration: underline; }}
-
-    /* KPI Pills */
-    .kpi-pill {{
-        display: inline-flex;
-        align-items: center;
-        padding: 0.35rem 1rem;
-        border-radius: 10px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        margin-left: 0.75rem;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }}
-    .kpi-student {{ background: #f3f4f6; color: #1f2937; border: 1px solid #e5e7eb; }}
-    .kpi-instant {{ background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; }}
-    .kpi-guest {{ background: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; }}
-    .kpi-scanned {{ background: #dcfce7; color: #15803d; border: 1px solid #d1fae5; }}
-
-    /* Main Content Card */
-    .main-card {{
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: var(--elite-shadow);
-        margin-bottom: 2rem;
-    }}
+        align-items: baseline;
+        gap: 0.75rem;
+    }
     
-    .card-header {{
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 1.5rem;
-        margin-bottom: 1.5rem;
-    }}
-
-    /* Table Styling */
-    .pro-table {{
-        width: 100%;
-        border-collapse: collapse;
-    }}
-    .pro-table th {{
-        text-align: left;
-        padding: 1rem;
-        color: var(--text-muted);
-        font-weight: 600;
-        font-size: 0.85rem;
-        border-bottom: 2px solid var(--border-color);
-    }}
-    .pro-table td {{
-        padding: 1.25rem 1rem;
-        border-bottom: 1px solid var(--border-color);
-        font-size: 0.9rem;
-    }}
-
-    /* Sidebar Styling */
-    [data-testid="stSidebar"] {{
-        background-color: var(--sidebar-bg);
-    }}
-    
-    .sidebar-category {{
-        color: var(--text-muted);
+    .pro-kpi-delta {
         font-size: 0.75rem;
         font-weight: 700;
-        text-transform: uppercase;
-        margin: 1.5rem 0 0.5rem 0;
-        padding: 0 1rem;
-    }}
+        padding: 0.15rem 0.6rem;
+        border-radius: 20px;
+        background: rgba(var(--primary-rgb), 0.1);
+        border: 1px solid var(--border-color);
+        width: fit-content;
+    }
     
-    .nav-item {{
-        display: flex;
-        align-items: center;
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        margin: 0.25rem 0.5rem;
-        cursor: pointer;
-        transition: all 0.2s;
-    }}
+    .delta-up { color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
+    .delta-down { color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
     
-    .nav-item:hover {{ background: var(--bg-deep); }}
-    .nav-item.selected {{ 
-        background: var(--nav-selected);
-        color: var(--nav-selected-text);
-        font-weight: 600;
-    }}
+    /* Elite Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: var(--bg-surface);
+        border-right: 1px solid var(--border-color);
+    }
 
-    /* Footer */
-    .pro-footer {{
-        padding: 2rem 0;
-        margin-top: 4rem;
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        justify-content: space-between;
+    
+    /* Elite Buttons */
+    .stButton>button {
+        background: var(--bg-surface);
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+        padding: 0.6rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+    
+    .stButton>button:hover {
+        border-color: var(--primary);
+        background: rgba(139, 92, 246, 0.05);
+        color: var(--primary);
+    }
+    
+    /* Elite Tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .stTabs [data-baseweb="tab"] {
+        padding: 0.75rem 0.25rem;
+        border-bottom: 2px solid transparent;
         color: var(--text-muted);
-        font-size: 0.85rem;
-    }}
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    
+    .stTabs [aria-selected="true"] {
+        color: var(--primary) !important;
+        border-bottom: 2px solid var(--primary) !important;
+        background: transparent !important;
+    }
     
     /* Animations */
-    @keyframes eliteFadeIn {{
-        from {{ opacity: 0; transform: translateY(10px); }}
-        to {{ opacity: 1; transform: translateY(0); }}
-    }}
+    @keyframes eliteFadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
     
-    .fade-in {{
+    .fade-in {
         animation: eliteFadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-    }}
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -498,137 +499,85 @@ def get_plotly_theme():
     }
 
 # ==================== Professional Components ====================
-def render_professional_header(title, subtitle=None):
-    """Academic/Enterprise Breadcrumb Header"""
-    current_page = st.session_state.get('current_page', 'Dashboard')
+def render_professional_header(title, subtitle):
+    """Elite Header with accent glow"""
     st.markdown(f"""
-    <div class="breadcrumb-container fade-in">
-        <div class="breadcrumb-path">
-            🏠 Dashboard &nbsp; / &nbsp; {current_page} &nbsp; / &nbsp; Summary
+    <div class="pro-header fade-in">
+        <div style="position: relative; z-index: 2;">
+            <div class="pro-header-title">{title}</div>
+            <div class="pro-header-subtitle">{subtitle}</div>
         </div>
-        <div style="font-size: 0.75rem;">
-            Bookings & attendance summary for <b>{datetime.now().strftime('%Y-%m-%d')}</b>
-        </div>
+        <div style="position: absolute; right: -50px; top: -50px; width: 200px; height: 200px; background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%); z-index: 1;"></div>
     </div>
-    <div class="page-title fade-in">{title}</div>
     """, unsafe_allow_html=True)
 
-def render_professional_kpi(title, value, delta=None, delta_type="up", icon_name="activity", pill_class="kpi-student"):
-    """Pill-style KPI for the Header area"""
+def render_professional_kpi(title, value, delta=None, delta_type="up", icon_name="activity"):
+    """Elite Glassmorphism KPI card with SVG icons"""
     if isinstance(value, (int, float)):
         formatted_value = f"{value:,}"
     else:
         formatted_value = str(value)
     
-    return f'<div class="kpi-pill {pill_class}">{title}: {formatted_value}</div>'
-
-def render_filter_bar():
-    """Enhanced horizontal filter bar with Search, Date, Platform, and Slots"""
-    st.markdown('<div class="filter-bar fade-in">', unsafe_allow_html=True)
-    f_col1, f_col2, f_col3, f_col4, f_col5, f_col6, f_col7 = st.columns([2, 1.2, 1.2, 1, 1, 0.7, 0.8])
+    delta_html = ""
+    if delta:
+        delta_class = "delta-up" if delta_type == "up" else "delta-down"
+        delta_icon = "↑" if delta_type == "up" else "↓"
+        delta_html = f'<div class="pro-kpi-delta {delta_class}">{delta_icon} {delta}</div>'
     
-    with f_col1:
-        st.text_input("Search", placeholder="🔍 Search posts or platforms...", label_visibility="collapsed")
-    with f_col2:
-        st.date_input("Date", datetime.now(), label_visibility="collapsed")
-    with f_col3:
-        st.selectbox("Platform", ["All Platforms", "Instagram", "Facebook", "YouTube"], label_visibility="collapsed")
-    with f_col4:
-        st.selectbox("Category", ["All Content", "Video", "Image", "Carousel"], label_visibility="collapsed")
-    with f_col5:
-        st.selectbox("Slot", ["All Cycles", "Morning", "Evening", "Night"], label_visibility="collapsed")
-    with f_col6:
-        if st.button("🔄 Sync", use_container_width=True):
+    icon_svg = get_svg_icon(icon_name, color="var(--primary)", size=20)
+    
+    st.markdown(f"""
+    <div class="pro-glass-card fade-in">
+        <div class="pro-kpi-container">
+            <div class="pro-kpi-title">
+                <span style="display: flex; align-items: center;">{icon_svg}</span>
+                <span style="margin-left: 8px;">{title}</span>
+            </div>
+            <div class="pro-kpi-value">{formatted_value}</div>
+            <div style="margin-top: 10px;">{delta_html}</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def render_quick_actions():
+    """Elite Mission Control section with quick dashboard actions"""
+    st.markdown('<div class="pro-header-title" style="font-size: 1.25rem; margin: 2rem 0 1rem 0;">⚡ Mission Control</div>', unsafe_allow_html=True)
+    
+    # 4-Column Quick Action Suite
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1rem; text-align: center; border-bottom: 3px solid #6366f1;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📄</div>', unsafe_allow_html=True)
+        if st.button("Generate Report", key="btn_pdf", use_container_width=True):
+            st.session_state.current_page = "Reports"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+    with col2:
+        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1rem; text-align: center; border-bottom: 3px solid #10b981;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🤖</div>', unsafe_allow_html=True)
+        if st.button("AI Forecast", key="btn_forecast", use_container_width=True):
+            st.session_state.current_page = "🔮 Predictive Engine"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+    with col3:
+        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1rem; text-align: center; border-bottom: 3px solid #f59e0b;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🏷️</div>', unsafe_allow_html=True)
+        if st.button("Hashtag Analysis", key="btn_hashtags", use_container_width=True):
+            st.session_state.current_page = "🎬 Content Deep-Dive"
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+    with col4:
+        st.markdown('<div class="pro-glass-card fade-in" style="padding: 1rem; text-align: center; border-bottom: 3px solid #ef4444;">', unsafe_allow_html=True)
+        st.markdown('<div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🔄</div>', unsafe_allow_html=True)
+        if st.button("Sync Data", key="btn_sync", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
-    with f_col7:
-        st.button("📥 CSV", use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Info Banner (Sticky Alert Style)
-    st.markdown(f"""
-    <div style="background: #e0f2fe; color: #0369a1; padding: 0.75rem 1.25rem; border-radius: 12px; font-size: 0.85rem; margin-bottom: 2rem; border-left: 6px solid #0ea5e9; display: flex; align-items: center; gap: 0.75rem;">
-        <span style="font-size: 1.1rem;">ℹ️</span>
-        <div><b>Data Sync Protocol:</b> Multi-platform analytics sync is active. Deep-dive intelligence will be fully populated after 2:00 PM today.</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-def render_platform_status_table(data):
-    """Refined Platform performance table with Action column and multi-pills"""
-    st.markdown('<div class="main-card fade-in">', unsafe_allow_html=True)
-    
-    # KPIs Calculation
-    total_posts = len(data)
-    total_likes = data['likes'].sum() if 'likes' in data.columns else 0
-    total_comments = data['comments'].sum() if 'comments' in data.columns else 0
-    total_reach = data['reach'].sum() if 'reach' in data.columns else 0
-
-    # Card Header
-    st.markdown(f"""
-    <div class="card-header">
-        <div>
-            <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-main);">Enterprise Activity Gateway</div>
-            <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
-                Monitoring <b>{total_posts}</b> active social threads across connected platforms.
-                <span class="badge badge-live" style="margin-left: 0.75rem;">Gatway Active</span>
-            </div>
-        </div>
-        <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
-            {render_professional_kpi("Threads", total_posts, pill_class="kpi-student")}
-            {render_professional_kpi("Impact", total_reach, pill_class="kpi-instant")}
-            {render_professional_kpi("Pulse", total_likes, pill_class="kpi-guest")}
-            {render_professional_kpi("Talk", total_comments, pill_class="kpi-scanned")}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # The Table
-    st.markdown("""
-    <table class="pro-table">
-        <thead>
-            <tr>
-                <th>Gateway / Platform</th>
-                <th>Likes</th>
-                <th>Comments</th>
-                <th>Reach</th>
-                <th>Engagement</th>
-                <th>Status</th>
-                <th>History</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-    """, unsafe_allow_html=True)
-    
-    if 'media_type' in data.columns:
-        grouped = data.groupby('media_type').agg({
-            'likes': 'sum',
-            'comments': 'sum',
-            'reach': 'sum',
-            'impressions': 'sum'
-        }).reset_index()
-        
-        for idx, row in grouped.iterrows():
-            platform = str(row['media_type'])
-            status = "LIVE" if idx == 0 else "HISTORY"
-            status_class = "badge-live" if status == "LIVE" else "badge-upcoming"
-            
-            eng_rate = (row['likes'] + row['comments']) / row['impressions'] * 100 if row['impressions'] > 0 else 0
-            
-            st.markdown(f"""
-                <tr>
-                    <td><b>{platform}</b></td>
-                    <td>{int(row['likes']):,}</td>
-                    <td>{int(row['comments']):,}</td>
-                    <td>{int(row['reach']):,}</td>
-                    <td>{eng_rate:.1f}%</td>
-                    <td><span class="badge {status_class}">{status}</span></td>
-                    <td><div style="width: 40px; height: 4px; background: #e5e7eb; border-radius: 2px;"><div style="width: {min(100, eng_rate*10)}%; height: 100%; background: #2563eb; border-radius: 2px;"></div></div></td>
-                    <td><a class="action-link" href="#">👁️ View</a></td>
-                </tr>
-            """, unsafe_allow_html=True)
-    
-    st.markdown("</tbody></table></div>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 def render_powerbi_style_kpi(title, value, change=None, change_type="neutral", icon="📊"):
@@ -647,35 +596,6 @@ def render_professional_section_header(title, icon="📊"):
     """, unsafe_allow_html=True)
 
 
-def render_quick_actions():
-    """Elite Mission Control section for rapid access to key features"""
-    st.markdown('<div class="pro-header fade-in" style="margin-top: 2rem;">', unsafe_allow_html=True)
-    st.markdown('<div class="pro-chart-title">⚡ Mission Control</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        if st.button("📊 Refresh Data", key="qa_refresh", use_container_width=True):
-            st.cache_data.clear()
-            st.rerun()
-            
-    with col2:
-        if st.button("📋 Professional Report", key="qa_report", use_container_width=True):
-            st.session_state.current_page = "Reports"
-            st.rerun()
-            
-    with col3:
-        if st.button("🔮 AI Predictions", key="qa_ai", use_container_width=True):
-            st.session_state.current_page = "Predictive Analytics"
-            st.rerun()
-            
-    with col4:
-        if st.button("📤 New Upload", key="qa_upload", use_container_width=True):
-            st.session_state.current_page = "Upload Data"
-            st.rerun()
-
-
 # ==================== Data Upload ====================
 def render_professional_upload():
     """Render professional data upload interface with automatic format detection"""
@@ -685,7 +605,7 @@ def render_professional_upload():
     )
     
     # Professional Upload Container
-    st.markdown('<div class="main-card fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
     
     # Enhanced layout with progress indicators
     col1, col2 = st.columns([2, 1])
@@ -877,7 +797,7 @@ def render_professional_upload():
                     st.session_state.current_page = "Dashboard"
                     st.rerun()
                 
-                st.markdown('</div> <!-- end main-card -->', unsafe_allow_html=True)
+                st.markdown('</div>', unsafe_allow_html=True)
                 return combined_data
     
     with col2:
@@ -948,37 +868,123 @@ def render_professional_upload():
 
 # ==================== 🧭 1. Dashboard Overview ====================
 def render_professional_dashboard(data):
-    """Academic/Enterprise Dashboard View"""
-    render_professional_header("Dashboard Overview")
+    """Dashboard Overview with Summary Metrics and AI-Powered Insights"""
+    render_professional_header(
+        "🧭 Executive Dashboard",
+        "High-level summary of performance with AI-generated insights and recommendations"
+    )
     
-    # 1. Horizontal Filter Bar
-    render_filter_bar()
+    # Calculate metrics with period comparison
+    if 'timestamp' in data.columns:
+        data['timestamp'] = pd.to_datetime(data['timestamp'])
+        current_period = data[data['timestamp'] >= (data['timestamp'].max() - timedelta(days=7))]
+        previous_period = data[(data['timestamp'] >= (data['timestamp'].max() - timedelta(days=14))) & 
+                              (data['timestamp'] < (data['timestamp'].max() - timedelta(days=7)))]
+    else:
+        current_period = data
+        previous_period = data
     
-    # 2. Main Platform Status Table (The "Mess Analytics" style)
-    render_platform_status_table(data)
+    # Calculate KPIs with NaN handling using safe conversion
+    total_followers = safe_int(data['follower_count'].iloc[-1] if 'follower_count' in data.columns and len(data) > 0 else 0)
+    prev_followers = safe_int(data['follower_count'].iloc[-8] if 'follower_count' in data.columns and len(data) > 7 else total_followers, total_followers)
+    follower_change = safe_float(((total_followers - prev_followers) / prev_followers * 100) if prev_followers > 0 else 0)
     
-    # 3. Quick Actions (Restored mission control)
-    render_quick_actions()
+    # Safely calculate engagement metrics with proper data type conversion
+    likes_sum = 0
+    comments_sum = 0
+    shares_sum = 0
+    if 'likes' in current_period.columns:
+        try:
+            likes_sum = pd.to_numeric(current_period['likes'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert likes to numeric: {e}")
+            likes_sum = 0
+    if 'comments' in current_period.columns:
+        try:
+            comments_sum = pd.to_numeric(current_period['comments'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert comments to numeric: {e}")
+            comments_sum = 0
+    if 'shares' in current_period.columns:
+        try:
+            shares_sum = pd.to_numeric(current_period['shares'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert shares to numeric: {e}")
+            shares_sum = 0
+    current_engagement = safe_float(likes_sum + comments_sum + shares_sum)
     
-    # 4. Secondary Analytics Row (Charts)
-    st.markdown("### 📈 Engagement Trajectory")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
-        if 'timestamp' in data.columns and 'follower_count' in data.columns:
-            # Only show recent trajectory
-            fig = px.line(data.tail(30), x='timestamp', y='follower_count', title="Audience Growth Trajectory")
-            fig.update_layout(get_plotly_theme()['layout'])
-            st.plotly_chart(fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
-        if 'timestamp' in data.columns and 'likes' in data.columns:
-            fig = px.bar(data.tail(30), x='timestamp', y='likes', title="Daily Interactions")
-            fig.update_layout(get_plotly_theme()['layout'])
-            st.plotly_chart(fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+    prev_likes_sum = 1
+    prev_comments_sum = 0
+    prev_shares_sum = 0
+    if 'likes' in previous_period.columns:
+        try:
+            prev_likes_sum = pd.to_numeric(previous_period['likes'], errors='coerce').fillna(0).sum() or 1
+        except Exception as e:
+            print(f"Warning: Could not convert previous likes to numeric: {e}")
+            prev_likes_sum = 1
+        try:
+            prev_comments_sum = pd.to_numeric(previous_period['comments'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert previous comments to numeric: {e}")
+            prev_comments_sum = 0
+        try:
+            prev_shares_sum = pd.to_numeric(previous_period['shares'], errors='coerce').fillna(0).sum()
+        except Exception as e:
+            print(f"Warning: Could not convert previous shares to numeric: {e}")
+            prev_shares_sum = 0
+    prev_engagement = safe_float(prev_likes_sum + prev_comments_sum + prev_shares_sum, 1)
+    engagement_change = safe_float(((current_engagement - prev_engagement) / prev_engagement * 100) if prev_engagement > 0 else 0)
+    
+    current_impressions = 0
+    if 'impressions' in current_period.columns:
+        try:
+            current_impressions = safe_int(pd.to_numeric(current_period['impressions'], errors='coerce').fillna(0).sum())
+        except Exception as e:
+            print(f"Warning: Could not convert impressions to numeric: {e}")
+            current_impressions = 0
+    prev_impressions = 1
+    if 'impressions' in previous_period.columns:
+        try:
+            prev_impressions = safe_int(pd.to_numeric(previous_period['impressions'], errors='coerce').fillna(0).sum() or 1, 1)
+        except Exception as e:
+            print(f"Warning: Could not convert previous impressions to numeric: {e}")
+            prev_impressions = 1
+    impressions_change = safe_float(((current_impressions - prev_impressions) / prev_impressions * 100) if prev_impressions > 0 else 0)
+    
+    current_reach = 0
+    if 'reach' in current_period.columns:
+        try:
+            current_reach = safe_int(pd.to_numeric(current_period['reach'], errors='coerce').fillna(0).sum())
+        except Exception as e:
+            print(f"Warning: Could not convert reach to numeric: {e}")
+            current_reach = 0
+    prev_reach = 1
+    if 'reach' in previous_period.columns:
+        try:
+            prev_reach = safe_int(pd.to_numeric(previous_period['reach'], errors='coerce').fillna(0).sum() or 1, 1)
+        except Exception as e:
+            print(f"Warning: Could not convert previous reach to numeric: {e}")
+            prev_reach = 1
+    reach_change = safe_float(((current_reach - prev_reach) / prev_reach * 100) if prev_reach > 0 else 0)
+    
+    engagement_rate = safe_float((current_engagement / current_impressions * 100) if current_impressions > 0 else 0)
+    
+    # Elite KPI Master Row
+    st.markdown('<div style="margin-bottom: 2rem;">', unsafe_allow_html=True)
+    cols = st.columns(4)
+    
+    with cols[0]:
+        render_professional_kpi("Followers", total_followers, delta=f"{follower_change:+.1f}%", delta_type="up" if follower_change > 0 else "down", icon_name="users")
+    
+    with cols[1]:
+        render_professional_kpi("Engagement", f"{engagement_rate:.1f}%", delta=f"{engagement_change:+.1f}%", delta_type="up" if engagement_change > 0 else "down", icon_name="zap")
+    
+    with cols[2]:
+        render_professional_kpi("Impressions", current_impressions, delta=f"{impressions_change:+.1f}%", delta_type="up" if impressions_change > 0 else "down", icon_name="trending")
+    
+    with cols[3]:
+        render_professional_kpi("Total Reach", current_reach, delta=f"{reach_change:+.1f}%", delta_type="up" if reach_change > 0 else "down", icon_name="activity")
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # Elite Quick Actions
     render_quick_actions()
@@ -1995,11 +2001,12 @@ def render_professional_reports(data):
     )
     
     # Report Options
-    st.markdown('<div class="main-card fade-in">', unsafe_allow_html=True)
-    st.markdown('<div style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 1.5rem;">📋 Report Configuration</div>', unsafe_allow_html=True)
-    
     col1, col2 = st.columns([2, 1])
+    
     with col1:
+        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">📋 Report Configuration</div>', unsafe_allow_html=True)
+        
         report_type = st.selectbox(
             "📄 Select Report Type",
             ["Executive Summary", "Detailed Analytics", "Performance Report", "Custom Report"]
@@ -2016,23 +2023,27 @@ def render_professional_reports(data):
             ["KPI Summary", "Engagement Metrics", "Audience Insights", "Content Performance", "Trends Analysis", "Recommendations"],
             default=["KPI Summary", "Engagement Metrics", "Content Performance"]
         )
+        
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        st.markdown(f'<div class="badge badge-info" style="margin-bottom: 1rem;">Data Ready</div>', unsafe_allow_html=True)
-        st.markdown(f'<div style="font-size: 0.85rem; color: var(--text-muted);">📊 <b>Records:</b> {len(data):,}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div style="font-size: 0.85rem; color: var(--text-muted);">📅 <b>Span:</b> {len(data)} items</div>', unsafe_allow_html=True)
-        st.markdown(f'<div style="font-size: 0.85rem; color: var(--text-muted);">📋 <b>Format:</b> High-Fidelity PDF</div>', unsafe_allow_html=True)
-
-    st.markdown('</div> <!-- end main-card -->', unsafe_allow_html=True)
+        st.markdown('<div class="pro-insights fade-in">', unsafe_allow_html=True)
+        st.markdown('### ℹ️ Report Info')
+        st.markdown(f'<div class="pro-insight-item">📊 <strong>Total Records:</strong> {len(data):,}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="pro-insight-item">📅 <strong>Period:</strong> {len(data)} days</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="pro-insight-item">📋 <strong>Format:</strong> PDF, Excel, CSV</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    st.markdown('<div class="main-card fade-in">', unsafe_allow_html=True)
-    st.markdown('<div style="font-size: 1.25rem; font-weight: 700; color: var(--text-main); margin-bottom: 1.5rem;">⬇️ Download Reports</div>', unsafe_allow_html=True)
+    # Download Buttons
+    st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-chart-title">⬇️ Download Reports</div>', unsafe_allow_html=True)
     
     col_a, col_b, col_c, col_d = st.columns(4)
     
     with col_a:
+        # PDF-Only Premium Export
         if PDF_AVAILABLE:
             if st.button("📊 Generate Executive PDF Report", use_container_width=True, type="primary"):
                 with st.spinner("🔄 Compiling executive intelligence report..."):
@@ -2048,12 +2059,12 @@ def render_professional_reports(data):
                         )
                         st.success("✅ Executive PDF generated successfully!")
         else:
-            st.warning("⚠️ PDF engine not available.")
+            st.warning("⚠️ PDF engine not available. Install reportlab.")
     
     with col_b:
         st.info("💡 PDF is the standard format for executive reviews.")
     
-    st.markdown('</div> <!-- end main-card -->', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
     
     # --- 1️⃣ Executive Overview ---
     st.markdown("### 🔹 1. Executive Overview")
@@ -2288,54 +2299,93 @@ def main():
             st.markdown('<h2 style="text-align: center; color: #667eea;">📊 Analytics</h2>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
-        # Custom Navigation Module Header
-        st.markdown('<div class="sidebar-category">Modules</div>', unsafe_allow_html=True)
+        # Elite Navigation Header
+        st.markdown('<div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">Analytics & Overview</div>', unsafe_allow_html=True)
         
-        # Dashboard Group (Always open for now, like "Mess")
-        with st.expander("📊 Dashboards", expanded=True):
-            nav_items = [
-                ("Summary", "Dashboard"),
-                ("Instant Booking", "Upload Data"), # Mapping for demo
-                ("Reports", "Reports")
-            ]
-            
-            for label, page in nav_items:
-                is_selected = st.session_state.current_page == page
-                selected_class = "selected" if is_selected else ""
-                if st.button(label, key=f"nav_{page}", use_container_width=True):
-                    st.session_state.current_page = page
-                    st.rerun()
+        # Category-based Navigation
+        main_nav = ["🏠 Executive Dashboard", "📤 Upload Data", "📋 Performance Reports"]
+        analytics_nav = ["📊 Advanced Analytics", "🎬 Content Deep-Dive", "👥 Audience Intelligence", "⏰ Time Analysis", "💬 Sentiment Hub"]
+        intelligence_nav = ["🔮 Predictive Engine", "🔥 Market Trends", "🤖 Machine Learning"]
+        campaign_nav = ["🎯 Competitor Bench", "👂 Social Listening", "📅 Publishing Plan", "🎓 Admission Growth", "🏷️ Hashtag Tracker"]
+        
+        all_nav = main_nav + analytics_nav + intelligence_nav + campaign_nav
+        
+        # Enhanced page mapping
+        page_mapping = {
+            "🏠 Executive Dashboard": "Dashboard",
+            "📤 Upload Data": "Upload Data",
+            "📋 Performance Reports": "Reports",
+            "📊 Advanced Analytics": "Advanced Analytics",
+            "🎬 Content Deep-Dive": "Content Performance",
+            "👥 Audience Intelligence": "Audience Insights",
+            "⏰ Time Analysis": "Time Trends",
+            "💬 Sentiment Hub": "Sentiment Analysis",
+            "🔮 Predictive Engine": "Predictive Analytics",
+            "🔥 Market Trends": "Market Trends",
+            "🤖 Machine Learning": "🤖 Advanced ML",
+            "🎯 Competitor Bench": "Competitor Benchmarking",
+            "👂 Social Listening": "Social Listening",
+            "📅 Publishing Plan": "Publishing Manager",
+            "🎓 Admission Growth": "Influencer Discovery",
+            "🏷️ Hashtag Tracker": "Hashtag Tracker"
+        }
+        
+        # Find current selection index
+        current_display = next((d for d, i in page_mapping.items() if i == st.session_state.current_page), "🏠 Executive Dashboard")
+        
+        # Render Grouped Selection
+        selected = st.selectbox("Navigation", all_nav, index=all_nav.index(current_display), label_visibility="collapsed")
+        
+        if selected and page_mapping.get(selected) != st.session_state.current_page:
+            st.session_state.current_page = page_mapping[selected]
+            st.rerun()
 
-        with st.expander("🔬 Analytics"):
-            nav_items = [
-                ("Advanced ML", " Advanced ML"),
-                ("Content Performance", "Content Performance"),
-                ("Audience Insights", "Audience Insights"),
-                ("Sentiment", "Sentiment Analysis")
-            ]
-            for label, page in nav_items:
-                if st.button(label, key=f"nav_{page}", use_container_width=True):
-                    st.session_state.current_page = page
-                    st.rerun()
-
-        with st.expander("🚀 Intelligence"):
-            nav_items = [
-                ("Predictive Engine", "Predictive Analytics"),
-                ("Social Listening", "Social Listening"),
-                ("Competitor Bench", "Competitor Benchmarking")
-            ]
-            for label, page in nav_items:
-                if st.button(label, key=f"nav_{page}", use_container_width=True):
-                    st.session_state.current_page = page
-                    st.rerun()
+        
+        # Professional Divider
+        st.markdown("---")
+        
+        # Appearance Toggle (Eclipse Theme Engine)
+        st.markdown("### 🌗 Appearance")
+        theme_label = "Switch to Elite Light" if st.session_state.ui_mode == "dark" else "Switch to Elite Dark"
+        if st.button(theme_label, use_container_width=True):
+            st.session_state.ui_mode = "light" if st.session_state.ui_mode == "dark" else "dark"
+            st.rerun()
         
         st.markdown("---")
         
-        # Appearance Toggle
-        theme_icon = "☀️" if st.session_state.ui_mode == "dark" else "🌙"
-        if st.button(f"{theme_icon} Toggle Theme", use_container_width=True):
-            st.session_state.ui_mode = "light" if st.session_state.ui_mode == "dark" else "dark"
-            st.rerun()
+        # Quick Actions
+        st.markdown("### ⚡ Quick Actions")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("📊 Refresh Data", use_container_width=True):
+                st.cache_data.clear()
+                st.rerun()
+        with col2:
+            if st.button("🔄 Reset App", use_container_width=True):
+                st.session_state.clear()
+                st.rerun()
+        
+        # System Status
+        st.markdown("---")
+        st.markdown("### 📊 System Status")
+        if st.session_state.data is not None:
+            st.success(f"✅ Data Loaded ({len(st.session_state.data)} records)")
+        else:
+            st.warning("⚠️ No Data Loaded")
+        
+        # Platform Info
+        st.markdown("---")
+        st.markdown("### ℹ️ About")
+        st.caption("Professional Social Media Analytics Platform v2.0")
+        st.caption("🚀 Powered by Advanced AI & ML")
+        st.caption("Last Updated: December 2025")
+        
+        # Quick Stats
+        if st.session_state.data is not None:
+            st.markdown("---")
+            st.markdown("### 📊 Quick Stats")
+            st.metric("Total Records", f"{len(st.session_state.data):,}")
+            st.metric("Data Loaded", "✅ Ready")
     
     # Main Content Area
     if st.session_state.current_page == "Upload Data":
