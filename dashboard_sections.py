@@ -29,59 +29,66 @@ def render_content_performance(data):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🎭 Media Type Performance</div>', unsafe_allow_html=True)
         
-
         if 'media_type' in data.columns and 'likes' in data.columns:
             media_performance = data.groupby('media_type').agg({
                 'likes': 'mean',
                 'comments': 'mean' if 'comments' in data.columns else 'count',
                 'shares': 'mean' if 'shares' in data.columns else 'count'
-            }).round(0)
+            }).round(0).reset_index()
             
-            fig = go.Figure()
-            fig.add_trace(go.Bar(name='Likes', x=media_performance.index, y=media_performance['likes'],
-                                marker_color='#667eea'))
-            if 'comments' in data.columns:
-                fig.add_trace(go.Bar(name='Comments', x=media_performance.index, y=media_performance['comments'],
-                                    marker_color='#f093fb'))
-            if 'shares' in data.columns:
-                fig.add_trace(go.Bar(name='Shares', x=media_performance.index, y=media_performance['shares'],
-                                    marker_color='#10b981'))
+            fig = px.bar(media_performance, x='media_type', y=['likes', 'comments', 'shares'],
+                         barmode='group',
+                         color_discrete_map={'likes': '#6366f1', 'comments': '#f093fb', 'shares': '#10b981'})
             
             fig.update_layout(
-                template='plotly_white',
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
                 height=300,
                 margin=dict(l=0, r=0, t=10, b=0),
-                barmode='group',
-                yaxis_title='Average Count'
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                xaxis_title="",
+                yaxis_title="Avg Engagement"
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
             
-            best_type = media_performance['likes'].idxmax()
-            best_likes = media_performance['likes'].max()
-            st.markdown(f"💡 **{best_type}** performs best with {best_likes:.0f} avg likes")
+            best_type = media_performance.loc[media_performance['likes'].idxmax(), 'media_type']
+            st.markdown(f"""
+            <div style="background: rgba(99, 102, 241, 0.05); padding: 0.5rem 1rem; border-radius: 10px; border-left: 3px solid #6366f1;">
+                💡 <b>{best_type}</b> content generates <b>{media_performance['likes'].max():.0f}</b> avg likes.
+            </div>
+            """, unsafe_allow_html=True)
+
         else:
             st.info("⚠️ Data missing for Media Type analysis. Required columns: 'media_type', 'likes'")
         
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🏆 Top Performing Posts</div>', unsafe_allow_html=True)
         
         if all(col in data.columns for col in ['likes', 'comments', 'shares']):
             data_copy = data.copy()
-            data_copy['total_engagement'] = data_copy['likes'] + data_copy['comments'] + data_copy['shares']
-            top_posts = data_copy.nlargest(5, 'total_engagement')[['timestamp', 'caption', 'likes', 'comments', 'shares']]
+            data_copy['total_engagement'] = pd.to_numeric(data_copy['likes'], errors='coerce').fillna(0) + \
+                                           pd.to_numeric(data_copy['comments'], errors='coerce').fillna(0) + \
+                                           pd.to_numeric(data_copy['shares'], errors='coerce').fillna(0)
+                                           
+            top_5 = data_copy.nlargest(5, 'total_engagement')
             
-            # Truncate long captions
-            top_posts['caption'] = top_posts['caption'].astype(str).str[:50] + '...'
-            
-            st.dataframe(top_posts, use_container_width=True, hide_index=True)
+            for _, post in top_5.iterrows():
+                cap = str(post['caption'])[:55] + "..." if len(str(post['caption'])) > 55 else str(post['caption'])
+                st.markdown(f"""
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #f1f5f9;">
+                    <div style="font-size: 0.9rem; color: #1e293b; font-weight: 500;">{cap}</div>
+                    <div style="font-weight: 700; color: #6366f1;">{int(post['total_engagement']):,}</div>
+                </div>
+                """, unsafe_allow_html=True)
         else:
-            st.info("⚠️ Data missing for Top Posts. Required: 'likes', 'comments', 'shares'")
+            st.info("⚠️ Data missing for Top Posts.")
+
         
         st.markdown('</div>', unsafe_allow_html=True)
     
@@ -477,25 +484,26 @@ def render_audience_insights(data):
     
     # 🧍‍♂️🧍‍♀️ Gender Distribution
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🧍‍♂️🧍‍♀️ Gender Distribution</div>', unsafe_allow_html=True)
         
         if 'audience_gender' in data.columns:
             gender_dist = data['audience_gender'].value_counts()
             
-            fig = go.Figure(data=[go.Pie(
-                labels=gender_dist.index,
-                values=gender_dist.values,
-                marker_colors=['#667eea', '#f093fb', '#764ba2']
-            )])
+            fig = px.pie(values=gender_dist.values, names=gender_dist.index, 
+                         hole=0.6,
+                         color_discrete_sequence=['#6366f1', '#f093fb', '#94a3b8'])
             
             fig.update_layout(
-                template='plotly_white',
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
                 height=300,
                 margin=dict(l=0, r=0, t=10, b=0),
-                showlegend=True
+                showlegend=True,
+                legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5)
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
         
         st.markdown('</div>', unsafe_allow_html=True)
     

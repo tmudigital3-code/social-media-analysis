@@ -31,7 +31,7 @@ def render_advanced_analytics_ml(data):
         
         # Engagement Predictor
         with col1:
-            st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+            st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
             st.markdown('<div class="pro-chart-title">🔮 ML Engagement Forecast</div>', unsafe_allow_html=True)
             
             if all(col in data.columns for col in ['timestamp', 'likes', 'comments', 'shares']):
@@ -62,24 +62,27 @@ def render_advanced_analytics_ml(data):
                     x=daily_engagement.index,
                     y=daily_engagement['total'],
                     name='Actual',
-                    line=dict(color='#667eea', width=3)
+                    line=dict(color='#6366f1', width=4)
                 ))
                 fig.add_trace(go.Scatter(
                     x=future_dates,
                     y=future_y,
-                    name='Predicted',
-                    line=dict(color='#f093fb', width=3, dash='dash')
+                    name='AI Predicted',
+                    line=dict(color='#f093fb', width=4, dash='dot')
                 ))
                 
                 fig.update_layout(
-                    template='plotly_white',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
                     height=300,
                     margin=dict(l=0, r=0, t=10, b=0),
-                    hovermode='x unified'
+                    hovermode='x unified',
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
                 )
-                st.plotly_chart(fig, width='stretch')
+                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
             
             st.markdown('</div>', unsafe_allow_html=True)
+
         
         # Engagement Decay Curve
         with col2:
@@ -141,20 +144,22 @@ def render_advanced_analytics_ml(data):
                     z=heatmap_data.values,
                     x=heatmap_data.columns,
                     y=heatmap_data.index,
-                    colorscale='Purples',
+                    colorscale='GnBu',
                     text=heatmap_data.values.round(0),
                     texttemplate="%{text}",
-                    textfont={"size": 9}
+                    textfont={"size": 10}
                 ))
                 
                 fig.update_layout(
-                    template='plotly_white',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
                     height=300,
                     margin=dict(l=0, r=0, t=10, b=0),
-                    xaxis_title="Hour of Day",
-                    yaxis_title="Post Type"
+                    xaxis_title="Hour",
+                    yaxis_title=""
                 )
-                st.plotly_chart(fig, width='stretch')
+                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+
             
             st.markdown('</div>', unsafe_allow_html=True)
         

@@ -72,11 +72,10 @@ def render_deep_learning_forecast(data):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📈 90-Day Follower Forecast</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'follower_count' in data.columns:
-            # We copy to avoid mutating original valid data if we need to
             df = data.copy()
             df['timestamp'] = pd.to_datetime(df['timestamp'])
             daily = df.groupby(pd.Grouper(key='timestamp', freq='D'))['follower_count'].last().reset_index().dropna()
@@ -85,77 +84,75 @@ def render_deep_learning_forecast(data):
                 horizons = [7, 30, 60, 90]
                 colors = ['#10b981', '#f59e0b', '#f97316', '#ef4444']
                 
-                # Matplotlib 90-Day Follower Forecast
-                fig, ax = plt.subplots(figsize=(10, 5))
-                ax.plot(daily['timestamp'], daily['follower_count'], label='Actual', color='#667eea', linewidth=3)
+                fig = go.Figure()
+                fig.add_trace(go.Scatter(x=daily['timestamp'], y=daily['follower_count'], name='Actual', line=dict(color='#6366f1', width=4)))
                 
                 current = int(daily['follower_count'].iloc[-1])
                 growth_metrics = []
 
                 for horizon, color in zip(horizons, colors):
-                    # Use cached calculation
                     future_y = calculate_gb_forecast(daily[['timestamp', 'follower_count']], horizon)
-                    
                     future_dates = pd.date_range(daily['timestamp'].iloc[-1] + timedelta(days=1), periods=horizon, freq='D')
-                    ax.plot(future_dates, future_y, label=f'{horizon}D', color=color, linewidth=2, linestyle='--')
+                    
+                    fig.add_trace(go.Scatter(x=future_dates, y=future_y, name=f'{horizon}D Forecast', line=dict(color=color, width=2, dash='dot')))
                     
                     predicted = int(future_y[-1])
                     growth = predicted - current
                     growth_metrics.append((horizon, growth, color))
                 
-                ax.set_title('90-Day Follower Forecast')
-                ax.legend()
-                plt.xticks(rotation=45)
-                sns.despine()
-                st.pyplot(fig)
+                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=300, margin=dict(l=0, r=0, t=10, b=0), showlegend=True, legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
                 
-                for horizon, growth, color in growth_metrics:
-                     st.markdown(f'<span style="color:{color}">▪ {horizon}d: +{growth:,} ({(growth/current*100):+.1f}%)</span>', unsafe_allow_html=True)
+                metrics_cols = st.columns(4)
+                for i, (horizon, growth, color) in enumerate(growth_metrics):
+                    with metrics_cols[i]:
+                        st.markdown(f"""
+                        <div style="text-align: center; padding: 0.5rem; background: {color}10; border-radius: 8px; border-top: 3px solid {color};">
+                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;">{horizon} Days</div>
+                            <div style="font-weight: 700; color: {color};">+{growth:,}</div>
+                        </div>
+                        """, unsafe_allow_html=True)
             else:
-                st.info("Need 14+ days for forecasting")
+                st.info("Insufficient data for 90-day forecasting.")
         st.markdown('</div>', unsafe_allow_html=True)
+
     
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🔮 Prophet Seasonal Forecast</div>', unsafe_allow_html=True)
         
         if PROPHET_AVAILABLE and 'timestamp' in data.columns and 'follower_count' in data.columns:
             try:
-                # Re-prepare daily data just in case
                 df = data.copy()
                 df['timestamp'] = pd.to_datetime(df['timestamp'])
                 daily = df.groupby(pd.Grouper(key='timestamp', freq='D'))['follower_count'].last().reset_index().dropna()
 
                 if len(daily) > 30:
-                    # Use cached calculation
                     forecast = calculate_prophet_forecast(daily[['timestamp', 'follower_count']])
-                    
                     if forecast is not None:
-                        # Matplotlib Prophet Forecast
-                        fig, ax = plt.subplots(figsize=(10, 5))
-                        ax.plot(daily['timestamp'], daily['follower_count'], label='Actual', color='#667eea', linewidth=3)
-                        ax.plot(forecast['ds'], forecast['yhat'], label='Forecast', color='#f093fb', linewidth=2, linestyle='--')
-                        ax.fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'], color='#f093fb', alpha=0.2, label='Confidence')
+                        fig = go.Figure()
+                        fig.add_trace(go.Scatter(x=daily['timestamp'], y=daily['follower_count'], name='Historical', line=dict(color='#6366f1', width=3)))
+                        fig.add_trace(go.Scatter(x=forecast['ds'], y=forecast['yhat'], name='AI Forecast', line=dict(color='#f093fb', width=3, dash='dash')))
+                        fig.add_trace(go.Scatter(x=pd.concat([forecast['ds'], forecast['ds'][::-1]]), y=pd.concat([forecast['yhat_upper'], forecast['yhat_lower'][::-1]]), fill='toself', fillcolor='rgba(240, 147, 251, 0.15)', line=dict(color='rgba(255,255,255,0)'), hoverinfo="skip", showlegend=False))
                         
-                        ax.set_title('Prophet Seasonal Forecast')
-                        ax.legend()
-                        plt.xticks(rotation=45)
-                        sns.despine()
-                        st.pyplot(fig)
+                        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=300, margin=dict(l=0, r=0, t=10, b=0), showlegend=True, legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
                         
                         pred30 = int(forecast['yhat'].iloc[-1])
                         curr = int(daily['follower_count'].iloc[-1])
-                        st.markdown(f'📊 **30D Forecast:** +{pred30-curr:,} ({(pred30-curr)/curr*100:+.1f}%)')
+                        st.markdown(f"""
+                        <div style="background: rgba(240, 147, 251, 0.05); padding: 0.5rem 1rem; border-radius: 10px; border-left: 3px solid #f093fb;">
+                            📊 <b>30D Growth Target:</b> +{pred30-curr:,} followers projected
+                        </div>
+                        """, unsafe_allow_html=True)
                 else:
-                    st.info("Need 30+ days for Prophet")
+                    st.info("Insufficient data for Prophet seasonal analysis.")
             except Exception as e:
                 st.warning(f"Prophet unavailable: {e}")
         else:
-            if not PROPHET_AVAILABLE:
-                st.info("Install: `pip install prophet`")
-            else:
-                st.info("Insufficient data for Prophet")
+            st.info("Upload more history for Prophet deep analysis.")
         st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 @st.cache_data(show_spinner=False)
@@ -218,33 +215,43 @@ def render_sentiment_analysis(data):
     col1, col2 = st.columns(2)
     
     with col1:
-        # Matplotlib Emotion Distribution
-        fig, ax = plt.subplots(figsize=(6, 6))
-        ax.pie(emotion_counts.values, labels=emotion_counts.index, autopct='%1.1f%%', 
-               colors=[colors_emotion.get(e, '#94a3b8') for e in emotion_counts.index], wedgeprops={'width': 0.4})
-        ax.set_title('Emotion Distribution')
-        st.pyplot(fig)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">🎭 Emotion Distribution</div>', unsafe_allow_html=True)
+        emotion_counts = analysis_df['emotion'].value_counts()
+        colors_emotion = {'😍 Joy': '#10b981', '😊 Happy': '#6366f1', '😡 Anger': '#ef4444', 
+                          '😢 Sad': '#f59e0b', '😲 Surprise': '#f093fb', '😐 Neutral': '#94a3b8'}
+        
+        fig = px.pie(values=emotion_counts.values, names=emotion_counts.index, hole=0.6,
+                     color=emotion_counts.index, color_discrete_map=colors_emotion)
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=300, 
+                          margin=dict(l=0, r=0, t=10, b=0), showlegend=True,
+                          legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📊 Emotion vs Engagement</div>', unsafe_allow_html=True)
         
         if 'likes' in analysis_df.columns:
-            # Matplotlib Emotion vs Engagement
-            emotion_eng = analysis_df.groupby('emotion')['likes'].mean().sort_values(ascending=True)
-            fig, ax = plt.subplots(figsize=(8, 5))
-            y_pos = np.arange(len(emotion_eng))
-            ax.barh(y_pos, emotion_eng.values, color=[colors_emotion.get(e, '#94a3b8') for e in emotion_eng.index])
-            ax.set_yticks(y_pos)
-            ax.set_yticklabels(emotion_eng.index)
-            ax.set_xlabel('Avg Likes')
-            ax.set_title('Emotion vs Engagement')
-            sns.despine()
-            st.pyplot(fig)
+            emotion_eng = analysis_df.groupby('emotion')['likes'].mean().sort_values(ascending=True).reset_index()
+            fig = px.bar(emotion_eng, x='likes', y='emotion', orientation='h',
+                         color='emotion', color_discrete_map=colors_emotion)
+            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=300,
+                              margin=dict(l=0, r=0, t=10, b=0), showlegend=False,
+                              xaxis_title="Avg Likes", yaxis_title="")
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+            
             if not emotion_eng.empty:
-                st.markdown(f'💡 **{emotion_eng.idxmax()}** performs best ({emotion_eng.max():.0f} likes)')
+                best_emo = emotion_eng.iloc[-1]['emotion']
+                best_val = emotion_eng.iloc[-1]['likes']
+                st.markdown(f"""
+                <div style="background: rgba(99, 102, 241, 0.05); padding: 0.5rem 1rem; border-radius: 10px; border-left: 3px solid #6366f1;">
+                    💡 <b>{best_emo}</b> content generates <b>{best_val:.0f}</b> avg likes.
+                </div>
+                """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 @st.cache_data(show_spinner=False)
@@ -274,54 +281,62 @@ def render_audience_clustering(data):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🎯 K-Means Segments</div>', unsafe_allow_html=True)
         
-        # Use cached calculation
         clusters, features_scaled = calculate_clustering(data[required], k=3)
-        
-        # Need to work on a copy to not corrupt main dataframe in session state cache
         df_cluster = data.copy()
         df_cluster['segment'] = clusters
         
         segment_avg = df_cluster.groupby('segment')['likes'].mean().sort_values()
-        labels = {segment_avg.index[0]: 'Low Engagers', segment_avg.index[1]: 'Medium Engagers', segment_avg.index[2]: 'High Engagers'}
-        df_cluster['segment_label'] = df_cluster['segment'].map(labels)
+        labels_map = {segment_avg.index[0]: 'Low Engagers', segment_avg.index[1]: 'Medium Engagers', segment_avg.index[2]: 'High Engagers'}
+        df_cluster['segment_label'] = df_cluster['segment'].map(labels_map)
         
-        counts = df_cluster['segment_label'].value_counts()
-        colors = ['#ef4444', '#f59e0b', '#10b981']
+        counts = df_cluster['segment_label'].value_counts().reset_index()
+        counts.columns = ['label', 'count']
+        colors_map = {'High Engagers': '#10b981', 'Medium Engagers': '#f59e0b', 'Low Engagers': '#ef4444'}
         
-        # Matplotlib K-Means Segments
-        fig, ax = plt.subplots(figsize=(6, 6))
-        ax.pie(counts.values, labels=counts.index, autopct='%1.1f%%', colors=colors, wedgeprops={'width': 0.4})
-        ax.set_title('K-Means Segments')
-        st.pyplot(fig)
-        st.markdown(f'**Quality:** {silhouette_score(features_scaled, clusters):.3f}')
+        fig = px.pie(counts, values='count', names='label', hole=0.6,
+                     color='label', color_discrete_map=colors_map)
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=300,
+                          margin=dict(l=0, r=0, t=10, b=0), showlegend=True,
+                          legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        
+        score = silhouette_score(features_scaled, clusters)
+        st.markdown(f"""
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+            <div style="font-size: 0.85rem; color: #64748b;">Clustering Quality:</div>
+            <div style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700;">{score:.3f}</div>
+        </div>
+        """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🔍 DBSCAN Patterns</div>', unsafe_allow_html=True)
         
-        # DBSCAN is fast enough, but we can cache if needed. For now leave as is to avoid over-engineering if not slow.
-        # Actually, let's just use the scaled features we already have!
         dbscan = DBSCAN(eps=0.5, min_samples=5)
         clusters_db = dbscan.fit_predict(features_scaled)
+        summary = pd.Series(clusters_db).value_counts().sort_index().reset_index()
+        summary.columns = ['cid', 'count']
+        summary['label'] = summary['cid'].apply(lambda x: 'Viral Outliers' if x == -1 else f'Pattern {x+1}')
         
-        summary = pd.Series(clusters_db).value_counts().sort_index()
-        labels = ['Outliers (Viral)' if cid == -1 else f'Pattern {cid+1}' for cid in summary.index]
+        fig = px.bar(summary, x='label', y='count',
+                     color='label', color_discrete_sequence=['#ef4444' if 'Viral' in l else '#6366f1' for l in summary['label']])
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', height=300,
+                          margin=dict(l=0, r=0, t=10, b=0), showlegend=False,
+                          xaxis_title="", yaxis_title="Post Count")
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         
-        # Matplotlib DBSCAN Patterns
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.bar(labels, summary.values, color=['#ef4444' if 'Outliers' in l else '#667eea' for l in labels])
-        for i, v in enumerate(summary.values):
-            ax.text(i, v + 0.1, str(v), ha='center')
-        ax.set_ylabel('Posts')
-        ax.set_title('DBSCAN Patterns')
-        sns.despine()
-        st.pyplot(fig)
-        st.markdown(f'**Outliers:** {(clusters_db==-1).sum()}')
+        outliers = (clusters_db==-1).sum()
+        st.markdown(f"""
+        <div style="background: rgba(239, 68, 68, 0.05); padding: 0.5rem 1rem; border-radius: 10px; border-left: 3px solid #ef4444; margin-top: 1rem;">
+            🔥 Detected <b>{outliers}</b> viral outliers that break common patterns.
+        </div>
+        """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
+
     
     st.markdown('<div class="pro-insights fade-in">', unsafe_allow_html=True)
     st.markdown('### 💡 Segment Recommendations')

@@ -226,16 +226,17 @@ def render_discovery_section(influencers_df):
             
             with col1:
                 st.markdown(f"""
-                <div style="padding: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
-                    <h3 style="margin: 0; color: white;">{influencer['name']}</h3>
-                    <p style="margin: 0.5rem 0; opacity: 0.9;">{influencer['handle']}</p>
-                    <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-                        <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{influencer['platform']}</span>
-                        <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">{influencer['niche']}</span>
-                        {f"<span style='background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;'>✓ Verified</span>" if influencer['verified'] else ""}
+                <div class="pro-glass-card" style="padding: 1.2rem; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white;">
+                    <h3 style="margin: 0; color: white; font-size: 1.2rem;">{influencer['name']}</h3>
+                    <p style="margin: 0.3rem 0; opacity: 0.9; font-size: 0.85rem;">{influencer['handle']}</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem;">
+                        <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 6px; font-size: 0.7rem;">{influencer['platform']}</span>
+                        <span style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 6px; font-size: 0.7rem;">{influencer['niche']}</span>
+                        {f"<span style='background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 6px; font-size: 0.7rem;'>✓ Verified</span>" if influencer['verified'] else ""}
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
+
             
             with col2:
                 st.markdown(f"""
@@ -292,23 +293,33 @@ def render_influencer_analytics(influencers_df):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### 🌐 Platform Distribution")
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">🌐 Platform Distribution</div>', unsafe_allow_html=True)
         
         platform_counts = influencers_df['platform'].value_counts()
         
         fig = px.pie(
             values=platform_counts.values,
             names=platform_counts.index,
-            title="Influencers by Platform",
-            color_discrete_sequence=px.colors.qualitative.Set3,
-            hole=0.4
+            color_discrete_sequence=px.colors.qualitative.Pastel,
+            hole=0.6
         )
         
-        fig.update_layout(height=400)
-        st.plotly_chart(fig, use_container_width=True)
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=350,
+            margin=dict(l=0, r=0, t=10, b=0),
+            showlegend=True,
+            legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5)
+        )
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        st.markdown('</div>', unsafe_allow_html=True)
+
     
     with col2:
-        st.markdown("#### 🎯 Niche Distribution")
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">🎯 Niche Distribution</div>', unsafe_allow_html=True)
         
         niche_counts = influencers_df['niche'].value_counts()
         
@@ -318,20 +329,23 @@ def render_influencer_analytics(influencers_df):
             orientation='h',
             marker=dict(
                 color=niche_counts.values,
-                colorscale='Viridis'
+                colorscale='GnBu'
             ),
             text=niche_counts.values,
-            textposition='auto'
+            textposition='inside'
         ))
         
         fig.update_layout(
-            title="Influencers by Niche",
-            xaxis_title="Count",
-            height=400,
-            template='plotly_white'
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=350,
+            margin=dict(l=0, r=0, t=10, b=0),
+            xaxis_title="",
+            yaxis_title=""
         )
-        
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        st.markdown('</div>', unsafe_allow_html=True)
+
     
     # Engagement vs Followers scatter
     st.markdown("#### 📈 Engagement Rate vs Followers")

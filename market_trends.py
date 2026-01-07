@@ -461,41 +461,61 @@ def render_market_trends_page():
             
         st.warning("⚠️ **Funnel Gap Warning**: Critical drop-off between Consideration and Decision. You need more 'How to Apply' content.")
         
-        st.markdown("---")
-        st.markdown("### 📊 Performance Benchmarks")
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">📊 Performance Benchmarks</div>', unsafe_allow_html=True)
         st.caption("Average metrics for University/Education niche")
-        bench_data = {
+        
+        bench_data = pd.DataFrame({
             'Metric': ['Reel Watch Time', 'Completion Rate', 'Save Rate', 'Share Rate'],
-            'Market': [12.5, 45, 8.2, 5.4],
-            'TMU': [8.2, 32, 4.1, 2.8]
-        }
-        df_bench = pd.DataFrame(bench_data)
+            'Market Avg': [12.5, 45, 8.2, 5.4],
+            'TMU Performance': [8.2, 32, 4.1, 2.8]
+        })
         
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.barplot(data=df_bench.melt(id_vars='Metric'), x='Metric', y='value', hue='variable', ax=ax, palette=['#94a3b8', '#667eea'])
-        ax.set_ylabel('Percentage / Seconds')
-        ax.set_title('TMU vs Market Benchmarks')
-        plt.xticks(rotation=45)
-        st.pyplot(fig)
+        fig = px.bar(bench_data, x='Metric', y=['Market Avg', 'TMU Performance'],
+                     barmode='group',
+                     color_discrete_map={'Market Avg': '#94a3b8', 'TMU Performance': '#6366f1'})
         
-        st.info("💡 **Fix**: Improve CTA for Save; add study notes or checklists to carousels.")
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=300,
+            margin=dict(l=0, r=0, t=10, b=0),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+            xaxis_title="",
+            yaxis_title="%"
+        )
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         
-        st.markdown("---")
-        st.markdown("### 🗺️ Interest by Indian State")
-        st.caption("Interest in 'TMU Admissions' or 'Higher Ed' across India")
-        state_data = {
+        st.info("💡 **Strategy**: Improve CTA for Save; add study notes to carousels.")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">🗺️ Interest by Indian State</div>', unsafe_allow_html=True)
+        st.caption("Interest in 'Admissions' across India")
+        
+        state_data = pd.DataFrame({
             'State': ['Uttar Pradesh', 'Delhi', 'Haryana', 'Bihar', 'Rajasthan', 'Uttarakhand'],
-            'Interest Score': [98, 85, 72, 65, 54, 88]
-        }
-        df_states = pd.DataFrame(state_data)
+            'Intensity': [98, 85, 72, 65, 54, 88]
+        })
         
-        fig, ax = plt.subplots(figsize=(6, 4))
-        sns.barplot(data=df_states, x='Interest Score', y='State', palette='rocket', ax=ax)
-        ax.set_xlabel('Trend Intensity (0-100)')
-        ax.set_ylabel('')
-        ax.set_title('Regional Engagement Potential')
-        sns.despine()
-        st.pyplot(fig)
+        fig = px.bar(state_data, x='Intensity', y='State', 
+                     orientation='h',
+                     color='Intensity',
+                     color_continuous_scale='Purples')
+        
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=300,
+            margin=dict(l=0, r=0, t=10, b=0),
+            coloraxis_showscale=False,
+            xaxis_title="Trend Intensity",
+            yaxis_title=""
+        )
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        st.markdown('</div>', unsafe_allow_html=True)
+
         
         st.markdown("---")
         st.markdown("### 🕵️ Competitor Strategy Map")
@@ -523,21 +543,28 @@ def render_market_trends_page():
             </div>
             """, unsafe_allow_html=True)
             
-        # Matplotlib visualization for growth rates
+        # Plotly visualization for growth rates
         st.markdown("#### 📊 Trend Growth Potential")
         try:
             trends_df = pd.DataFrame(meta_trends)
             trends_df['growth_num'] = trends_df['growth'].str.replace('+', '', regex=False).str.replace('%', '', regex=False).astype(float)
             
-            fig, ax = plt.subplots(figsize=(6, 4))
-            sns.barplot(data=trends_df, x='growth_num', y='trend', palette='viridis', ax=ax)
-            ax.set_xlabel('Projected Growth (%)')
-            ax.set_ylabel('')
-            ax.set_title('Meta-Trend Impact Forecast')
-            sns.despine()
-            st.pyplot(fig)
+            fig = px.bar(trends_df, x='growth_num', y='trend', orientation='h',
+                         color='growth_num', color_continuous_scale='Viridis')
+            
+            fig.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                height=300,
+                margin=dict(l=0, r=0, t=10, b=0),
+                coloraxis_showscale=False,
+                xaxis_title="Projected Growth (%)",
+                yaxis_title=""
+            )
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         except Exception as e:
             st.error(f"Could not render trend chart: {e}")
+
             
         st.markdown("### 💡 Strategic Content Gaps")
         st.info("High-priority gaps to increase your engagement rates:")

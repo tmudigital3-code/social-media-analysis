@@ -233,19 +233,38 @@ def safe_float(value, default=0.0):
 
 # ==================== Professional CSS Styling ====================
 def add_professional_css():
-    """Add professional CSS styling with modern design principles"""
+    """Add professional CSS styling with premium SaaS aesthetics"""
     st.markdown("""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    /* Global Styles - Power BI Inspired */
-    * {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    /* Variables */
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #64748b;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --background: #f8fafc;
+        --card-bg: rgba(255, 255, 255, 0.85);
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border-color: rgba(226, 232, 240, 0.8);
+        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
     }
     
+    /* Global Styles */
     .stApp {
-        background: #f3f6fb;
-        color: #202020;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        color: var(--text-main);
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    }
+    
+    h1, h2, h3, h4, .pro-header-title {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        letter-spacing: -0.02em;
     }
     
     /* Hide Streamlit Branding */
@@ -253,416 +272,273 @@ def add_professional_css():
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Power BI Style Header */
+    /* Glassmorphism Containers */
+    .pro-glass-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: var(--glass-shadow);
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        margin-bottom: 1rem;
+    }
+    
+    .pro-glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Premium Header */
     .pro-header {
-        background: linear-gradient(90deg, #118ACD 0%, #0078D7 100%);
-        padding: 1.8rem 2.5rem;
-        border-radius: 0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        margin-bottom: 0;
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        padding: 2.5rem 3rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
         color: white;
-        border-bottom: 1px solid #e1e1e1;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .pro-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
+        pointer-events: none;
     }
     
     .pro-header-title {
-        font-size: 1.8rem;
-        font-weight: 600;
-        margin-bottom: 0.3rem;
-        letter-spacing: 0;
+        font-size: clamp(1.5rem, 5vw, 2.2rem);
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(to right, #fff, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     
     .pro-header-subtitle {
-        font-size: 0.95rem;
-        opacity: 0.9;
-        font-weight: 400;
-    }
-    
-    /* Power BI Style Sidebar */
-    [data-testid="stSidebar"] {
-        background: #ffffff;
-        border-right: 1px solid #e1e1e1;
-        padding-top: 0;
-    }
-    
-    .sidebar-logo {
-        text-align: center;
-        padding: 1.2rem 1rem;
-        border-bottom: 1px solid #e1e1e1;
-        margin-bottom: 0;
-        background: #f8f8f8;
-    }
-    
-    .sidebar-logo img {
-        max-width: 100px;
-        filter: none;
-    }
-    
-    .nav-item {
-        padding: 0.75rem 1.2rem;
-        margin: 0;
-        border-radius: 0;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        font-size: clamp(0.85rem, 2vw, 1rem);
+        color: #94a3b8;
         font-weight: 500;
-        font-size: 0.9rem;
-        color: #333333;
-        background: transparent;
-        border-left: 3px solid transparent;
-        border-bottom: 1px solid #f0f0f0;
+        max-width: 600px;
     }
+
     
-    .nav-item:hover {
-        background: #f0f8ff;
-        border-left: 3px solid #0078D7;
-        color: #0078D7;
-    }
-    
-    .nav-item-active {
-        background: #e1f0fa;
-        color: #0078D7;
-        border-left: 3px solid #0078D7;
-        font-weight: 600;
-    }
-    
-    /* Power BI Style KPI Cards */
-    .pro-kpi-card {
-        background: white;
-        border-radius: 4px;
-        padding: 1.2rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border: 1px solid #e1e1e1;
-        transition: all 0.2s ease;
-        position: relative;
-        overflow: hidden;
+    /* KPI Cards Premium */
+    .pro-kpi-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         height: 100%;
-    }
-    
-    .pro-kpi-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 3px;
-        height: 100%;
-        background: #0078D7;
-    }
-    
-    .pro-kpi-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
     
     .pro-kpi-title {
-        font-size: 0.8rem;
-        color: #666666;
+        font-size: 0.85rem;
+        color: var(--text-muted);
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-bottom: 0.6rem;
-    }
-    
-    .pro-kpi-value {
-        font-size: 1.6rem;
-        font-weight: 600;
-        color: #202020;
-        margin-bottom: 0.3rem;
-        line-height: 1.2;
-    }
-    
-
-    /* Power BI Style Chart Container */
-    .pro-chart-container {
-        background: white;
-        border-radius: 4px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1.2rem;
-        border: 1px solid #e1e1e1;
-    }
-    
-    .pro-chart-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #202020;
-        margin-bottom: 1rem;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        border-bottom: 1px solid #f0f0f0;
-        padding-bottom: 0.5rem;
     }
     
-    .pro-chart-subtitle {
+    .pro-kpi-value {
+        font-size: clamp(1.2rem, 4vw, 2rem);
+        font-weight: 800;
+        color: var(--text-main);
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .pro-kpi-delta {
         font-size: 0.85rem;
-        color: #666666;
-        margin-top: 0.2rem;
+        font-weight: 600;
+        padding: 0.2rem 0.5rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        width: fit-content;
+    }
+
+    
+    .delta-up { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+    .delta-down { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+    
+    /* Sidebar Enhancements */
+    [data-testid="stSidebar"] {
+        background-color: white;
+        border-right: 1px solid var(--border-color);
     }
     
-    /* Power BI Style Buttons */
+    .sidebar-logo {
+        padding: 2rem 1rem;
+        text-align: center;
+    }
+    
+    /* Button Premium */
     .stButton>button {
-        background: #0078D7;
+        background: linear-gradient(to bottom, #6366f1, #4f46e5);
         color: white;
-        border: 1px solid #0078D7;
-        border-radius: 2px;
-        padding: 0.5rem 1.2rem;
-        font-weight: 500;
-        font-size: 0.9rem;
-        transition: all 0.2s ease;
-        box-shadow: none;
-        text-transform: none;
-        letter-spacing: 0.2px;
+        border: none;
+        padding: 0.6rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
     
     .stButton>button:hover {
-        background: #106EBE;
-        border-color: #106EBE;
-        transform: none;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
     }
     
-    .stButton>button:active {
-        transform: none;
-    }
-    
-    /* Power BI Style File Uploader */
-    .stFileUploader {
+    /* Chart Containers */
+    .pro-chart-container {
         background: white;
-        border: 1px dashed #cccccc;
-        border-radius: 2px;
-        padding: 2rem;
-        text-align: center;
-        transition: all 0.2s ease;
+        border-radius: 20px;
+        padding: 1.5rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--glass-shadow);
+        margin-bottom: 2rem;
     }
     
-    .stFileUploader:hover {
-        border-color: #0078D7;
-        background: #f9f9f9;
-    }
-    
-    /* Power BI Style Tabs */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 0;
-        background: #f3f6fb;
-        padding: 0;
-        border-radius: 0;
-        box-shadow: none;
-        border-bottom: 1px solid #e1e1e1;
-    }
-    
-    .stTabs [data-baseweb="tab"] {
-        height: 40px;
-        border-radius: 0;
-        color: #666666;
-        font-weight: 500;
-        padding: 0 1.2rem;
-        transition: all 0.2s ease;
-        background: transparent;
-        border-bottom: 2px solid transparent;
-    }
-    
-    .stTabs [data-baseweb="tab"]:hover {
-        background: #e1f0fa;
-        color: #0078D7;
-    }
-    
-    .stTabs [aria-selected="true"] {
-        background: transparent;
-        color: #0078D7;
-        border-bottom: 2px solid #0078D7;
-        font-weight: 600;
-    }
-    
-    /* Power BI Style Metrics */
-    .pro-metric {
-        background: white;
-        padding: 1rem;
-        border-radius: 2px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border-left: 3px solid #0078D7;
-        border: 1px solid #e1e1e1;
-    }
-    
-    /* Power BI Style Insights Panel */
-    .pro-insights {
-        background: #f9f9f9;
-        border-radius: 4px;
-        padding: 1.2rem;
-        border: 1px solid #e1e1e1;
-        margin-bottom: 1.2rem;
-    }
-    
-    .pro-insight-item {
-        background: white;
-        padding: 0.8rem;
-        border-radius: 2px;
-        margin: 0.4rem 0;
-        border-left: 2px solid #0078D7;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        border: 1px solid #f0f0f0;
-    }
-    
-    /* Power BI Style Alert Boxes */
-    .stAlert {
-        border-radius: 2px;
-        border: 1px solid #e1e1e1;
-        padding: 0.8rem 1rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Power BI Style Data Table */
-    .dataframe {
-        border-radius: 2px;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e1e1e1;
-    }
-    
-    .dataframe th {
-        background: #0078D7;
-        color: white;
-        font-weight: 500;
-        padding: 0.8rem;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.5px;
-    }
-    
-    .dataframe td {
-        padding: 0.7rem 0.8rem;
-        border-bottom: 1px solid #f0f0f0;
-        font-size: 0.85rem;
-    }
-    
-    .dataframe tr:hover {
-        background: #f8f8f8;
-    }
-    
-    /* Power BI Style Section Header */
-    .pro-section-header {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #202020;
-        margin: 1.5rem 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #0078D7;
+    .pro-chart-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
-        gap: 0.6rem;
+        gap: 0.75rem;
+        color: var(--text-main);
     }
     
-    /* Power BI Style Badge */
-    .pro-badge {
-        display: inline-block;
-        padding: 0.3rem 0.7rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        background: #0078D7;
-        color: white;
-    }
-    
-    /* Power BI Style Footer */
-    .pro-footer {
-        text-align: center;
-        padding: 1.5rem;
-        color: #666666;
-        font-size: 0.85rem;
-        margin-top: 2rem;
-        border-top: 1px solid #e1e1e1;
-        background: white;
-        border-radius: 0;
-    }
-    
-    /* Scrollbar Styling - Power BI Style */
-    ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: #0078D7;
-        border-radius: 4px;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: #106EBE;
-    }
-    
-    /* Animation Classes */
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
+    /* Animations */
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
     
     .fade-in {
-        animation: fadeIn 0.3s ease-out;
+        animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
     
-    /* Loading Spinner */
-    .pro-spinner {
-        border: 3px solid #f0f0f0;
-        border-top: 3px solid #0078D7;
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        animation: spin 0.8s linear infinite;
-        margin: 1.5rem auto;
+    /* Tooltip Premium */
+    .pro-tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted #ccc;
     }
     
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+    /* Tabs Premium */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 2rem;
+        background: transparent;
+        padding: 0;
+        margin-bottom: 1.5rem;
     }
     
-    /* Additional Power BI Style Elements */
-    .metric-tile {
-        background: white;
-        border: 1px solid #e1e1e1;
-        border-radius: 2px;
-        padding: 1rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        text-align: center;
-    }
-    
-    .metric-tile .value {
-        font-size: 1.8rem;
+    .stTabs [data-baseweb="tab"] {
+        height: auto;
+        padding: 0.75rem 0.5rem;
+        background: transparent;
+        font-size: clamp(0.8rem, 2vw, 1rem);
+        border: none;
         font-weight: 600;
-        color: #0078D7;
-        margin: 0.5rem 0;
+        color: var(--text-muted);
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s ease;
     }
     
-    .metric-tile .label {
-        font-size: 0.85rem;
-        color: #666666;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+    /* Responsive Media Queries */
+    @media (max-width: 768px) {
+        .pro-header {
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+        
+        .pro-glass-card {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 0.5rem;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+        
+        .pro-kpi-value {
+            font-size: 1.5rem;
+        }
     }
     
-    .card {
-        background: white;
-        border: 1px solid #e1e1e1;
-        border-radius: 2px;
-        padding: 1.2rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    @media (max-width: 480px) {
+        .pro-header-title {
+            font-size: 1.4rem;
+        }
+        
+        .pro-kpi-value {
+            font-size: 1.25rem;
+        }
+        
+        .pro-chart-title {
+            font-size: 1rem;
+        }
+    }
+
+    
+    .stTabs [aria-selected="true"] {
+        color: var(--primary) !important;
+        border-bottom: 2px solid var(--primary) !important;
     }
     
-    .card-header {
-        font-weight: 600;
-        color: #202020;
-        margin-bottom: 0.8rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid #f0f0f0;
+    /* Metric tiles */
+    [data-testid="stMetricValue"] {
+        font-size: 2.2rem !important;
+        font-weight: 800 !important;
+        color: var(--text-main) !important;
+    }
+    
+    [data-testid="stMetricDelta"] {
+        font-weight: 600 !important;
     }
     </style>
     """, unsafe_allow_html=True)
 
+def get_plotly_theme():
+    """Unified premium Plotly theme for all charts"""
+    return {
+        'layout': {
+            'paper_bgcolor': 'rgba(0,0,0,0)',
+            'plot_bgcolor': 'rgba(0,0,0,0)',
+            'font': {'family': 'Inter, sans-serif', 'color': '#64748b'},
+            'title': {'font': {'family': 'Plus Jakarta Sans', 'size': 20, 'color': '#1e293b'}},
+            'xaxis': {'gridcolor': '#f1f5f9', 'zerolinecolor': '#f1f5f9', 'showline': False},
+            'yaxis': {'gridcolor': '#f1f5f9', 'zerolinecolor': '#f1f5f9', 'showline': False},
+            'margin': {'t': 40, 'b': 40, 'l': 40, 'r': 40},
+            'hoverlabel': {
+                'bgcolor': 'white',
+                'font': {'family': 'Inter', 'size': 13},
+                'bordercolor': '#e2e8f0'
+            },
+            'colorway': ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4']
+        }
+    }
+
 # ==================== Professional Components ====================
 def render_professional_header(title, subtitle):
-    """Render professional header with gradient background"""
+    """Render professional premium header with gradient and glow"""
     st.markdown(f"""
     <div class="pro-header fade-in">
         <div class="pro-header-title">{title}</div>
@@ -670,59 +546,47 @@ def render_professional_header(title, subtitle):
     </div>
     """, unsafe_allow_html=True)
 
-def render_professional_kpi(title, value, change=None, change_type="neutral"):
-    """Render professional KPI card without change indicators"""
-    # Format value only if it's a number
+def render_professional_kpi(title, value, delta=None, delta_type="up", icon="📈"):
+    """Render premium glassmorphism KPI card"""
+    # Format value
     if isinstance(value, (int, float)):
         formatted_value = f"{value:,}"
     else:
         formatted_value = str(value)
     
-    return f"""
-    <div class="pro-kpi-card fade-in">
-        <div class="pro-kpi-title">{title}</div>
-        <div class="pro-kpi-value">{formatted_value}</div>
-    </div>
-    """
-
-def render_powerbi_style_kpi(title, value, change=None, change_type="neutral", icon="📊"):
-    """Render Power BI style KPI card with change indicators"""
-    # Format value only if it's a number
-    if isinstance(value, (int, float)):
-        formatted_value = f"{value:,}"
-    else:
-        formatted_value = str(value)
-    
-    # Generate delta HTML
     delta_html = ""
-    if change:
-        color = "#10b981" if change_type == "positive" else "#ef4444" if change_type == "negative" else "#64748b"
-        arrow = "▲" if change_type == "positive" else "▼" if change_type == "negative" else "•"
-        delta_html = f'<div style="color: {color}; font-size: 0.85rem; margin-top: 0.4rem; font-weight: 500;">{arrow} {change}</div>'
+    if delta:
+        delta_class = "delta-up" if delta_type == "up" else "delta-down"
+        delta_icon = "↑" if delta_type == "up" else "↓"
+        delta_html = f'<div class="pro-kpi-delta {delta_class}">{delta_icon} {delta}</div>'
     
-    return f"""
-    <div class="pro-kpi-card fade-in" style="border-left: 4px solid #0078D7;">
-        <div style="display: flex; justify-content: space-between; align-items: start;">
-            <div>
-                <div class="pro-kpi-title">{title}</div>
-                <div class="pro-kpi-value">{formatted_value}</div>
-                {delta_html}
+    st.markdown(f"""
+    <div class="pro-glass-card fade-in">
+        <div class="pro-kpi-container">
+            <div class="pro-kpi-title">
+                <span>{icon}</span> {title}
             </div>
-            <div style="background: #f0f8ff; padding: 0.5rem; border-radius: 50%; color: #0078D7;">
-                <span style="font-size: 1.2rem;">{icon}</span>
-            </div>
+            <div class="pro-kpi-value">{formatted_value}</div>
+            {delta_html}
         </div>
     </div>
-    """
+    """, unsafe_allow_html=True)
+
+def render_powerbi_style_kpi(title, value, change=None, change_type="neutral", icon="📊"):
+    """Render enhanced Power BI style KPI card with trend indicators"""
+    # Simply redirect to the new professional KPI for uniformity
+    render_professional_kpi(title, value, delta=change, delta_type="up" if change_type=="positive" else "down", icon=icon)
 
 def render_professional_section_header(title, icon="📊"):
-    """Render professional section header"""
+    """Render premium section header"""
     st.markdown(f"""
-    <div class="pro-section-header fade-in">
-        <span>{icon}</span>
-        <span>{title}</span>
+    <div style="margin: 2.5rem 0 1.5rem 0; display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-size: 1.5rem;">{icon}</span>
+        <h2 style="margin: 0; font-size: 1.5rem; font-weight: 700; color: #1e293b;">{title}</h2>
     </div>
+    <div style="height: 4px; width: 60px; background: var(--primary); border-radius: 2px; margin-bottom: 2rem;"></div>
     """, unsafe_allow_html=True)
+
 
 # ==================== Data Upload ====================
 def render_professional_upload():
@@ -1097,19 +961,24 @@ def render_professional_dashboard(data):
     
     engagement_rate = safe_float((current_engagement / current_impressions * 100) if current_impressions > 0 else 0)
     
-    # Power BI Style KPI Cards
-    st.markdown("### 📊 Key Performance Indicators")
+    # Premium KPI Cards
+    st.markdown('<div style="margin-bottom: 2rem;">', unsafe_allow_html=True)
+    render_professional_section_header("Key Performance Indicators", icon="🎯")
     cols = st.columns(4)
-    kpi_data = [
-        ("👥 Total Followers", total_followers, f"{follower_change:+.1f}%", "positive" if follower_change > 0 else "negative"),
-        ("📈 Engagement Rate", f"{engagement_rate:.1f}%", f"{engagement_change:+.1f}%", "positive" if engagement_change > 0 else "negative"),
-        ("👁️ Total Impressions", current_impressions, f"{impressions_change:+.1f}%", "positive" if impressions_change > 0 else "negative"),
-        ("🎯 Total Reach", current_reach, f"{reach_change:+.1f}%", "positive" if reach_change > 0 else "negative")
-    ]
     
-    for col, (title, value, change, change_type) in zip(cols, kpi_data):
-        with col:
-            st.markdown(render_powerbi_style_kpi(title, value, change, change_type), unsafe_allow_html=True)
+    with cols[0]:
+        render_professional_kpi("Total Followers", total_followers, delta=f"{follower_change:+.1f}%", delta_type="up" if follower_change > 0 else "down", icon="👥")
+    
+    with cols[1]:
+        render_professional_kpi("Engagement Rate", f"{engagement_rate:.1f}%", delta=f"{engagement_change:+.1f}%", delta_type="up" if engagement_change > 0 else "down", icon="📈")
+    
+    with cols[2]:
+        render_professional_kpi("Total Impressions", current_impressions, delta=f"{impressions_change:+.1f}%", delta_type="up" if impressions_change > 0 else "down", icon="👁️")
+    
+    with cols[3]:
+        render_professional_kpi("Total Reach", current_reach, delta=f"{reach_change:+.1f}%", delta_type="up" if reach_change > 0 else "down", icon="🎯")
+    st.markdown('</div>', unsafe_allow_html=True)
+
     
     st.markdown("<br>", unsafe_allow_html=True)
     
@@ -1117,105 +986,74 @@ def render_professional_dashboard(data):
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
-        st.markdown('<div class="pro-chart-title">📈 Real-time Follower Growth</div>', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">📈 Audience Growth Trajectory</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'follower_count' in data.columns:
-            # For large datasets, sample data for performance
-            sampled_data = data if len(data) <= 1000 else data.sample(n=1000, random_state=42)
-            daily_followers = sampled_data.groupby(pd.Grouper(key='timestamp', freq='D'))['follower_count'].last()
+            # Resample for smooth visualization
+            daily_followers = data.set_index('timestamp').resample('D')['follower_count'].last().reset_index()
             
-            # Matplotlib Follower Growth
-            fig, ax = plt.subplots(figsize=(8, 4))
-            ax.plot(daily_followers.index, daily_followers.values, color='#10b981', linewidth=2, marker='o', markersize=4, label='Followers')
-            ax.fill_between(daily_followers.index, daily_followers.values, color='#10b981', alpha=0.2)
+            fig = px.line(daily_followers, x='timestamp', y='follower_count', 
+                          render_mode='svg')
             
-            # Trend line
-            if len(daily_followers) > 1:
-                x_numeric = np.arange(len(daily_followers))
-                z = np.polyfit(x_numeric, daily_followers.values, 1)
-                p = np.poly1d(z)
-                ax.plot(daily_followers.index, p(x_numeric), color='#f59e0b', linestyle='--', linewidth=2, label='Trend')
+            fig.update_traces(
+                line_color='#6366f1', 
+                line_width=4,
+                fill='tozeroy',
+                fillcolor='rgba(99, 102, 241, 0.1)'
+            )
             
-            ax.set_title('Real-time Follower Growth', fontsize=12)
-            ax.legend()
-            ax.grid(True, linestyle='--', alpha=0.3)
-            sns.despine()
-            st.pyplot(fig)
+            fig.update_layout(**get_plotly_theme()['layout'])
+            fig.update_layout(height=350)
             
-            # Add growth insights
-            if len(daily_followers) > 1 and 'z' in locals():
-                trend_slope = z[0]  # type: ignore
-                if trend_slope > 0:
-                    st.success(f"📈 Growing at +{trend_slope:.1f} followers/day")
-                elif trend_slope < 0:
-                    st.error(f"📉 Declining at {trend_slope:.1f} followers/day")
-                else:
-                    st.info("⏸️ Stable growth pattern")
-            elif len(daily_followers) > 1:
-                st.info("⏸️ Not enough data for trend analysis")
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+            
+            # Growth Insight
+            st.markdown(f"""
+            <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(16, 185, 129, 0.05); border-radius: 12px; border-left: 3px solid #10b981;">
+                <span style="font-weight: 700; color: #10b981;">PRO TIP:</span> 
+                Your audience grew by <b>{follower_change:+.1f}%</b> this period. Keep up the high-value reels!
+            </div>
+            """, unsafe_allow_html=True)
+
         
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
-        st.markdown('<div class="pro-chart-title">🔥 Top Performing Posts This Week</div>', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-chart-title">🔥 Content Power Rankings</div>', unsafe_allow_html=True)
         
-        if 'likes' in current_period.columns and 'comments' in current_period.columns:
-            # For large datasets, sample data for performance
-            sampled_period = current_period if len(current_period) <= 500 else current_period.sample(n=500, random_state=42)
-            # Safely calculate total engagement with proper data type conversion
-            try:
-                likes_col = pd.to_numeric(sampled_period['likes'], errors='coerce').fillna(0) if 'likes' in sampled_period.columns else 0
-            except Exception as e:
-                print(f"Warning: Could not convert likes to numeric: {e}")
-                likes_col = 0
-            try:
-                comments_col = pd.to_numeric(sampled_period['comments'], errors='coerce').fillna(0) if 'comments' in sampled_period.columns else 0
-            except Exception as e:
-                print(f"Warning: Could not convert comments to numeric: {e}")
-                comments_col = 0
-            try:
-                shares_col = pd.to_numeric(sampled_period['shares'], errors='coerce').fillna(0) if 'shares' in sampled_period.columns else 0
-            except Exception as e:
-                print(f"Warning: Could not convert shares to numeric: {e}")
-                shares_col = 0
-            sampled_period['total_engagement'] = likes_col + comments_col + shares_col
-            top_posts = sampled_period.nlargest(5, 'total_engagement')
+        if 'likes' in current_period.columns:
+            # Safely calculate total engagement
+            current_period['total_engagement'] = pd.to_numeric(current_period['likes'], errors='coerce').fillna(0) + \
+                                               pd.to_numeric(current_period['comments'], errors='coerce').fillna(0) + \
+                                               pd.to_numeric(current_period['shares'], errors='coerce').fillna(0)
+            top_posts = current_period.nlargest(4, 'total_engagement')
             
-            # Enhanced post display with more details
-            for idx, (i, post) in enumerate(top_posts.iterrows()):
-                caption = str(post.get('caption', 'N/A'))[:50] + "..."
+            for idx, (_, post) in enumerate(top_posts.iterrows()):
+                caption = str(post.get('caption', 'N/A'))[:60] + "..."
                 engagement = safe_int(post['total_engagement'])
-                media_type = post.get('media_type', 'Unknown')
-                timestamp = post.get('timestamp', 'N/A')
-                date_str = timestamp.strftime('%b %d') if pd.notna(timestamp) else 'N/A'
-                
-                # Enhanced styling with engagement breakdown
-                likes = safe_int(post.get('likes', 0))
-                comments = safe_int(post.get('comments', 0))
-                shares = safe_int(post.get('shares', 0))
+                media_icon = "🎬" if post.get('media_type') == "Video" else "📸"
                 
                 st.markdown(f"""
-                <div style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); 
-                     padding: 1rem; border-radius: 10px; margin-bottom: 0.8rem; border-left: 4px solid #667eea; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div>
-                            <div style="font-weight: 700; color: #1e293b; font-size: 1.1rem;">#{idx+1} {media_type}</div>
-                            <div style="font-size: 0.9rem; color: #64748b; margin: 0.3rem 0;">{caption}</div>
+                <div style="background: white; padding: 1.25rem; border-radius: 16px; margin-bottom: 1rem; 
+                     border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="background: #f1f5f9; padding: 0.75rem; border-radius: 12px; font-size: 1.5rem;">{media_icon}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #1e293b; font-size: 1rem;">{caption}</div>
+                            <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">
+                                💖 {safe_int(post['likes'])} &nbsp; 💬 {safe_int(post['comments'])} &nbsp; 🔄 {safe_int(post['shares'])}
+                            </div>
                         </div>
-                        <div style="text-align: right; font-size: 0.85rem; color: #94a3b8;">{date_str}</div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.8rem;">
-                        <div style="font-weight: 800; color: #667eea; font-size: 1.2rem;">{engagement:,} total</div>
-                        <div style="font-size: 0.8rem; color: #64748b;">
-                            <span style="margin-right: 0.8rem;">👍 {likes}</span>
-                            <span style="margin-right: 0.8rem;">💬 {comments}</span>
-                            <span>🔄 {shares}</span>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 800; color: #6366f1; font-size: 1.1rem;">{engagement:,}</div>
+                            <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Score</div>
                         </div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
+
         
         st.markdown('</div>', unsafe_allow_html=True)
     

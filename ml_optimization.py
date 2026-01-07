@@ -27,45 +27,68 @@ def render_visual_analysis(data):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🎨 Color Palette Impact</div>', unsafe_allow_html=True)
         
-        palettes = ['Warm Tones', 'Cool Blues', 'Vibrant', 'Pastel', 'Monochrome']
-        scores = [8.5, 7.2, 9.1, 6.8, 5.9]
+        palette_data = pd.DataFrame({
+            'Palette': ['Warm Tones', 'Cool Blues', 'Vibrant', 'Pastel', 'Monochrome'],
+            'Score': [8.5, 7.2, 9.1, 6.8, 5.9]
+        })
         
-        # Matplotlib Color Palette Impact
-        fig, ax = plt.subplots(figsize=(8, 4))
-        ax.bar(palettes, scores, color=['#f97316', '#3b82f6', '#a855f7', '#fbbf24', '#64748b'])
-        for i, v in enumerate(scores):
-            ax.text(i, v + 0.1, f'{v:.1f}', ha='center')
-        ax.set_ylabel('Engagement Score')
-        ax.set_title('Color Palette Impact')
-        plt.xticks(rotation=-30)
-        sns.despine()
-        st.pyplot(fig)
-        st.markdown('💡 **Vibrant colors** drive +23% higher engagement')
+        fig = px.bar(palette_data, x='Palette', y='Score', 
+                     color='Palette',
+                     color_discrete_sequence=['#f97316', '#3b82f6', '#a855f7', '#fbbf24', '#64748b'])
+        
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=300,
+            margin=dict(l=0, r=0, t=10, b=0),
+            showlegend=False,
+            xaxis_title="",
+            yaxis_title="Engagement Score"
+        )
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        
+        st.markdown(f"""
+        <div style="background: rgba(168, 85, 247, 0.05); padding: 0.5rem 1rem; border-radius: 10px; border-left: 3px solid #a855f7;">
+            💡 <b>Vibrant colors</b> drive +23% higher engagement.
+        </div>
+        """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
+
     
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">👤 Face Detection Correlation</div>', unsafe_allow_html=True)
         
-        categories = ['No Faces', '1 Face', '2-3 Faces', '4+ Faces']
-        avg_likes = [450, 890, 1250, 780]
+        face_data = pd.DataFrame({
+            'Category': ['No Faces', '1 Face', '2-3 Faces', '4+ Faces'],
+            'Likes': [450, 890, 1250, 780]
+        })
         
-        # Matplotlib Face Detection Correlation
-        fig, ax = plt.subplots(figsize=(8, 4))
-        ax.bar(categories, avg_likes, color='#667eea')
-        for i, v in enumerate(avg_likes):
-            ax.text(i, v + 20, str(v), ha='center')
-        ax.set_ylabel('Average Likes')
-        ax.set_title('Face Detection Correlation')
-        sns.despine()
-        st.pyplot(fig)
-        st.markdown('💡 **Posts with 2-3 faces** get +40% more likes')
+        fig = px.bar(face_data, x='Category', y='Likes', 
+                     color_discrete_sequence=['#6366f1'])
+        
+        fig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            height=300,
+            margin=dict(l=0, r=0, t=10, b=0),
+            xaxis_title="",
+            yaxis_title="Avg Likes"
+        )
+        st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+        
+        st.markdown(f"""
+        <div style="background: rgba(99, 102, 241, 0.05); padding: 0.5rem 1rem; border-radius: 10px; border-left: 3px solid #6366f1;">
+            💡 <b>Posts with 2-3 faces</b> get +40% more likes.
+        </div>
+        """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
+
     
-    st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     st.markdown('<div class="pro-chart-title">📐 Composition Analysis</div>', unsafe_allow_html=True)
     col3, col4, col5 = st.columns(3)
     with col3:
@@ -87,10 +110,11 @@ def render_advanced_optimization(data):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🧬 Optimal Posting Times (Genetic Algorithm)</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
+            # Reusing optimized heatmap logic with Plotly
             data['timestamp'] = pd.to_datetime(data['timestamp'])
             data['hour'] = data['timestamp'].dt.hour
             data['day_of_week'] = data['timestamp'].dt.day_name()
@@ -99,37 +123,37 @@ def render_advanced_optimization(data):
             days_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
             heatmap_data = heatmap_data.reindex([d for d in days_order if d in heatmap_data.index])
             
-            # Convert 24-hour to 12-hour format
-            hour_labels = []
-            for h in heatmap_data.columns:
-                if h == 0:
-                    hour_labels.append('12 AM')
-                elif h < 12:
-                    hour_labels.append(f'{h} AM')
-                elif h == 12:
-                    hour_labels.append('12 PM')
-                else:
-                    hour_labels.append(f'{h-12} PM')
+            fig = go.Figure(data=go.Heatmap(
+                z=heatmap_data.values,
+                x=heatmap_data.columns,
+                y=heatmap_data.index,
+                colorscale='Viridis',
+                text=heatmap_data.values.round(0),
+                texttemplate="%{text}",
+                textfont={"size": 10}
+            ))
             
-            # Seaborn Heatmap for Optimal Posting Times
-            fig, ax = plt.subplots(figsize=(10, 5))
-            sns.heatmap(heatmap_data, annot=True, fmt=".0f", cmap='viridis', 
-                        xticklabels=hour_labels, ax=ax, cbar_kws={'label': 'Likes'})
-            ax.set_title('Optimal Posting Times (Genetic Algorithm)')
-            ax.set_xlabel('Time')
-            ax.set_ylabel('Day of Week')
-            st.pyplot(fig)
+            fig.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                height=350,
+                margin=dict(l=0, r=0, t=10, b=0),
+                xaxis_title="Hour (24h format)",
+                yaxis_title=""
+            )
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
             
             best_idx = np.unravel_index(heatmap_data.values.argmax(), heatmap_data.values.shape)
-            best_day = heatmap_data.index[best_idx[0]]
-            best_hour = heatmap_data.columns[best_idx[1]]
-            best_hour_str = hour_labels[best_idx[1]]
-            best_likes = heatmap_data.values[best_idx]
-            st.markdown(f'🏆 **Optimal:** {best_day} at {best_hour_str} ({best_likes:.0f} avg likes)')
+            st.markdown(f"""
+            <div style="background: rgba(16, 185, 129, 0.05); padding: 0.5rem 1rem; border-radius: 10px; border-left: 3px solid #10b981;">
+                🏆 <b>Strategic Peak:</b> {heatmap_data.index[best_idx[0]]}s at {heatmap_data.columns[best_idx[1]]}:00
+            </div>
+            """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
+
     
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🔥 Content Mix Optimizer</div>', unsafe_allow_html=True)
         
         if 'media_type' in data.columns and 'likes' in data.columns:
@@ -137,23 +161,25 @@ def render_advanced_optimization(data):
             type_performance = data.groupby('media_type')['likes'].mean()
             optimal_mix = (type_performance / type_performance.sum() * 100)
             
-            comparison = pd.DataFrame({'Current (%)': current_mix, 'Optimal (%)': optimal_mix}).fillna(0)
+            comparison = pd.DataFrame({'Current': current_mix, 'Optimal': optimal_mix}).reset_index()
+            comparison.columns = ['Type', 'Current', 'Optimal']
             
-            # Matplotlib Content Mix Optimizer
-            fig, ax = plt.subplots(figsize=(10, 5))
-            x_arr = np.arange(len(comparison))
-            w = 0.35
-            ax.bar(x_arr - w/2, comparison['Current (%)'], w, label='Current', color='#667eea')
-            ax.bar(x_arr + w/2, comparison['Optimal (%)'], w, label='Optimal', color='#10b981')
+            fig = px.bar(comparison, x='Type', y=['Current', 'Optimal'],
+                         barmode='group',
+                         color_discrete_map={'Current': '#6366f1', 'Optimal': '#10b981'})
             
-            ax.set_xticks(x_arr)
-            ax.set_xticklabels(comparison.index)
-            ax.set_ylabel('Percentage (%)')
-            ax.set_title('Content Mix Optimizer')
-            ax.legend()
-            sns.despine()
-            st.pyplot(fig)
+            fig.update_layout(
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                height=350,
+                margin=dict(l=0, r=0, t=10, b=0),
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                xaxis_title="",
+                yaxis_title="Percentage (%)"
+            )
+            st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
         st.markdown('</div>', unsafe_allow_html=True)
+
     
     # A/B Testing Framework
     st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
