@@ -143,8 +143,8 @@ def detect_crisis_signals(mentions_df):
 def render_social_listening():
     """Main rendering function for social listening dashboard"""
     
-    st.markdown("## 👂 Social Listening & Brand Monitoring")
-    st.markdown("Real-time monitoring of brand mentions, sentiment, and conversations across platforms")
+    from professional_dashboard import render_professional_header
+    render_professional_header("👂 Social Listening & Brand Monitoring", "Real-time monitoring of brand mentions, sentiment, and conversations across platforms")
     
     # Configuration
     col1, col2, col3 = st.columns(3)
@@ -174,7 +174,8 @@ def render_social_listening():
                 st.warning(f"**{alert['type']}**: {alert['message']}\n\n💡 {alert['action']}")
     
     # Key Metrics
-    st.markdown("### 📊 Key Listening Metrics")
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-chart-title">📊 Key Listening Metrics</div>', unsafe_allow_html=True)
     
     col1, col2, col3, col4, col5 = st.columns(5)
     
@@ -206,9 +207,10 @@ def render_social_listening():
     with col5:
         influencer_mentions = len(mentions_df[mentions_df['is_influencer'] == True])
         st.metric("Influencer Mentions", influencer_mentions, delta="+3")
+    st.markdown('</div>', unsafe_allow_html=True)
     
     # Sentiment Over Time
-    st.markdown("### 📈 Sentiment Trends Over Time")
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     
     # Group by date and sentiment
     daily_sentiment = mentions_df.groupby([mentions_df['date'].dt.date, 'sentiment']).size().reset_index(name='count')
@@ -258,7 +260,7 @@ def render_social_listening():
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 🌐 Platform Distribution")
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         
         platform_counts = mentions_df['platform'].value_counts()
         
@@ -276,7 +278,7 @@ def render_social_listening():
         st.plotly_chart(fig_platform, use_container_width=True)
     
     with col2:
-        st.markdown("### 🔥 Trending Topics")
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         
         topic_counts = detect_trending_topics(mentions_df)
         

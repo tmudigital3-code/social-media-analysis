@@ -19,10 +19,9 @@ warnings.filterwarnings('ignore')
 # ==================== 2. Advanced Analytics with ML ====================
 def render_advanced_analytics_ml(data):
     """Advanced Analytics with ML Predictions and Statistical Analysis"""
-    st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-title">🔬 Advanced Analytics</div>', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-subtitle">Deep statistical & predictive analytics layer</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    from professional_dashboard import render_professional_header
+    render_professional_header("🔬 Advanced Analytics", "Deep statistical & predictive analytics layer")
+
     
     tab1, tab2, tab3 = st.tabs(["🔮 Engagement Predictor", "🔥 Virality Factors", "📊 Success Probability"])
     
@@ -86,7 +85,7 @@ def render_advanced_analytics_ml(data):
         
         # Engagement Decay Curve
         with col2:
-            st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+            st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
             st.markdown('<div class="pro-chart-title">📉 Engagement Decay Curve</div>', unsafe_allow_html=True)
             
             # Simulated decay curve
@@ -127,7 +126,7 @@ def render_advanced_analytics_ml(data):
         
         # Post Type Efficiency Heatmap
         with col1:
-            st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+            st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
             st.markdown('<div class="pro-chart-title">🎯 Post Type Efficiency Heatmap</div>', unsafe_allow_html=True)
             
             if 'media_type' in data.columns and 'timestamp' in data.columns:
@@ -165,7 +164,7 @@ def render_advanced_analytics_ml(data):
         
         # Virality Factors Analysis
         with col2:
-            st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+            st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
             st.markdown('<div class="pro-chart-title">🚀 Virality Factors (Feature Importance)</div>', unsafe_allow_html=True)
             
             # Simulated feature importance
@@ -198,7 +197,7 @@ def render_advanced_analytics_ml(data):
         
         # Post Success Probability
         with col1:
-            st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+            st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
             st.markdown('<div class="pro-chart-title">🎯 Post Success Probability</div>', unsafe_allow_html=True)
             
             success_prob = 73  # Simulated
@@ -239,7 +238,7 @@ def render_advanced_analytics_ml(data):
         
         # Sentiment Time Series
         with col2:
-            st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+            st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
             st.markdown('<div class="pro-chart-title">😊 Sentiment Time Series</div>', unsafe_allow_html=True)
             
             if 'timestamp' in data.columns:
@@ -296,7 +295,7 @@ def render_content_performance_advanced(data):
     
     # Hashtag Co-occurrence Network
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🌐 Hashtag Co-occurrence Network</div>', unsafe_allow_html=True)
         
         if 'hashtags' in data.columns:
@@ -390,7 +389,7 @@ def render_content_performance_advanced(data):
         st.markdown('</div>', unsafe_allow_html=True)
     
     # Trending Keywords
-    st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     st.markdown('<div class="pro-chart-title">🔥 Top Trending Keywords</div>', unsafe_allow_html=True)
     
     if 'caption' in data.columns:
@@ -432,7 +431,7 @@ def render_audience_insights_advanced(data):
     
     # Audience Growth Forecast
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📈 Audience Growth Forecast</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'follower_count' in data.columns:
@@ -482,7 +481,7 @@ def render_audience_insights_advanced(data):
     
     # Follower Retention vs Churn
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📊 Follower Retention vs Churn</div>', unsafe_allow_html=True)
         
         # Simulated retention data
@@ -522,7 +521,7 @@ def render_audience_insights_advanced(data):
         st.markdown('</div>', unsafe_allow_html=True)
     
     # AI-Generated Personas
-    st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     st.markdown('<div class="pro-chart-title">🎭 AI-Generated Audience Personas</div>', unsafe_allow_html=True)
     
     personas = [

@@ -64,10 +64,9 @@ def calculate_prophet_forecast(daily_data):
 
 def render_deep_learning_forecast(data):
     """90-day forecasting with Gradient Boosting & Prophet"""
-    st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-title">🧠 Deep Learning Time Series</div>', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-subtitle">Neural network predictions & seasonal forecasting</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    from professional_dashboard import render_professional_header
+    render_professional_header("🧠 Deep Learning Time Series", "Neural network predictions & seasonal forecasting")
+
     
     col1, col2 = st.columns(2)
     

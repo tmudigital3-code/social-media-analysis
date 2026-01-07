@@ -95,8 +95,8 @@ def get_best_posting_times():
 def render_publishing_dashboard():
     """Main rendering function for publishing dashboard"""
     
-    st.markdown("## 📅 Multi-Account Publishing & Scheduling")
-    st.markdown("Manage, schedule, and publish content across all your social media accounts")
+    from professional_dashboard import render_professional_header
+    render_professional_header("📅 Multi-Account Publishing & Scheduling", "Manage, schedule, and publish content across all your social media accounts")
     
     # Tabs for different sections
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
@@ -120,7 +120,7 @@ def render_publishing_dashboard():
 
 def render_compose_section():
     """Render the compose post section"""
-    st.markdown("### ✍️ Compose New Post")
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     
     # Platform selection
     st.markdown("#### Select Platforms")

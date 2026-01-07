@@ -127,10 +127,9 @@ def render_sentiment_analysis(data):
         return
     
     # Header
-    st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-title">💬 Sentiment Analysis</div>', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-subtitle">AI-powered emotion detection and sentiment insights</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    from professional_dashboard import render_professional_header
+    render_professional_header("💬 Sentiment Analysis", "AI-powered emotion detection and sentiment insights")
+
     
     # Check for caption column
     text_column = None
@@ -258,7 +257,7 @@ def render_sentiment_analysis(data):
     col5, col6 = st.columns(2)
     
     with col5:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🏷️ Top Hashtags by Sentiment</div>', unsafe_allow_html=True)
         
         if 'hashtags' in data.columns:
@@ -299,7 +298,7 @@ def render_sentiment_analysis(data):
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col6:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📝 Caption Length vs Sentiment</div>', unsafe_allow_html=True)
         
         data['caption_length'] = data[text_column].astype(str).str.len()
@@ -324,7 +323,7 @@ def render_sentiment_analysis(data):
         st.markdown('</div>', unsafe_allow_html=True)
     
     # Emotion Timeline
-    st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     st.markdown('<div class="pro-chart-title">🎭 Emotion Timeline</div>', unsafe_allow_html=True)
     
     if 'timestamp' in data.columns:
@@ -344,7 +343,7 @@ def render_sentiment_analysis(data):
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Top Posts by Sentiment
-    st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     st.markdown('<div class="pro-chart-title">🏆 Top Performing Posts by Sentiment</div>', unsafe_allow_html=True)
     
     sentiment_tabs = st.tabs(['Positive 😊', 'Neutral 😐', 'Negative 😢'])

@@ -17,10 +17,9 @@ warnings.filterwarnings('ignore')
 
 def render_visual_analysis(data):
     """Visual content analysis (simulated AI insights)"""
-    st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-title">🖼️ Visual Content AI</div>', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-subtitle">Color palette, composition & face detection analysis</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    from professional_dashboard import render_professional_header
+    render_professional_header("🖼️ Visual Content AI", "Color palette, composition & face detection analysis")
+
     
     st.info("📸 Full image analysis requires OpenCV/TensorFlow. Showing AI-powered engagement insights.")
     
@@ -182,7 +181,7 @@ def render_advanced_optimization(data):
 
     
     # A/B Testing Framework
-    st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     st.markdown('<div class="pro-chart-title">🧪 A/B Testing Framework (Bayesian)</div>', unsafe_allow_html=True)
     
     col3, col4, col5 = st.columns(3)

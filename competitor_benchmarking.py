@@ -63,8 +63,8 @@ def calculate_competitive_score(your_data, competitor_data):
 def render_competitor_benchmarking(your_data=None):
     """Main rendering function for competitor benchmarking"""
     
-    st.markdown("## 🎯 Competitor Benchmarking")
-    st.markdown("Compare your performance against competitors and identify opportunities")
+    from professional_dashboard import render_professional_header
+    render_professional_header("🎯 Competitor Benchmarking", "Compare your performance against competitors and identify opportunities")
     
     # Configuration
     col1, col2 = st.columns([2, 1])
@@ -100,7 +100,8 @@ def render_competitor_benchmarking(your_data=None):
     overall_score, metric_scores = calculate_competitive_score(your_data, competitor_df)
     
     # Display competitive score
-    st.markdown("### 📊 Your Competitive Position")
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-chart-title">📊 Your Competitive Position</div>', unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
     
@@ -119,9 +120,11 @@ def render_competitor_benchmarking(your_data=None):
     with col4:
         eng_vs_avg = your_data['avg_engagement_rate'] - competitor_df['avg_engagement_rate'].mean()
         st.metric("Engagement vs Avg", f"{your_data['avg_engagement_rate']}%", delta=f"{round(eng_vs_avg, 1)}%")
+    st.markdown('</div>', unsafe_allow_html=True)
     
     # Radar Chart - Competitive Analysis
-    st.markdown("### 🕸️ Multi-Dimensional Competitive Analysis")
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-chart-title">🕸️ Multi-Dimensional Competitive Analysis</div>', unsafe_allow_html=True)
     
     categories = ['Engagement Rate', 'Posting Frequency', 'Growth Rate', 'Follower Base', 'Content Quality']
     
@@ -176,6 +179,7 @@ def render_competitor_benchmarking(your_data=None):
     )
     
     st.plotly_chart(fig, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
     
     # Detailed Metrics Comparison Table
     st.markdown("### 📋 Detailed Metrics Comparison")

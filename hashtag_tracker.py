@@ -118,8 +118,8 @@ def calculate_hashtag_score(hashtag_data):
 def render_hashtag_tracker():
     """Main rendering function for hashtag tracker"""
     
-    st.markdown("## 🏷️ Hashtag Performance Tracker")
-    st.markdown("Optimize your hashtag strategy with data-driven insights")
+    from professional_dashboard import render_professional_header
+    render_professional_header("🏷️ Hashtag Performance Tracker", "Optimize your hashtag strategy with data-driven insights")
     
     # Generate hashtag data
     hashtags_df = generate_hashtag_data()
@@ -144,7 +144,9 @@ def render_hashtag_tracker():
 
 def render_hashtag_overview(hashtags_df):
     """Render hashtag overview dashboard"""
-    st.markdown("### 📊 Hashtag Performance Overview")
+    # Overview Section
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
+    st.markdown('<div class="pro-chart-title">📊 Hashtag Performance Overview</div>', unsafe_allow_html=True)
     
     # Key metrics
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -168,9 +170,10 @@ def render_hashtag_overview(hashtags_df):
     with col5:
         rising_count = len(hashtags_df[hashtags_df['growth_trend'] == 'Rising'])
         st.metric("Rising Hashtags", rising_count, delta=f"+{rising_count}")
+    st.markdown("</div>", unsafe_allow_html=True)
     
     # Top performing hashtags
-    st.markdown("### 🏆 Top Performing Hashtags")
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     
     top_hashtags = hashtags_df.nlargest(10, 'effectiveness_score')
     
@@ -265,7 +268,7 @@ def render_hashtag_overview(hashtags_df):
 
 def render_hashtag_analysis(hashtags_df):
     """Render detailed hashtag analysis"""
-    st.markdown("### 🔍 Detailed Hashtag Analysis")
+    st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
     
     # Filter options
     col1, col2, col3 = st.columns(3)

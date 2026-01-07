@@ -16,10 +16,9 @@ warnings.filterwarnings('ignore')
 # ==================== 1. Content Performance ====================
 def render_content_performance(data):
     """Analyze content performance with hashtag analysis and engagement metrics"""
-    st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-title">🎬 Content Performance</div>', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-subtitle">Analyze what kind of content performs best</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    from professional_dashboard import render_professional_header
+    render_professional_header("🎬 Content Performance", "Analyze what kind of content performs best")
+
     
     # Add AI recommendations for content performance
     from advanced_techniques import render_trending_content_suggestions
@@ -96,7 +95,7 @@ def render_content_performance(data):
     col3, col4 = st.columns(2)
     
     with col3:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🏷️ Top Hashtags by Engagement</div>', unsafe_allow_html=True)
         
         if 'hashtags' in data.columns and 'likes' in data.columns:
@@ -145,7 +144,7 @@ def render_content_performance(data):
     
     # 🧮 Top 10 Hashtags by Reach
     with col4:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🧮 Top 10 Hashtags by Reach</div>', unsafe_allow_html=True)
         
         if 'hashtags' in data.columns and 'reach' in data.columns:
@@ -197,7 +196,7 @@ def render_content_performance(data):
     col5, col6 = st.columns(2)
     
     with col5:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📝 Content Length Impact</div>', unsafe_allow_html=True)
         
         if 'caption' in data.columns and 'likes' in data.columns:
@@ -246,7 +245,7 @@ def render_content_performance(data):
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col6:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📊 Posting Frequency Analysis</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns:
@@ -287,7 +286,7 @@ def render_content_performance(data):
     
     # 📊 Engagement Rate by Content Type
     with col9:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📊 Engagement Rate by Content Type</div>', unsafe_allow_html=True)
         
         if all(col in data.columns for col in ['media_type', 'likes', 'impressions']) and len(data) > 0:
@@ -342,7 +341,7 @@ def render_content_performance(data):
     
     # 💾 Saves Analysis
     with col10:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">💾 Saves Analysis</div>', unsafe_allow_html=True)
         
         if 'saves' in data.columns and 'media_type' in data.columns:
@@ -385,7 +384,7 @@ def render_content_performance(data):
     col7, col8 = st.columns(2)
     
     with col7:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🔗 Engagement Correlation</div>', unsafe_allow_html=True)
         
         if all(col in data.columns for col in ['likes', 'comments', 'shares']):
@@ -425,7 +424,7 @@ def render_content_performance(data):
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col8:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">⚖️ Content Type Comparison</div>', unsafe_allow_html=True)
         
         if 'media_type' in data.columns and 'likes' in data.columns:
@@ -471,10 +470,9 @@ def render_content_performance(data):
 # ==================== 2. Audience Insights ====================
 def render_audience_insights(data):
     """Audience Insights with Clear Visuals"""
-    st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-title">👥 Audience Insights</div>', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-subtitle">Understand followers and their activity patterns</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    from professional_dashboard import render_professional_header
+    render_professional_header("👥 Audience Insights", "Understand followers and their activity patterns")
+
     
     # Add AI recommendations for optimal posting times
     from advanced_techniques import render_optimal_posting_times
@@ -806,7 +804,7 @@ def render_audience_insights(data):
     
     # 👥 Gender-Age Cross Analysis
     with col5:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">👥 Gender-Age Cross Analysis</div>', unsafe_allow_html=True)
         
         if 'audience_gender' in data.columns and 'audience_age' in data.columns:
@@ -838,7 +836,7 @@ def render_audience_insights(data):
     
     # 📈 Follower Growth Rate
     with col6:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📈 Follower Growth Rate</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'follower_count' in data.columns:
@@ -885,16 +883,15 @@ def render_audience_insights(data):
 # ==================== 3. Time-Based Trends ====================
 def render_time_based_trends(data):
     """Analyze temporal patterns and trends in social media performance"""
-    st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-title">⏰ Time-Based Trends</div>', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-subtitle">Temporal patterns and optimal posting times</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    from professional_dashboard import render_professional_header
+    render_professional_header("⏰ Time-Based Trends", "Temporal patterns and optimal posting times")
+
     
     col1, col2 = st.columns(2)
     
     # 📈 Daily Engagement Trend
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📈 Daily Engagement Trend</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
@@ -937,7 +934,7 @@ def render_time_based_trends(data):
     
     # 📊 Weekly Pattern Analysis
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📅 Weekly Pattern Analysis</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
@@ -986,7 +983,7 @@ def render_time_based_trends(data):
     
     # 🕒 Hourly Engagement Patterns
     with col5:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🕒 Hourly Engagement Patterns</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
@@ -1049,7 +1046,7 @@ def render_time_based_trends(data):
     
     # 🗓️ Day-of-Week Engagement Comparison
     with col6:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🗓️ Day-of-Week Engagement Comparison</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
@@ -1113,7 +1110,7 @@ def render_time_based_trends(data):
     
     # 📅 Monthly Trend Analysis
     with col3:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📅 Monthly Trend Analysis</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
@@ -1163,7 +1160,7 @@ def render_time_based_trends(data):
     
     # 🌞 Seasonal Patterns
     with col4:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🌞 Seasonal Patterns</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
@@ -1215,17 +1212,16 @@ def render_time_based_trends(data):
 # ==================== 4. Predictive Analytics ====================
 def render_predictive_analytics(data):
     """Predictive analytics with engagement forecasting"""
-    st.markdown('<div class="pro-header fade-in">', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-title">🔮 Predictive Analytics</div>', unsafe_allow_html=True)
-    st.markdown('<div class="pro-header-subtitle">ML-powered engagement and follower growth predictions</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+    from professional_dashboard import render_professional_header
+    render_professional_header("🔮 Predictive Analytics", "ML-powered engagement and follower growth predictions")
+
     
     # Row 1: Engagement Forecast & Follower Growth Prediction
     col1, col2 = st.columns(2)
     
     # 📈 Engagement Forecast
     with col1:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📈 30-Day Engagement Forecast</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
@@ -1281,7 +1277,7 @@ def render_predictive_analytics(data):
     
     # 📊 Follower Growth Prediction
     with col2:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">👥 Follower Growth Prediction</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'follower_count' in data.columns:
@@ -1338,7 +1334,7 @@ def render_predictive_analytics(data):
     
     # 📈 Engagement Trend Analysis
     with col5:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📈 Engagement Trend Analysis</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
@@ -1400,7 +1396,7 @@ def render_predictive_analytics(data):
     
     # 🚀 Follower Growth Acceleration
     with col6:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🚀 Follower Growth Acceleration</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'follower_count' in data.columns:
@@ -1450,7 +1446,7 @@ def render_predictive_analytics(data):
     
     # 📉 Engagement Volatility Analysis
     with col3:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">📉 Engagement Volatility Analysis</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
@@ -1494,7 +1490,7 @@ def render_predictive_analytics(data):
     
     # 🎯 Prediction Confidence Intervals
     with col4:
-        st.markdown('<div class="pro-chart-container fade-in">', unsafe_allow_html=True)
+        st.markdown('<div class="pro-glass-card fade-in">', unsafe_allow_html=True)
         st.markdown('<div class="pro-chart-title">🎯 Prediction Confidence Intervals</div>', unsafe_allow_html=True)
         
         if 'timestamp' in data.columns and 'likes' in data.columns:
