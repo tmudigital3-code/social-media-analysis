@@ -13,12 +13,12 @@ import random
 def get_connected_accounts():
     """Get list of connected social media accounts"""
     return [
-        {'id': 1, 'platform': 'Instagram', 'handle': '@tmu_official', 'followers': 45000, 'status': 'Active'},
-        {'id': 2, 'platform': 'Facebook', 'handle': 'TMU Official', 'followers': 78000, 'status': 'Active'},
-        {'id': 3, 'platform': 'Twitter', 'handle': '@TMU_Edu', 'followers': 23000, 'status': 'Active'},
-        {'id': 4, 'platform': 'LinkedIn', 'handle': 'TMU University', 'followers': 34000, 'status': 'Active'},
-        {'id': 5, 'platform': 'YouTube', 'handle': 'TMU Official', 'followers': 12000, 'status': 'Active'},
-        {'id': 6, 'platform': 'TikTok', 'handle': '@tmu_campus', 'followers': 56000, 'status': 'Limited'},
+        {'id': 1, 'platform': 'Instagram', 'handle': '@brand_official', 'followers': 45000, 'status': 'Active'},
+        {'id': 2, 'platform': 'Facebook', 'handle': 'Brand Official', 'followers': 78000, 'status': 'Active'},
+        {'id': 3, 'platform': 'Twitter', 'handle': '@Brand_HQ', 'followers': 23000, 'status': 'Active'},
+        {'id': 4, 'platform': 'LinkedIn', 'handle': 'Brand Company', 'followers': 34000, 'status': 'Active'},
+        {'id': 5, 'platform': 'YouTube', 'handle': 'Brand TV', 'followers': 12000, 'status': 'Active'},
+        {'id': 6, 'platform': 'TikTok', 'handle': '@brand_tok', 'followers': 56000, 'status': 'Limited'},
     ]
 
 def get_scheduled_posts():

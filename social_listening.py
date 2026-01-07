@@ -150,7 +150,7 @@ def render_social_listening():
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        brand_name = st.text_input("Brand Name", value="TMU")
+        brand_name = st.text_input("Brand Name", value="Your Brand")
     
     with col2:
         time_range = st.selectbox("Time Range", ["Last 7 Days", "Last 30 Days", "Last 90 Days"], index=1)

@@ -85,7 +85,7 @@ def render_influencer_discovery():
     """Main rendering function for influencer discovery"""
     
     from professional_dashboard import render_professional_header
-    render_professional_header("🎓 Academic & Campus Influencer Discovery", "Identify and collaborate with educational influencers to boost college admissions and brand reach")
+    render_professional_header("📈 Influencer Discovery & Analysis", "Identify and analyze key influencers to expand your brand's reach and engagement")
     
     # Generate influencer database
     influencers_df = generate_influencer_database(num_influencers=100)

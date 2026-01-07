@@ -15,15 +15,15 @@ def generate_hashtag_data():
     """Generate simulated hashtag performance data"""
     hashtags = []
     
-    # Education-related hashtags
+    # Industry-related hashtags
     tag_list = [
-        '#TMU', '#University', '#HigherEducation', '#StudentLife', '#CampusLife',
-        '#Education', '#CollegeLife', '#Admissions2025', '#Placements', '#Engineering',
-        '#MBA', '#Research', '#Innovation', '#StudyInIndia', '#CareerGoals',
-        '#FutureLeaders', '#AcademicExcellence', '#CampusCulture', '#StudentSuccess',
-        '#EducationMatters', '#UniversityLife', '#CollegeAdmissions', '#Scholarship',
-        '#OnlineLearning', '#SkillDevelopment', '#YouthEmpowerment', '#DreamBig',
-        '#SuccessStory', '#Motivation', '#InspireEducation'
+        '#BrandName', '#IndustryTrends', '#Innovation', '#Leadership', '#GrowthHacking',
+        '#Marketing', '#DigitalStrategy', '#ContentCreator', '#BusinessGrowth', '#TechNews',
+        '#StartupLife', '#Entrepreneurship', '#FutureOfWork', '#Sustainability', '#Community',
+        '#GlobalImpact', '#SuccessMindset', '#Creative', '#SocialMediaTips',
+        '#BrandAwareness', '#CustomerExperience', '#RemoteWork', '#Productivity',
+        '#Motivation', '#Inspiration', '#Networking', '#Collaboration',
+        '#ViralTrends', '#BestPractices', '#IndustryLeaders'
     ]
     
     for tag in tag_list:

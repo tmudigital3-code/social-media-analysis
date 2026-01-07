@@ -2303,31 +2303,31 @@ def main():
         st.markdown('<div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem;">Analytics & Overview</div>', unsafe_allow_html=True)
         
         # Category-based Navigation
-        main_nav = ["🏠 Executive Dashboard", "📤 Upload Data", "📋 Performance Reports"]
-        analytics_nav = ["📊 Advanced Analytics", "🎬 Content Deep-Dive", "👥 Audience Intelligence", "⏰ Time Analysis", "💬 Sentiment Hub"]
-        intelligence_nav = ["🔮 Predictive Engine", "🔥 Market Trends", "🤖 Machine Learning"]
-        campaign_nav = ["🎯 Competitor Bench", "👂 Social Listening", "📅 Publishing Plan", "🎓 Admission Growth", "🏷️ Hashtag Tracker"]
+        main_nav = ["🏠 Executive Dashboard", "📤 Data Management", "📋 Performance Reports"]
+        analytics_nav = ["📊 Advanced Analytics", "🎬 Content Performance", "👥 Audience Insights", "⏰ Engagement Timing", "💬 Sentiment Analysis"]
+        intelligence_nav = ["🔮 Engagement Forecast", "🔥 Social Trends", "🤖 AI Optimization"]
+        campaign_nav = ["🎯 Competitor Analysis", "👂 Brand Monitoring", "📅 Content Planner", "📈 Influencer Analysis", "🏷️ Hashtag Performance"]
         
         all_nav = main_nav + analytics_nav + intelligence_nav + campaign_nav
         
         # Enhanced page mapping
         page_mapping = {
             "🏠 Executive Dashboard": "Dashboard",
-            "📤 Upload Data": "Upload Data",
+            "📤 Data Management": "Upload Data",
             "📋 Performance Reports": "Reports",
             "📊 Advanced Analytics": "Advanced Analytics",
-            "🎬 Content Deep-Dive": "Content Performance",
-            "👥 Audience Intelligence": "Audience Insights",
-            "⏰ Time Analysis": "Time Trends",
-            "💬 Sentiment Hub": "Sentiment Analysis",
-            "🔮 Predictive Engine": "Predictive Analytics",
-            "🔥 Market Trends": "Market Trends",
-            "🤖 Machine Learning": "🤖 Advanced ML",
-            "🎯 Competitor Bench": "Competitor Benchmarking",
-            "👂 Social Listening": "Social Listening",
-            "📅 Publishing Plan": "Publishing Manager",
-            "🎓 Admission Growth": "Influencer Discovery",
-            "🏷️ Hashtag Tracker": "Hashtag Tracker"
+            "🎬 Content Performance": "Content Performance",
+            "👥 Audience Insights": "Audience Insights",
+            "⏰ Engagement Timing": "Time Trends",
+            "💬 Sentiment Analysis": "Sentiment Analysis",
+            "🔮 Engagement Forecast": "Predictive Analytics",
+            "🔥 Social Trends": "Market Trends",
+            "🤖 AI Optimization": "🤖 Advanced ML",
+            "🎯 Competitor Analysis": "Competitor Benchmarking",
+            "👂 Brand Monitoring": "Social Listening",
+            "📅 Content Planner": "Publishing Manager",
+            "📈 Influencer Analysis": "Influencer Discovery",
+            "🏷️ Hashtag Performance": "Hashtag Tracker"
         }
         
         # Find current selection index
