@@ -286,7 +286,7 @@ def add_professional_css(mode="dark"):
     }}
     
     /* Academic Breadcrumb & Header */
-    .breadcrumb-container {
+    .breadcrumb-container {{
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -294,23 +294,23 @@ def add_professional_css(mode="dark"):
         margin-bottom: 1rem;
         color: var(--text-muted);
         font-size: 0.85rem;
-    }
+    }}
     
-    .breadcrumb-path {
+    .breadcrumb-path {{
         display: flex;
         align-items: center;
         gap: 0.5rem;
-    }
+    }}
     
-    .page-title {
+    .page-title {{
         font-size: 1.75rem;
         font-weight: 700;
         color: var(--text-main);
         margin: 0.5rem 0 1.5rem 0;
-    }
+    }}
 
     /* Horizontal Filter Bar */
-    .filter-bar {
+    .filter-bar {{
         background: var(--bg-surface);
         padding: 1rem;
         border-radius: 12px;
@@ -321,24 +321,24 @@ def add_professional_css(mode="dark"):
         margin-bottom: 1.5rem;
         box-shadow: var(--elite-shadow);
         flex-wrap: wrap;
-    }
+    }}
 
     /* Status Badges */
-    .badge {
+    .badge {{
         padding: 0.3rem 0.8rem;
         border-radius: 50px;
         font-size: 0.7rem;
         font-weight: 700;
         text-transform: uppercase;
         border: 1px solid transparent;
-    }
-    .badge-expired { background: #fee2e2; color: #ef4444; border-color: #fecaca; }
-    .badge-live { background: #dcfce7; color: #10b981; border-color: #bbf7d0; }
-    .badge-upcoming { background: #f3f4f6; color: #6b7280; border-color: #e5e7eb; }
-    .badge-info { background: #e0f2fe; color: #0ea5e9; border-color: #bae6fd; }
+    }}
+    .badge-expired {{ background: #fee2e2; color: #ef4444; border-color: #fecaca; }}
+    .badge-live {{ background: #dcfce7; color: #10b981; border-color: #bbf7d0; }}
+    .badge-upcoming {{ background: #f3f4f6; color: #6b7280; border-color: #e5e7eb; }}
+    .badge-info {{ background: #e0f2fe; color: #0ea5e9; border-color: #bae6fd; }}
 
     /* Action Link */
-    .action-link {
+    .action-link {{
         color: #2563eb;
         text-decoration: none;
         font-weight: 600;
@@ -347,11 +347,11 @@ def add_professional_css(mode="dark"):
         display: flex;
         align-items: center;
         gap: 0.25rem;
-    }
-    .action-link:hover { text-decoration: underline; }
+    }}
+    .action-link:hover {{ text-decoration: underline; }}
 
     /* KPI Pills */
-    .kpi-pill {
+    .kpi-pill {{
         display: inline-flex;
         align-items: center;
         padding: 0.35rem 1rem;
@@ -360,65 +360,65 @@ def add_professional_css(mode="dark"):
         font-weight: 700;
         margin-left: 0.75rem;
         box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-    .kpi-student { background: #f3f4f6; color: #1f2937; border: 1px solid #e5e7eb; }
-    .kpi-instant { background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; }
-    .kpi-guest { background: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; }
-    .kpi-scanned { background: #dcfce7; color: #15803d; border: 1px solid #d1fae5; }
+    }}
+    .kpi-student {{ background: #f3f4f6; color: #1f2937; border: 1px solid #e5e7eb; }}
+    .kpi-instant {{ background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; }}
+    .kpi-guest {{ background: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; }}
+    .kpi-scanned {{ background: #dcfce7; color: #15803d; border: 1px solid #d1fae5; }}
 
     /* Main Content Card */
-    .main-card {
+    .main-card {{
         background: var(--bg-card);
         border: 1px solid var(--border-color);
         border-radius: 16px;
         padding: 2rem;
         box-shadow: var(--elite-shadow);
         margin-bottom: 2rem;
-    }
+    }}
     
-    .card-header {
+    .card-header {{
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         border-bottom: 1px solid var(--border-color);
         padding-bottom: 1.5rem;
         margin-bottom: 1.5rem;
-    }
+    }}
 
     /* Table Styling */
-    .pro-table {
+    .pro-table {{
         width: 100%;
         border-collapse: collapse;
-    }
-    .pro-table th {
+    }}
+    .pro-table th {{
         text-align: left;
         padding: 1rem;
         color: var(--text-muted);
         font-weight: 600;
         font-size: 0.85rem;
         border-bottom: 2px solid var(--border-color);
-    }
-    .pro-table td {
+    }}
+    .pro-table td {{
         padding: 1.25rem 1rem;
         border-bottom: 1px solid var(--border-color);
         font-size: 0.9rem;
-    }
+    }}
 
     /* Sidebar Styling */
-    [data-testid="stSidebar"] {
+    [data-testid="stSidebar"] {{
         background-color: var(--sidebar-bg);
-    }
+    }}
     
-    .sidebar-category {
+    .sidebar-category {{
         color: var(--text-muted);
         font-size: 0.75rem;
         font-weight: 700;
         text-transform: uppercase;
         margin: 1.5rem 0 0.5rem 0;
         padding: 0 1rem;
-    }
+    }}
     
-    .nav-item {
+    .nav-item {{
         display: flex;
         align-items: center;
         padding: 0.75rem 1rem;
@@ -426,17 +426,17 @@ def add_professional_css(mode="dark"):
         margin: 0.25rem 0.5rem;
         cursor: pointer;
         transition: all 0.2s;
-    }
+    }}
     
-    .nav-item:hover { background: var(--bg-deep); }
-    .nav-item.selected { 
+    .nav-item:hover {{ background: var(--bg-deep); }}
+    .nav-item.selected {{ 
         background: var(--nav-selected);
         color: var(--nav-selected-text);
         font-weight: 600;
-    }
+    }}
 
     /* Footer */
-    .pro-footer {
+    .pro-footer {{
         padding: 2rem 0;
         margin-top: 4rem;
         border-top: 1px solid var(--border-color);
@@ -444,7 +444,7 @@ def add_professional_css(mode="dark"):
         justify-content: space-between;
         color: var(--text-muted);
         font-size: 0.85rem;
-    }
+    }}
     
     /* Animations */
     @keyframes eliteFadeIn {{
